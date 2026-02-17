@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Level Up Gaming</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background" id="starsBackground"></div>
+
+    <!-- Auth Page -->
+    <div class="auth-page">
+        <div class="auth-container">
+            <form class="form-card" id="registerForm">
+                <h1 class="form-title" data-en="Create Account" data-ru="Создать Аккаунт">Создать Аккаунт</h1>
+                
+                <div id="formMessage"></div>
+
+                <div class="form-group">
+                    <label class="form-label" data-en="Full Name" data-ru="Полное Имя">Полное Имя</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" class="form-input" id="fullName" placeholder="Иван Иванов" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-en="Email Address" data-ru="Email Адрес">Email Адрес</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="form-input" id="email" placeholder="ivan@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-en="Username" data-ru="Имя Пользователя">Имя Пользователя</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at input-icon"></i>
+                        <input type="text" class="form-input" id="username" placeholder="ivanov_gamer" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-en="Password" data-ru="Пароль">Пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-en="Confirm Password" data-ru="Подтвердите Пароль">Подтвердите Пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="••••••••" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
+                    </div>
+                </div>
+
+                <div class="form-checkbox-group">
+                    <input type="checkbox" class="form-checkbox" id="terms" required>
+                    <label class="form-checkbox-label" for="terms">
+                        <span data-en="I agree to the Terms and Conditions" data-ru="Я согласен с Условиями использования">Я согласен с Условиями использования</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large btn-block">
+                    <span data-en="Create Account" data-ru="Создать Аккаунт">Создать Аккаунт</span>
+                </button>
+
+                <div class="form-divider">
+                    <span data-en="OR" data-ru="ИЛИ">ИЛИ</span>
+                </div>
+
+                <div class="social-login-buttons">
+                    <button type="button" class="btn-social">
+                        <i class="fab fa-google"></i>
+                        <span data-en="Continue with Google" data-ru="Продолжить с Google">Продолжить с Google</span>
+                    </button>
+                    <button type="button" class="btn-social">
+                        <i class="fab fa-discord"></i>
+                        <span data-en="Continue with Discord" data-ru="Продолжить с Discord">Продолжить с Discord</span>
+                    </button>
+                </div>
+
+                <div class="form-footer">
+                    <span data-en="Already have an account?" data-ru="Уже есть аккаунт?">Уже есть аккаунт?</span>
+                    <a href="login.html" data-en="Sign In" data-ru="Войти">Войти</a>
+                </div>
+
+                <div class="form-footer" style="margin-top: var(--spacing-md);">
+                    <a href="index.html" data-en="Back to Home" data-ru="Вернуться на Главную">Вернуться на Главную</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.parentElement.querySelector('.password-toggle');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formMessage = document.getElementById('formMessage');
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                formMessage.className = 'form-message error';
+                formMessage.textContent = 'Пароли не совпадают!';
+                return;
+            }
+            
+            // Validate password strength
+            if (password.length < 8) {
+                formMessage.className = 'form-message error';
+                formMessage.textContent = 'Пароль должен содержать минимум 8 символов!';
+                return;
+            }
+            
+            // Create user object
+            const userData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Success - save user and redirect
+            formMessage.className = 'form-message success';
+            formMessage.textContent = 'Регистрация успешна! Перенаправление...';
+            
+            setTimeout(() => {
+                window.login(userData);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

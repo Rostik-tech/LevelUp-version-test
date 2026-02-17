@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Level Up Gaming</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background" id="starsBackground"></div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.svg" alt="Level Up Logo" class="logo-img">
+                </a>
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link active" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span></a>
+                            <a href="orders.html" class="dropdown-item"><i class="fas fa-box"></i><span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span></a>
+                            <a href="profile.html#settings" class="dropdown-item"><i class="fas fa-cog"></i><span data-en="Settings" data-ru="Настройки">Настройки</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span data-en="Logout" data-ru="Выйти">Выйти</span></a>
+                        </div>
+                    </div>
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn"><i class="fas fa-globe"></i><span id="currentLang">RU</span></button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn"><i class="fas fa-dollar-sign"></i><span id="currentCurrency">USD</span></button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">
+                <span class="gradient-text" data-en="About Level Up" data-ru="О Level Up">О Level Up</span>
+            </h1>
+            <p class="page-subtitle" data-en="Your trusted partner for premium gaming gear" data-ru="Ваш надежный партнер для премиальных игровых аксессуаров">
+                Ваш надежный партнер для премиальных игровых аксессуаров
+            </p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="content-section">
+        <div class="container">
+            <div class="content-card">
+                <h2 class="content-title" data-en="Our Story" data-ru="Наша История">Наша История</h2>
+                <p class="content-text" data-en="Level Up Gaming Accessories was founded by passionate gamers who understand what it takes to dominate the competition. We believe that every gamer deserves access to premium equipment that enhances their performance and gaming experience." data-ru="Level Up Gaming Accessories была основана страстными геймерами, которые понимают, что нужно для доминирования в соревнованиях. Мы верим, что каждый геймер заслуживает доступа к премиальному оборудованию, которое улучшает его производительность и игровой опыт.">
+                    Level Up Gaming Accessories была основана страстными геймерами, которые понимают, что нужно для доминирования в соревнованиях. Мы верим, что каждый геймер заслуживает доступа к премиальному оборудованию, которое улучшает его производительность и игровой опыт.
+                </p>
+                
+                <p class="content-text" data-en="Our mission is simple: provide the highest quality gaming accessories at competitive prices, backed by exceptional customer service. Whether you're a professional esports athlete or a casual gamer, we have the perfect gear to help you level up your game." data-ru="Наша миссия проста: предоставить самые качественные игровые аксессуары по конкурентным ценам, поддерживаемые исключительным обслуживанием клиентов. Независимо от того, являетесь ли вы профессиональным киберспортсменом или обычным геймером, у нас есть идеальное оборудование, чтобы помочь вам поднять вашу игру на новый уровень.">
+                    Наша миссия проста: предоставить самые качественные игровые аксессуары по конкурентным ценам, поддерживаемые исключительным обслуживанием клиентов. Независимо от того, являетесь ли вы профессиональным киберспортсменом или обычным геймером, у нас есть идеальное оборудование, чтобы помочь вам поднять вашу игру на новый уровень.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <h2 class="content-title" data-en="Why Choose Us?" data-ru="Почему Выбирают Нас?">Почему Выбирают Нас?</h2>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="Premium quality products from trusted brands" data-ru="Премиальные продукты от проверенных брендов">Премиальные продукты от проверенных брендов</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="Competitive prices and regular discounts" data-ru="Конкурентные цены и регулярные скидки">Конкурентные цены и регулярные скидки</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="Fast and reliable worldwide shipping" data-ru="Быстрая и надежная доставка по всему миру">Быстрая и надежная доставка по всему миру</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="24/7 customer support" data-ru="Круглосуточная поддержка клиентов">Круглосуточная поддержка клиентов</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="Easy returns and warranty protection" data-ru="Легкий возврат и гарантийная защита">Легкий возврат и гарантийная защита</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2 class="content-title" data-en="Our Values" data-ru="Наши Ценности">Наши Ценности</h2>
+                <p class="content-text" data-en="We are committed to excellence in everything we do. From product selection to customer service, we strive to exceed expectations and deliver an exceptional gaming experience." data-ru="Мы стремимся к совершенству во всем, что мы делаем. От выбора продуктов до обслуживания клиентов, мы стремимся превзойти ожидания и обеспечить исключительный игровой опыт.">
+                    Мы стремимся к совершенству во всем, что мы делаем. От выбора продуктов до обслуживания клиентов, мы стремимся превзойти ожидания и обеспечить исключительный игровой опыт.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up">О Level Up</h4>
+                    <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.">
+                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки">Быстрые ссылки</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-en="Home" data-ru="Главная">Главная</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас">О нас</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов">Обслуживание клиентов</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-en="Shipping Info" data-ru="Информация о доставке">Информация о доставке</a></li>
+                        <li><a href="#" data-en="Returns" data-ru="Возвраты">Возвраты</a></li>
+                        <li><a href="#" data-en="FAQ" data-ru="FAQ">FAQ</a></li>
+                        <li><a href="#" data-en="Support" data-ru="Поддержка">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами">Следите за нами</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены.">Все права защищены.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
