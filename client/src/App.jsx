@@ -1,10 +1,9 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import Products from "./pages/Products.jsx";
 import Cart from "./pages/Cart.jsx";
-import Navbar from "./components/Navbar.jsx";
 
 function App() {
   return (

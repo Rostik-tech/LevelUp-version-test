@@ -1,14 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-function Navbar() {
+export default function Navbar() {
+  const [isAuth, setIsAuth] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuth(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuth(false);
+    navigate("/login");
+  };
+
   return (
-    <nav>
-      <Link to="/">Главная</Link> |{" "}
-      <Link to="/login">Вход</Link> |{" "}
-      <Link to="/register">Регистрация</Link> |{" "}
-      <Link to="/cart">Корзина</Link>
+    <nav style={{ padding: "15px", background: "#222", color: "white" }}>
+      <Link style={{ color: "white", marginRight: "15px" }} to="/">
+        Products
+      </Link>
+
+      {isAuth && (
+        <Link style={{ color: "white", marginRight: "15px" }} to="/cart">
+          Cart
+        </Link>
+      )}
+
+      {!isAuth && (
+        <>
+          <Link style={{ color: "white", marginRight: "15px" }} to="/login">
+            Login
+          </Link>
+
+          <Link style={{ color: "white" }} to="/register">
+            Register
+          </Link>
+        </>
+      )}
+
+      {isAuth && (
+        <button
+          onClick={handleLogout}
+          style={{
+            marginLeft: "20px",
+            padding: "5px 10px",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      )}
     </nav>
   );
 }
-
-export default Navbar;

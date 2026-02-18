@@ -12,6 +12,7 @@ export default function Login() {
     console.log(res);
     if (res.token) {
       localStorage.setItem("token", res.token);
+      window.location.href = "/";
       alert("Успешный вход!");
       setEmail("");
       setPassword("");
