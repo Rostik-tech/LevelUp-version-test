@@ -1,15 +1,11 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('./index');
-const Order = require('./order');
+// backend/models/payment.js
+import { DataTypes } from "sequelize";
 
-const Payment = sequelize.define('Payment', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    amount: { type: DataTypes.DECIMAL(10,2), allowNull: false },
-    payment_method: { type: DataTypes.STRING, allowNull: false },
-    status: { type: DataTypes.STRING, defaultValue: 'pending' }
-});
+export default (sequelize) => {
+  return sequelize.define("Payment", {
+    amount: { type: DataTypes.FLOAT, allowNull: false },
+    method: { type: DataTypes.STRING, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: "pending" },
+  }, { timestamps: true });
+};
 
-Payment.belongsTo(Order, { foreignKey: 'order_id' });
-Order.hasMany(Payment, { foreignKey: 'order_id' });
-
-module.exports = Payment;

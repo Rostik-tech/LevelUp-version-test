@@ -1,11 +1,28 @@
-const express = require('express');
+// backend/routes/products.js
+import express from "express";
+import { Product } from "../models/index.js";
+
 const router = express.Router();
-const productController = require('../controllers/productController');
 
-// Создать товар
-router.post('/', productController.createProduct);
+// Создание продукта
+router.post("/", async (req, res) => {
+  try {
+    const product = await Product.create(req.body);
+    res.json({ message: "Продукт создан", product });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
-// Получить все товары
-router.get('/', productController.getProducts);
+// Получение всех продуктов
+router.get("/", async (req, res) => {
+  try {
+    const products = await Product.findAll();
+    res.json(products);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
-module.exports = router;
+export default router;
+

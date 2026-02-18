@@ -1,39 +1,31 @@
-// server.js
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-require('dotenv').config();
-const { sequelize } = require('./models');
+import authRouter from "./routes/auth.js";
+import orderRouter from "./routes/orders.js";
+import productRouter from "./routes/products.js";
+import paymentRouter from "./routes/payments.js";
 
-// Маршруты
-const authRoutes = require('./routes/auth');
-const productRoutes = require('./routes/products');
-const orderRoutes = require('./routes/orders');
-const paymentRoutes = require('./routes/payments');
+import { sequelize } from "./models/index.js";
 
+dotenv.config();
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Тестовый роут
-app.get('/', (req, res) => {
-    res.send('Сервер работает!');
-});
-
-// API маршруты
-app.use('/api/auth', authRoutes);       // регистрация / логин
-app.use('/api/products', productRoutes); // товары
-app.use('/api/orders', orderRoutes);    // заказы
-app.use('/api/payments', paymentRoutes); // платежи
-
-// Синхронизация базы данных
-sequelize.sync({ alter: true })
-    .then(() => console.log('База данных синхронизирована'))
-    .catch(err => console.log('Ошибка синхронизации:', err));
+// Роуты
+app.use("/api/auth", authRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/products", productRouter);
+app.use("/api/payments", paymentRouter);
 
 // Запуск сервера
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Сервер запущен на порту ${PORT}`));
+
+sequelize.sync({ alter: true }).then(() => {
+  console.log("База данных синхронизирована");
+  app.listen(PORT, () => console.log(`Сервер запущен на порту ${PORT}`));
+}).catch(err => console.log("Ошибка синхронизации базы:", err));

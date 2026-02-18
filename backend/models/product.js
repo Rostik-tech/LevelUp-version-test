@@ -1,12 +1,13 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('./index');
+// backend/models/product.js
+import { DataTypes } from "sequelize";
 
-const Product = sequelize.define('Product', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+export default (sequelize) => {
+  return sequelize.define("Product", {
     name: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.TEXT },
-    price: { type: DataTypes.DECIMAL(10,2), allowNull: false },
-    stock: { type: DataTypes.INTEGER, defaultValue: 0 }
-});
+    description: { type: DataTypes.STRING },
+    price: { type: DataTypes.FLOAT, allowNull: false },
+    stock: { type: DataTypes.INTEGER, defaultValue: 0 },
+  }, { timestamps: true });
+};
 
-module.exports = Product;
+
