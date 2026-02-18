@@ -1,13 +1,18 @@
 // backend/routes/orders.js
 import express from "express";
 import { Order, OrderItem, Product } from "../models/index.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
+
 
 const router = express.Router();
 
 // Создание заказа
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
+
   try {
-    const { userId, items } = req.body;
+    const userId = req.user.id;
+    const { items } = req.body;
+
     const order = await Order.create({ UserId: userId });
 
     let totalPrice = 0;

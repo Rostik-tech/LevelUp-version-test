@@ -1,45 +1,93 @@
-const Payment = require('../models/payment');
-const Order = require('../models/order');
+import axios from "axios";
+import dotenv from "dotenv";
 
-// Создать платеж
-exports.createPayment = async (req, res) => {
-    try {
-        const { order_id, amount, payment_method } = req.body;
+dotenv.config();
 
-        // Проверка, существует ли заказ
-        const order = await Order.findByPk(order_id);
-        if (!order) return res.status(404).json({ message: 'Заказ не найден' });
+const PAYPAL_BASE =
+  process.env.PAYPAL_MODE === "live"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
 
-        const payment = await Payment.create({
-            order_id,
-            amount,
-            payment_method,
-            status: 'completed' // по умолчанию можно ставить completed
-        });
+// 🔹 Получение access token
+const getAccessToken = async () => {
+  const response = await axios({
+    url: `${PAYPAL_BASE}/v1/oauth2/token`,
+    method: "post",
+    auth: {
+      username: process.env.PAYPAL_CLIENT_ID,
+      password: process.env.PAYPAL_SECRET,
+    },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    data: "grant_type=client_credentials",
+  });
 
-        res.json({ message: 'Платеж создан', payment });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  return response.data.access_token;
 };
 
-// Получить все платежи
-exports.getPayments = async (req, res) => {
-    try {
-        const payments = await Payment.findAll();
-        res.json(payments);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+// 🔹 Создание заказа
+export const createOrder = async (req, res) => {
+  try {
+    const accessToken = await getAccessToken();
+
+    const response = await axios.post(
+      `${PAYPAL_BASE}/v2/checkout/orders`,
+      {
+        intent: "CAPTURE",
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "USD",
+              value: "10.00",
+            },
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // ВАЖНО: возвращаем весь ответ, а не только id
+    res.json(response.data);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.response?.data || error.message,
+    });
+  }
 };
 
-// Получить платеж по ID
-exports.getPaymentById = async (req, res) => {
-    try {
-        const payment = await Payment.findByPk(req.params.id);
-        if (!payment) return res.status(404).json({ message: 'Платеж не найден' });
-        res.json(payment);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+// 🔹 Подтверждение оплаты
+export const captureOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const accessToken = await getAccessToken();
+
+    const response = await axios.post(
+      `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json({
+      status: response.data.status,
+      order: response.data,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.response?.data || error.message,
+    });
+  }
 };

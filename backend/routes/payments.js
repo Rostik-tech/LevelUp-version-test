@@ -1,27 +1,12 @@
-// backend/routes/payments.js
 import express from "express";
-import { Payment } from "../models/index.js";
+import { createOrder, captureOrder } from "../controllers/paymentController.js";
 
 const router = express.Router();
 
-// Создание платежа
-router.post("/", async (req, res) => {
-  try {
-    const payment = await Payment.create(req.body);
-    res.json({ message: "Платеж создан", payment });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+// Создание заказа PayPal
+router.post("/create", createOrder);
 
-// Получение всех платежей
-router.get("/", async (req, res) => {
-  try {
-    const payments = await Payment.findAll();
-    res.json(payments);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+// Подтверждение оплаты
+router.post("/capture/:id", captureOrder);
 
 export default router;

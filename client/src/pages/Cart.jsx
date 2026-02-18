@@ -1,44 +1,72 @@
-// src/pages/Cart.jsx
-import { useState } from "react";
-import { createOrder, makePayment } from "../api/api.js";
+import { useEffect, useState } from "react";
+import { createPaypalOrder, capturePaypalOrder } from "../api/paymentApi.js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function Cart() {
-  const [orderData, setOrderData] = useState({ products: [], total: 0 });
-  const [paymentMethod, setPaymentMethod] = useState("card");
-
+  const [cart, setCart] = useState([]);
   const token = localStorage.getItem("token");
 
-  const handleOrder = async () => {
-    const res = await createOrder(orderData, token);
-    console.log(res);
-    if (res.id) {
-      alert("Заказ создан успешно!");
-    } else {
-      alert(res.message);
-    }
-  };
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(storedCart);
+  }, []);
 
-  const handlePayment = async () => {
-    const res = await makePayment({ orderId: orderData.id, method: paymentMethod }, token);
-    console.log(res);
-    if (res.id) {
-      alert("Оплата прошла успешно!");
-    } else {
-      alert(res.message);
-    }
-  };
+  // Общая сумма корзины
+  const totalAmount = cart
+    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+    .toFixed(2);
 
   return (
-    <div>
+    <div className="cart-page">
       <h1>Корзина</h1>
-      <button onClick={handleOrder}>Создать заказ</button>
-      <div>
-        <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-          <option value="card">Карта</option>
-          <option value="cash">Наличные</option>
-        </select>
-        <button onClick={handlePayment}>Оплатить</button>
-      </div>
+
+      {cart.length === 0 && <p>Корзина пуста</p>}
+
+      {cart.map((item) => (
+        <div key={item.id}>
+          <h3>{item.name}</h3>
+          <p>Цена: ${item.price}</p>
+          <p>Количество: {item.quantity}</p>
+        </div>
+      ))}
+
+      {cart.length > 0 && (
+        <>
+          <h2>Итого: ${totalAmount}</h2>
+
+          {token ? (
+            <PayPalScriptProvider
+              options={{
+                "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
+                currency: "USD",
+              }}
+            >
+              <PayPalButtons
+                style={{ layout: "vertical", color: "blue", shape: "rect" }}
+                createOrder={async () => {
+                  const orderId = await createPaypalOrder(totalAmount);
+                  return orderId;
+                }}
+                onApprove={async (data) => {
+                  const res = await capturePaypalOrder(data.orderID);
+                  console.log("Результат оплаты:", res);
+                  if (res.status === "COMPLETED") {
+                    alert("Оплата прошла успешно!");
+                    localStorage.removeItem("cart");
+                    setCart([]);
+                  }
+                }}
+                onError={(err) => {
+                  console.error("Ошибка PayPal:", err);
+                  alert("Произошла ошибка при оплате PayPal");
+                }}
+              />
+            </PayPalScriptProvider>
+          ) : (
+            <p>Нужно авторизоваться, чтобы оплатить</p>
+          )}
+        </>
+      )}
     </div>
   );
 }
