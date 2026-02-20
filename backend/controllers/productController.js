@@ -1,3 +1,4 @@
+// controllers/productController.js
 const Product = require('../models/product');
 
 exports.createProduct = async (req, res) => {

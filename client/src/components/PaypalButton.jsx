@@ -1,3 +1,4 @@
+// components/PaypalButton.jsx
 import { useEffect } from "react";
 import { createPaypalOrder, capturePaypalOrder } from "../api/paymentApi.js";
 

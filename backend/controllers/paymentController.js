@@ -1,5 +1,7 @@
+// controllers/paymentController.js
 import axios from "axios";
 import dotenv from "dotenv";
+import { Order, Payment } from "../models/index.js";
 
 dotenv.config();
 
@@ -26,9 +28,25 @@ const getAccessToken = async () => {
   return response.data.access_token;
 };
 
-// 🔹 Создание заказа
+// 🔹 Создание PayPal заказа (СУММА ТОЛЬКО ИЗ БАЗЫ)
 export const createOrder = async (req, res) => {
   try {
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ message: "orderId обязателен" });
+    }
+
+    const dbOrder = await Order.findByPk(orderId);
+
+    if (!dbOrder) {
+      return res.status(404).json({ message: "Заказ не найден" });
+    }
+
+    if (dbOrder.totalPrice <= 0) {
+      return res.status(400).json({ message: "Сумма заказа некорректна" });
+    }
+
     const accessToken = await getAccessToken();
 
     const response = await axios.post(
@@ -39,7 +57,7 @@ export const createOrder = async (req, res) => {
           {
             amount: {
               currency_code: "USD",
-              value: "10.00",
+              value: dbOrder.totalPrice.toString(), // 🔥 БЕРЁМ ИЗ БАЗЫ
             },
           },
         ],
@@ -52,7 +70,17 @@ export const createOrder = async (req, res) => {
       }
     );
 
-    // ВАЖНО: возвращаем весь ответ, а не только id
+    const paypalOrderId = response.data.id;
+
+    await Payment.create({
+      OrderId: dbOrder.id,
+      UserId: dbOrder.UserId,
+      amount: dbOrder.totalPrice,
+      method: "paypal",
+      paypalOrderId,
+      status: "pending",
+    });
+
     res.json(response.data);
 
   } catch (error) {
@@ -62,14 +90,14 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// 🔹 Подтверждение оплаты
+// 🔥 ДВОЙНАЯ СЕРВЕРНАЯ ВАЛИДАЦИЯ
 export const captureOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
     const accessToken = await getAccessToken();
 
-    const response = await axios.post(
+    await axios.post(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
       {},
       {
@@ -80,9 +108,45 @@ export const captureOrder = async (req, res) => {
       }
     );
 
+    const verifyResponse = await axios.get(
+      `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const orderData = verifyResponse.data;
+
+    if (orderData.status !== "COMPLETED") {
+      return res.status(400).json({ message: "Оплата не подтверждена" });
+    }
+
+    const payment = await Payment.findOne({
+      where: { paypalOrderId: id },
+    });
+
+    if (!payment) {
+      return res.status(404).json({ message: "Payment не найден" });
+    }
+
+    const dbOrder = await Order.findByPk(payment.OrderId);
+
+    if (!dbOrder) {
+      return res.status(404).json({ message: "Заказ не найден" });
+    }
+
+    dbOrder.status = "paid";
+    await dbOrder.save();
+
+    payment.status = "completed";
+    await payment.save();
+
     res.json({
-      status: response.data.status,
-      order: response.data,
+      message: "Оплата подтверждена",
+      order: dbOrder,
+      payment,
     });
 
   } catch (error) {

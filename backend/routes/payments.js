@@ -1,3 +1,4 @@
+// routes/payments.js
 import express from "express";
 import { createOrder, captureOrder } from "../controllers/paymentController.js";
 

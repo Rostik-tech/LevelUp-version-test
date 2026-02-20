@@ -1,3 +1,4 @@
+// pages/Cart.jsx
 import { useEffect, useState } from "react";
 import { createPaypalOrder, capturePaypalOrder } from "../api/paymentApi.js";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";

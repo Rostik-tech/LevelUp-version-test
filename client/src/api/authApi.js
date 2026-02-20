@@ -1,3 +1,4 @@
+// api/authApi.js
 import { API } from "./api";
 
 export const registerUser = async (data) => {
