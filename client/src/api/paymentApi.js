@@ -15,21 +15,23 @@ const getAuthConfig = () => {
 // ============================
 // 1. Создание Order в БД
 // ============================
-export const createOrderInBackend = async (items) => {
+export const createOrderInBackend = async (orderData) => {
   try {
     const res = await axios.post(
       "/api/orders",
-      { items },
+      orderData, // теперь отправляем весь объект
       getAuthConfig()
     );
 
     return res.data.order.id;
   } catch (error) {
-    console.error("❌ Ошибка создания Order:", error.response?.data || error.message);
+    console.error(
+      "❌ Ошибка создания Order:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
-
 // ============================
 // 2. Создание PayPal Order
 // ============================
