@@ -12,6 +12,8 @@ const PAYPAL_BASE =
 
 // 🔹 Получение access token
 const getAccessToken = async () => {
+  console.log("🔐 Getting PayPal access token...");
+
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
     method: "post",
@@ -25,12 +27,18 @@ const getAccessToken = async () => {
     data: "grant_type=client_credentials",
   });
 
+  console.log("✅ Access token received");
   return response.data.access_token;
 };
 
-// 🔹 Создание PayPal заказа (СУММА ТОЛЬКО ИЗ БАЗЫ)
+// =============================
+// СОЗДАНИЕ PAYPAL ЗАКАЗА
+// =============================
 export const createOrder = async (req, res) => {
   try {
+    console.log("🟡 CREATE ORDER ENDPOINT HIT");
+    console.log("Body:", req.body);
+
     const { orderId } = req.body;
 
     if (!orderId) {
@@ -43,10 +51,6 @@ export const createOrder = async (req, res) => {
       return res.status(404).json({ message: "Заказ не найден" });
     }
 
-    if (dbOrder.totalPrice <= 0) {
-      return res.status(400).json({ message: "Сумма заказа некорректна" });
-    }
-
     const accessToken = await getAccessToken();
 
     const response = await axios.post(
@@ -57,7 +61,7 @@ export const createOrder = async (req, res) => {
           {
             amount: {
               currency_code: "USD",
-              value: dbOrder.totalPrice.toString(), // 🔥 БЕРЁМ ИЗ БАЗЫ
+              value: dbOrder.totalPrice.toString(),
             },
           },
         ],
@@ -72,6 +76,8 @@ export const createOrder = async (req, res) => {
 
     const paypalOrderId = response.data.id;
 
+    console.log("🟢 PayPal order created:", paypalOrderId);
+
     await Payment.create({
       OrderId: dbOrder.id,
       UserId: dbOrder.UserId,
@@ -84,20 +90,27 @@ export const createOrder = async (req, res) => {
     res.json(response.data);
 
   } catch (error) {
+    console.error("❌ CREATE ORDER ERROR:", error.response?.data || error.message);
     res.status(500).json({
       error: error.response?.data || error.message,
     });
   }
 };
 
-// 🔥 ДВОЙНАЯ СЕРВЕРНАЯ ВАЛИДАЦИЯ
+// =============================
+// CAPTURE (ручной)
+// =============================
 export const captureOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
+    console.log("🔥 CAPTURE ENDPOINT HIT:", id);
+
     const accessToken = await getAccessToken();
 
-    await axios.post(
+    console.log("➡ Sending capture request to PayPal...");
+
+    const captureResponse = await axios.post(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
       {},
       {
@@ -107,6 +120,8 @@ export const captureOrder = async (req, res) => {
         },
       }
     );
+
+    console.log("📦 Capture response:", captureResponse.data.status);
 
     const verifyResponse = await axios.get(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
@@ -119,7 +134,10 @@ export const captureOrder = async (req, res) => {
 
     const orderData = verifyResponse.data;
 
+    console.log("🔎 Order verify status:", orderData.status);
+
     if (orderData.status !== "COMPLETED") {
+      console.log("❌ Payment NOT completed");
       return res.status(400).json({ message: "Оплата не подтверждена" });
     }
 
@@ -128,20 +146,19 @@ export const captureOrder = async (req, res) => {
     });
 
     if (!payment) {
+      console.log("❌ Payment not found in DB");
       return res.status(404).json({ message: "Payment не найден" });
     }
 
     const dbOrder = await Order.findByPk(payment.OrderId);
-
-    if (!dbOrder) {
-      return res.status(404).json({ message: "Заказ не найден" });
-    }
 
     dbOrder.status = "paid";
     await dbOrder.save();
 
     payment.status = "completed";
     await payment.save();
+
+    console.log("✅ DB updated: Order + Payment marked as paid");
 
     res.json({
       message: "Оплата подтверждена",
@@ -150,8 +167,79 @@ export const captureOrder = async (req, res) => {
     });
 
   } catch (error) {
+    console.error("❌ CAPTURE ERROR:", error.response?.data || error.message);
     res.status(500).json({
       error: error.response?.data || error.message,
     });
+  }
+};
+
+// =============================
+// 🔥 WEBHOOK
+// =============================
+export const paypalWebhook = async (req, res) => {
+  try {
+    console.log("📩 WEBHOOK HIT");
+    console.log("Event type:", req.body.event_type);
+
+    const event = req.body;
+    const accessToken = await getAccessToken();
+
+    const verifyResponse = await axios.post(
+      `${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`,
+      {
+        transmission_id: req.headers["paypal-transmission-id"],
+        transmission_time: req.headers["paypal-transmission-time"],
+        cert_url: req.headers["paypal-cert-url"],
+        auth_algo: req.headers["paypal-auth-algo"],
+        transmission_sig: req.headers["paypal-transmission-sig"],
+        webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+        webhook_event: event,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("🔐 Webhook verification:", verifyResponse.data.verification_status);
+
+    if (verifyResponse.data.verification_status !== "SUCCESS") {
+      return res.status(400).send("Invalid signature");
+    }
+
+    if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+      const paypalOrderId =
+        event.resource.supplementary_data.related_ids.order_id;
+
+      console.log("💳 Webhook order ID:", paypalOrderId);
+
+      const payment = await Payment.findOne({
+        where: { paypalOrderId },
+      });
+
+      if (!payment) {
+        console.log("❌ Payment not found for webhook");
+        return res.status(200).send("Payment not found");
+      }
+
+      const dbOrder = await Order.findByPk(payment.OrderId);
+
+      dbOrder.status = "paid";
+      await dbOrder.save();
+
+      payment.status = "completed";
+      await payment.save();
+
+      console.log("✅ Webhook updated DB successfully");
+    }
+
+    res.status(200).send("Webhook processed");
+
+  } catch (error) {
+    console.error("❌ WEBHOOK ERROR:", error.response?.data || error.message);
+    res.status(500).send("Webhook error");
   }
 };
