@@ -1,5 +1,5 @@
 import express from "express";
-import { Product } from "../models/index.js";
+import { Product, Order, OrderItem, User } from "../models/index.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/adminMiddleware.js";
 
@@ -63,4 +63,54 @@ router.delete("/products/:id", authenticateToken, isAdmin, async (req, res) => {
   res.json({ message: "Product deleted" });
 });
 
+/* =========================
+   📦 ПОЛУЧИТЬ ВСЕ ЗАКАЗЫ
+========================= */
+router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
+  const orders = await Order.findAll({
+    include: [
+      { model: User, attributes: ["id", "username", "email"] },
+      { model: OrderItem, include: [Product] }
+    ],
+    order: [["createdAt", "DESC"]]
+  });
+
+  res.json(orders);
+});
+
+/* =========================
+   📄 ПОЛУЧИТЬ ОДИН ЗАКАЗ
+========================= */
+router.get("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
+  const order = await Order.findByPk(req.params.id, {
+    include: [
+      { model: User, attributes: ["id", "username", "email"] },
+      { model: OrderItem, include: [Product] }
+    ]
+  });
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  res.json(order);
+});
+
+/* =========================
+   🔄 ИЗМЕНИТЬ СТАТУС ЗАКАЗА
+========================= */
+router.put("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
+  const { status } = req.body;
+
+  const order = await Order.findByPk(req.params.id);
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  order.status = status;
+  await order.save();
+
+  res.json(order);
+});
 export default router;
