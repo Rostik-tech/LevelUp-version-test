@@ -2,6 +2,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import { Order, Payment } from "../models/index.js";
+import { canTransition } from "../utils/orderStatus.js";
 
 dotenv.config();
 
@@ -12,8 +13,6 @@ const PAYPAL_BASE =
 
 // 🔹 Получение access token
 const getAccessToken = async () => {
-  console.log("🔐 Getting PayPal access token...");
-
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
     method: "post",
@@ -27,7 +26,6 @@ const getAccessToken = async () => {
     data: "grant_type=client_credentials",
   });
 
-  console.log("✅ Access token received");
   return response.data.access_token;
 };
 
@@ -36,9 +34,6 @@ const getAccessToken = async () => {
 // =============================
 export const createOrder = async (req, res) => {
   try {
-    console.log("🟡 CREATE ORDER ENDPOINT HIT");
-    console.log("Body:", req.body);
-
     const { orderId } = req.body;
 
     if (!orderId) {
@@ -76,8 +71,6 @@ export const createOrder = async (req, res) => {
 
     const paypalOrderId = response.data.id;
 
-    console.log("🟢 PayPal order created:", paypalOrderId);
-
     await Payment.create({
       OrderId: dbOrder.id,
       UserId: dbOrder.UserId,
@@ -90,7 +83,6 @@ export const createOrder = async (req, res) => {
     res.json(response.data);
 
   } catch (error) {
-    console.error("❌ CREATE ORDER ERROR:", error.response?.data || error.message);
     res.status(500).json({
       error: error.response?.data || error.message,
     });
@@ -98,19 +90,16 @@ export const createOrder = async (req, res) => {
 };
 
 // =============================
-// CAPTURE (ручной)
+// CAPTURE
 // =============================
 export const captureOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log("🔥 CAPTURE ENDPOINT HIT:", id);
-
     const accessToken = await getAccessToken();
 
-    console.log("➡ Sending capture request to PayPal...");
-
-    const captureResponse = await axios.post(
+    // Capture
+    await axios.post(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
       {},
       {
@@ -121,8 +110,7 @@ export const captureOrder = async (req, res) => {
       }
     );
 
-    console.log("📦 Capture response:", captureResponse.data.status);
-
+    // Verify
     const verifyResponse = await axios.get(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
       {
@@ -132,12 +120,7 @@ export const captureOrder = async (req, res) => {
       }
     );
 
-    const orderData = verifyResponse.data;
-
-    console.log("🔎 Order verify status:", orderData.status);
-
-    if (orderData.status !== "COMPLETED") {
-      console.log("❌ Payment NOT completed");
+    if (verifyResponse.data.status !== "COMPLETED") {
       return res.status(400).json({ message: "Оплата не подтверждена" });
     }
 
@@ -146,19 +129,22 @@ export const captureOrder = async (req, res) => {
     });
 
     if (!payment) {
-      console.log("❌ Payment not found in DB");
       return res.status(404).json({ message: "Payment не найден" });
     }
 
     const dbOrder = await Order.findByPk(payment.OrderId);
+
+    if (!canTransition(dbOrder.status, "paid")) {
+      return res.status(400).json({
+        message: `Недопустимый переход статуса: ${dbOrder.status} → paid`,
+      });
+    }
 
     dbOrder.status = "paid";
     await dbOrder.save();
 
     payment.status = "completed";
     await payment.save();
-
-    console.log("✅ DB updated: Order + Payment marked as paid");
 
     res.json({
       message: "Оплата подтверждена",
@@ -167,7 +153,6 @@ export const captureOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ CAPTURE ERROR:", error.response?.data || error.message);
     res.status(500).json({
       error: error.response?.data || error.message,
     });
@@ -175,13 +160,10 @@ export const captureOrder = async (req, res) => {
 };
 
 // =============================
-// 🔥 WEBHOOK
+// WEBHOOK
 // =============================
 export const paypalWebhook = async (req, res) => {
   try {
-    console.log("📩 WEBHOOK HIT");
-    console.log("Event type:", req.body.event_type);
-
     const event = req.body;
     const accessToken = await getAccessToken();
 
@@ -204,8 +186,6 @@ export const paypalWebhook = async (req, res) => {
       }
     );
 
-    console.log("🔐 Webhook verification:", verifyResponse.data.verification_status);
-
     if (verifyResponse.data.verification_status !== "SUCCESS") {
       return res.status(400).send("Invalid signature");
     }
@@ -214,32 +194,31 @@ export const paypalWebhook = async (req, res) => {
       const paypalOrderId =
         event.resource.supplementary_data.related_ids.order_id;
 
-      console.log("💳 Webhook order ID:", paypalOrderId);
-
       const payment = await Payment.findOne({
         where: { paypalOrderId },
       });
 
       if (!payment) {
-        console.log("❌ Payment not found for webhook");
         return res.status(200).send("Payment not found");
       }
 
       const dbOrder = await Order.findByPk(payment.OrderId);
 
-      dbOrder.status = "paid";
-      await dbOrder.save();
+      // Webhook не должен ломать систему
+      if (canTransition(dbOrder.status, "paid")) {
+        dbOrder.status = "paid";
+        await dbOrder.save();
 
-      payment.status = "completed";
-      await payment.save();
+        payment.status = "completed";
+        await payment.save();
+      }
 
-      console.log("✅ Webhook updated DB successfully");
+      // если переход невозможен — просто игнорируем
     }
 
     res.status(200).send("Webhook processed");
 
   } catch (error) {
-    console.error("❌ WEBHOOK ERROR:", error.response?.data || error.message);
     res.status(500).send("Webhook error");
   }
 };

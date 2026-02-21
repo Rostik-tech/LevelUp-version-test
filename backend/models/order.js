@@ -11,14 +11,21 @@ export default (sequelize) => {
         allowNull: false,
       },
 
-      // ⚠️ Пока оставляем STRING (не ENUM), чтобы не ломать существующие записи
+      // 🔒 Теперь строгий ENUM
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(
+          "pending",
+          "paid",
+          "processing",
+          "shipped",
+          "delivered",
+          "cancelled"
+        ),
         defaultValue: "pending",
         allowNull: false,
       },
 
-      // 🔹 Shipping Information (временно allowNull: true)
+      // 🔹 Shipping Information
       shippingFullName: {
         type: DataTypes.STRING,
         allowNull: true,

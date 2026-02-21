@@ -1,7 +1,9 @@
+// routes/admin.js
 import express from "express";
 import { Product, Order, OrderItem, User } from "../models/index.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/adminMiddleware.js";
+import { canTransition } from "../utils/orderStatus.js";
 
 const router = express.Router();
 
@@ -23,7 +25,7 @@ router.post("/products", authenticateToken, isAdmin, async (req, res) => {
     name,
     description,
     price,
-    image
+    image,
   });
 
   res.json(product);
@@ -70,9 +72,9 @@ router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
   const orders = await Order.findAll({
     include: [
       { model: User, attributes: ["id", "username", "email"] },
-      { model: OrderItem, include: [Product] }
+      { model: OrderItem, include: [Product] },
     ],
-    order: [["createdAt", "DESC"]]
+    order: [["createdAt", "DESC"]],
   });
 
   res.json(orders);
@@ -85,8 +87,8 @@ router.get("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
   const order = await Order.findByPk(req.params.id, {
     include: [
       { model: User, attributes: ["id", "username", "email"] },
-      { model: OrderItem, include: [Product] }
-    ]
+      { model: OrderItem, include: [Product] },
+    ],
   });
 
   if (!order) {
@@ -108,6 +110,17 @@ router.put("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
     return res.status(404).json({ message: "Order not found" });
   }
 
+  if (!status) {
+    return res.status(400).json({ message: "Новый статус обязателен" });
+  }
+
+  // 🔒 Проверка допустимого перехода
+  if (!canTransition(order.status, status)) {
+    return res.status(400).json({
+      message: `Недопустимый переход статуса: ${order.status} → ${status}`,
+    });
+  }
+
   order.status = status;
   await order.save();
 
@@ -119,7 +132,7 @@ router.put("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
 ========================= */
 router.get("/users", authenticateToken, isAdmin, async (req, res) => {
   const users = await User.findAll({
-    attributes: ["id", "username", "email", "role", "createdAt"]
+    attributes: ["id", "username", "email", "role", "createdAt"],
   });
 
   res.json(users);
@@ -137,7 +150,7 @@ router.get("/users/search", authenticateToken, isAdmin, async (req, res) => {
 
   const user = await User.findOne({
     where: { email },
-    attributes: ["id", "username", "email", "role", "createdAt"]
+    attributes: ["id", "username", "email", "role", "createdAt"],
   });
 
   if (!user) {
