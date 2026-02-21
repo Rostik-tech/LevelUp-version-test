@@ -1,8 +1,9 @@
 // controllers/paymentController.js
 import axios from "axios";
 import dotenv from "dotenv";
-import { Order, Payment } from "../models/index.js";
+import { Order, Payment, OrderItem, Product } from "../models/index.js";
 import { canTransition } from "../utils/orderStatus.js";
+import { sendOrderNotification } from "../utils/emailService.js";
 
 dotenv.config();
 
@@ -11,7 +12,6 @@ const PAYPAL_BASE =
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
-// 🔹 Получение access token
 const getAccessToken = async () => {
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
@@ -30,7 +30,7 @@ const getAccessToken = async () => {
 };
 
 // =============================
-// СОЗДАНИЕ PAYPAL ЗАКАЗА
+// CREATE PAYPAL ORDER
 // =============================
 export const createOrder = async (req, res) => {
   try {
@@ -90,7 +90,7 @@ export const createOrder = async (req, res) => {
 };
 
 // =============================
-// CAPTURE
+// CAPTURE + EMAIL
 // =============================
 export const captureOrder = async (req, res) => {
   try {
@@ -98,7 +98,6 @@ export const captureOrder = async (req, res) => {
 
     const accessToken = await getAccessToken();
 
-    // Capture
     await axios.post(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
       {},
@@ -110,7 +109,6 @@ export const captureOrder = async (req, res) => {
       }
     );
 
-    // Verify
     const verifyResponse = await axios.get(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
       {
@@ -134,6 +132,11 @@ export const captureOrder = async (req, res) => {
 
     const dbOrder = await Order.findByPk(payment.OrderId);
 
+    // Если уже оплачено — просто возвращаем успех
+    if (dbOrder.status === "paid") {
+      return res.json({ message: "Уже оплачено" });
+    }
+
     if (!canTransition(dbOrder.status, "paid")) {
       return res.status(400).json({
         message: `Недопустимый переход статуса: ${dbOrder.status} → paid`,
@@ -145,6 +148,19 @@ export const captureOrder = async (req, res) => {
 
     payment.status = "completed";
     await payment.save();
+
+    // 🔥 Отправляем email прямо здесь
+    const items = await OrderItem.findAll({
+      where: { OrderId: dbOrder.id },
+      include: [Product],
+    });
+
+    try {
+      await sendOrderNotification(dbOrder, payment, items);
+      console.log("📧 Email notification sent");
+    } catch (err) {
+      console.error("❌ Email failed:", err.message);
+    }
 
     res.json({
       message: "Оплата подтверждена",
@@ -160,11 +176,15 @@ export const captureOrder = async (req, res) => {
 };
 
 // =============================
-// WEBHOOK
+// WEBHOOK (только статус)
 // =============================
 export const paypalWebhook = async (req, res) => {
   try {
-    const event = req.body;
+    console.log("📩 WEBHOOK HIT");
+
+    const rawBody = req.body.toString("utf8");
+    const event = JSON.parse(rawBody);
+
     const accessToken = await getAccessToken();
 
     const verifyResponse = await axios.post(
@@ -186,6 +206,8 @@ export const paypalWebhook = async (req, res) => {
       }
     );
 
+    console.log("🔐 Verification status:", verifyResponse.data.verification_status);
+
     if (verifyResponse.data.verification_status !== "SUCCESS") {
       return res.status(400).send("Invalid signature");
     }
@@ -204,7 +226,6 @@ export const paypalWebhook = async (req, res) => {
 
       const dbOrder = await Order.findByPk(payment.OrderId);
 
-      // Webhook не должен ломать систему
       if (canTransition(dbOrder.status, "paid")) {
         dbOrder.status = "paid";
         await dbOrder.save();
@@ -212,13 +233,12 @@ export const paypalWebhook = async (req, res) => {
         payment.status = "completed";
         await payment.save();
       }
-
-      // если переход невозможен — просто игнорируем
     }
 
     res.status(200).send("Webhook processed");
 
   } catch (error) {
+    console.error("❌ WEBHOOK ERROR:", error.message);
     res.status(500).send("Webhook error");
   }
 };
