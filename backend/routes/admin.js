@@ -113,4 +113,38 @@ router.put("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
 
   res.json(order);
 });
+
+/* =========================
+   👥 ПОЛУЧИТЬ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
+========================= */
+router.get("/users", authenticateToken, isAdmin, async (req, res) => {
+  const users = await User.findAll({
+    attributes: ["id", "username", "email", "role", "createdAt"]
+  });
+
+  res.json(users);
+});
+
+/* =========================
+   🔎 НАЙТИ ПОЛЬЗОВАТЕЛЯ ПО EMAIL
+========================= */
+router.get("/users/search", authenticateToken, isAdmin, async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email query is required" });
+  }
+
+  const user = await User.findOne({
+    where: { email },
+    attributes: ["id", "username", "email", "role", "createdAt"]
+  });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.json(user);
+});
+
 export default router;
