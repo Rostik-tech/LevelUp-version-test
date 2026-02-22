@@ -1,7 +1,7 @@
 // controllers/paymentController.js
 import axios from "axios";
 import dotenv from "dotenv";
-import { Order, Payment, OrderItem, Product } from "../models/index.js";
+import { sequelize, Order, Payment, OrderItem, Product } from "../models/index.js";
 import { canTransition } from "../utils/orderStatus.js";
 import { sendOrderNotification } from "../utils/emailService.js";
 
@@ -12,6 +12,9 @@ const PAYPAL_BASE =
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
+// =====================================
+// GET PAYPAL ACCESS TOKEN
+// =====================================
 const getAccessToken = async () => {
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
@@ -29,21 +32,30 @@ const getAccessToken = async () => {
   return response.data.access_token;
 };
 
-// =============================
+// =====================================
 // CREATE PAYPAL ORDER
-// =============================
+// =====================================
 export const createOrder = async (req, res) => {
+  const transaction = await sequelize.transaction();
+
   try {
     const { orderId } = req.body;
 
     if (!orderId) {
+      await transaction.rollback();
       return res.status(400).json({ message: "orderId обязателен" });
     }
 
-    const dbOrder = await Order.findByPk(orderId);
+    const dbOrder = await Order.findByPk(orderId, { transaction });
 
     if (!dbOrder) {
+      await transaction.rollback();
       return res.status(404).json({ message: "Заказ не найден" });
+    }
+
+    if (dbOrder.status !== "PENDING") {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Заказ уже обработан" });
     }
 
     const accessToken = await getAccessToken();
@@ -71,28 +83,36 @@ export const createOrder = async (req, res) => {
 
     const paypalOrderId = response.data.id;
 
-    await Payment.create({
-      OrderId: dbOrder.id,
-      UserId: dbOrder.UserId,
-      amount: dbOrder.totalPrice,
-      method: "paypal",
-      paypalOrderId,
-      status: "pending",
-    });
+    await Payment.create(
+      {
+        OrderId: dbOrder.id,
+        UserId: dbOrder.UserId,
+        amount: dbOrder.totalPrice,
+        method: "PAYPAL",
+        paypalOrderId,
+        status: "PENDING",
+      },
+      { transaction }
+    );
+
+    await transaction.commit();
 
     res.json(response.data);
 
   } catch (error) {
+    await transaction.rollback();
     res.status(500).json({
       error: error.response?.data || error.message,
     });
   }
 };
 
-// =============================
+// =====================================
 // CAPTURE + EMAIL
-// =============================
+// =====================================
 export const captureOrder = async (req, res) => {
+  const transaction = await sequelize.transaction();
+
   try {
     const { id } = req.params;
 
@@ -119,43 +139,49 @@ export const captureOrder = async (req, res) => {
     );
 
     if (verifyResponse.data.status !== "COMPLETED") {
+      await transaction.rollback();
       return res.status(400).json({ message: "Оплата не подтверждена" });
     }
 
     const payment = await Payment.findOne({
       where: { paypalOrderId: id },
+      transaction,
     });
 
     if (!payment) {
+      await transaction.rollback();
       return res.status(404).json({ message: "Payment не найден" });
     }
 
-    const dbOrder = await Order.findByPk(payment.OrderId);
+    const dbOrder = await Order.findByPk(payment.OrderId, { transaction });
 
-    // Если уже оплачено — просто возвращаем успех
-    if (dbOrder.status === "paid") {
+    if (dbOrder.status === "PAID") {
+      await transaction.commit();
       return res.json({ message: "Уже оплачено" });
     }
 
-    if (!canTransition(dbOrder.status, "paid")) {
+    if (!canTransition(dbOrder.status, "PAID")) {
+      await transaction.rollback();
       return res.status(400).json({
-        message: `Недопустимый переход статуса: ${dbOrder.status} → paid`,
+        message: `Недопустимый переход статуса: ${dbOrder.status} → PAID`,
       });
     }
 
-    dbOrder.status = "paid";
-    await dbOrder.save();
+    dbOrder.status = "PAID";
+    await dbOrder.save({ transaction });
 
-    payment.status = "completed";
-    await payment.save();
+    payment.status = "COMPLETED";
+    await payment.save({ transaction });
 
-    // 🔥 Отправляем email прямо здесь
-    const items = await OrderItem.findAll({
-      where: { OrderId: dbOrder.id },
-      include: [Product],
-    });
+    await transaction.commit();
 
+    // 📧 EMAIL
     try {
+      const items = await OrderItem.findAll({
+        where: { OrderId: dbOrder.id },
+        include: [Product],
+      });
+
       await sendOrderNotification(dbOrder, payment, items);
       console.log("📧 Email notification sent");
     } catch (err) {
@@ -169,19 +195,18 @@ export const captureOrder = async (req, res) => {
     });
 
   } catch (error) {
+    await transaction.rollback();
     res.status(500).json({
       error: error.response?.data || error.message,
     });
   }
 };
 
-// =============================
-// WEBHOOK (только статус)
-// =============================
+// =====================================
+// WEBHOOK
+// =====================================
 export const paypalWebhook = async (req, res) => {
   try {
-    console.log("📩 WEBHOOK HIT");
-
     const rawBody = req.body.toString("utf8");
     const event = JSON.parse(rawBody);
 
@@ -206,8 +231,6 @@ export const paypalWebhook = async (req, res) => {
       }
     );
 
-    console.log("🔐 Verification status:", verifyResponse.data.verification_status);
-
     if (verifyResponse.data.verification_status !== "SUCCESS") {
       return res.status(400).send("Invalid signature");
     }
@@ -220,17 +243,15 @@ export const paypalWebhook = async (req, res) => {
         where: { paypalOrderId },
       });
 
-      if (!payment) {
-        return res.status(200).send("Payment not found");
-      }
+      if (!payment) return res.status(200).send("Payment not found");
 
       const dbOrder = await Order.findByPk(payment.OrderId);
 
-      if (canTransition(dbOrder.status, "paid")) {
-        dbOrder.status = "paid";
+      if (canTransition(dbOrder.status, "PAID")) {
+        dbOrder.status = "PAID";
         await dbOrder.save();
 
-        payment.status = "completed";
+        payment.status = "COMPLETED";
         await payment.save();
       }
     }

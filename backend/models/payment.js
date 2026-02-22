@@ -6,22 +6,34 @@ export default (sequelize) => {
     "Payment",
     {
       amount: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
+
       method: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+
       paypalOrderId: {
         type: DataTypes.STRING,
-        allowNull: true, // временно true, чтобы ничего не сломать
+        allowNull: true,
       },
+
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(
+          "pending",
+          "completed",
+          "failed"
+        ),
+        allowNull: false,
         defaultValue: "pending",
       },
     },
-    { timestamps: true }
+    {
+      tableName: "Payments",   // 🔥 ВАЖНО
+      freezeTableName: true,   // 🔥 Не создавать payments
+      timestamps: true,
+    }
   );
 };

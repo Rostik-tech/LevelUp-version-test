@@ -15,42 +15,68 @@
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <a href="index.html" class="logo"><img src="images/logo.svg" alt="Level Up" class="logo-img"></a>
+                <a href="index.html" class="logo">
+                    <img src="images/logo.svg" alt="Level Up" class="logo-img">
+                </a>
+
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html" class="nav-link">ГЛАВНАЯ</a></li>
                     <li><a href="shop.html" class="nav-link">МАГАЗИН</a></li>
                     <li><a href="about.html" class="nav-link">О НАС</a></li>
                     <li><a href="contact.html" class="nav-link">КОНТАКТЫ</a></li>
                 </ul>
+
                 <div class="nav-actions">
                     <div class="auth-buttons" id="authButtons">
                         <a href="register.html" class="btn btn-primary">Регистрация</a>
                         <a href="login.html" class="btn btn-primary">Вход</a>
                     </div>
+
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
-                        <button class="btn btn-profile" id="profileBtn"><i class="fas fa-user"></i><span>Профиль</span></button>
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span>Профиль</span>
+                        </button>
                         <div class="dropdown-menu" id="dropdownMenu">
-                            <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>Мой профиль</span></a>
-                            <a href="orders.html" class="dropdown-item"><i class="fas fa-box"></i><span>Мои заказы</span></a>
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i><span>Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i><span>Мои заказы</span>
+                            </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></a>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i><span>Выйти</span>
+                            </a>
                         </div>
                     </div>
+
                     <div class="switcher language-switcher">
-                        <button class="switcher-btn" id="langBtn"><i class="fas fa-globe"></i><span id="currentLang">RU</span></button>
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
                             <button class="switcher-option" data-lang="en">EN</button>
                         </div>
                     </div>
+
                     <div class="switcher currency-switcher">
-                        <button class="switcher-btn" id="currencyBtn"><i class="fas fa-dollar-sign"></i><span id="currentCurrency">USD</span></button>
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
                         <div class="switcher-menu" id="currencyMenu">
                             <button class="switcher-option" data-currency="usd">USD</button>
                             <button class="switcher-option" data-currency="eur">EUR</button>
                         </div>
                     </div>
-                    <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i><span class="cart-count" id="cartCount">0</span></a>
+
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
                 </div>
             </nav>
         </div>
@@ -58,7 +84,9 @@
 
     <section class="page-header">
         <div class="container">
-            <h1 class="page-title"><span class="gradient-text">Мои Заказы</span></h1>
+            <h1 class="page-title">
+                <span class="gradient-text">Мои Заказы</span>
+            </h1>
             <p class="page-subtitle">История ваших покупок</p>
         </div>
     </section>
@@ -81,7 +109,18 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/orders.js"></script>
+
+    <!-- 🔐 JWT Protection -->
+    <script>
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+    </script>
+
 </body>
 </html>

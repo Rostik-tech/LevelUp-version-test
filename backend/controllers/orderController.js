@@ -1,58 +1,137 @@
-// controllers/orderController.js
-const Order = require('../models/order');
-const OrderItem = require('../models/orderItem');
-const Product = require('../models/product');
+// backend/controllers/orderController.js
+import { sequelize } from "../models/index.js";
+import { Order, OrderItem, Product } from "../models/index.js";
 
-// Создать заказ
-exports.createOrder = async (req, res) => {
-    try {
-        const { user_id, items } = req.body; // items = [{ product_id, quantity }]
-        let total = 0;
+// ======================
+// СОЗДАТЬ ЗАКАЗ
+// ======================
+export const createOrder = async (req, res) => {
+  const transaction = await sequelize.transaction();
 
-        // Считаем total
-        for (let item of items) {
-            const product = await Product.findByPk(item.product_id);
-            if (!product) return res.status(404).json({ message: 'Товар не найден' });
-            total += product.price * item.quantity;
-        }
+  try {
+    const { items, shipping } = req.body;
 
-        // Создаем заказ
-        const order = await Order.create({ user_id, total });
-
-        // Создаем order_items
-        for (let item of items) {
-            const product = await Product.findByPk(item.product_id);
-            await OrderItem.create({
-                order_id: order.id,
-                product_id: product.id,
-                quantity: item.quantity,
-                price: product.price
-            });
-        }
-
-        res.json({ message: 'Заказ создан', order });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    if (!items || items.length === 0) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Корзина пуста" });
     }
+
+    let totalPrice = 0;
+
+    // Проверяем товары и считаем сумму
+    for (const item of items) {
+      const product = await Product.findByPk(item.productId);
+
+      if (!product) {
+        await transaction.rollback();
+        return res.status(404).json({ message: "Товар не найден" });
+      }
+
+      if (product.stock < item.quantity) {
+        await transaction.rollback();
+        return res.status(400).json({ message: "Недостаточно товара на складе" });
+      }
+
+      totalPrice += product.price * item.quantity;
+    }
+
+    // Создаем заказ
+    const order = await Order.create(
+      {
+        UserId: req.user.id, // 🔥 берем из JWT
+        totalPrice,
+        status: "PENDING",
+
+        shippingFullName: shipping?.fullName,
+        shippingPhone: shipping?.phone,
+        shippingCountry: shipping?.country,
+        shippingCity: shipping?.city,
+        shippingAddress: shipping?.address,
+        shippingPostalCode: shipping?.postalCode,
+        shippingApartment: shipping?.apartment,
+      },
+      { transaction }
+    );
+
+    // Создаем позиции заказа
+    for (const item of items) {
+      const product = await Product.findByPk(item.productId);
+
+      await OrderItem.create(
+        {
+          OrderId: order.id,
+          ProductId: product.id,
+          quantity: item.quantity,
+          price: product.price,
+        },
+        { transaction }
+      );
+
+      // уменьшаем stock
+      product.stock -= item.quantity;
+      await product.save({ transaction });
+    }
+
+    await transaction.commit();
+
+    res.status(201).json({
+      message: "Заказ создан",
+      order,
+    });
+  } catch (error) {
+    await transaction.rollback();
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// Получить все заказы
-exports.getOrders = async (req, res) => {
-    try {
-        const orders = await Order.findAll();
-        res.json(orders);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+// ======================
+// ПОЛУЧИТЬ ВСЕ ЗАКАЗЫ (админ)
+// ======================
+export const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      include: [OrderItem],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// Получить заказ по ID
-exports.getOrderById = async (req, res) => {
-    try {
-        const order = await Order.findByPk(req.params.id);
-        if (!order) return res.status(404).json({ message: 'Заказ не найден' });
-        res.json(order);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+// ======================
+// ПОЛУЧИТЬ МОИ ЗАКАЗЫ
+// ======================
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      where: { UserId: req.user.id },
+      include: [OrderItem],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ======================
+// ПОЛУЧИТЬ ЗАКАЗ ПО ID
+// ======================
+export const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.id, {
+      include: [OrderItem],
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: "Заказ не найден" });
     }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

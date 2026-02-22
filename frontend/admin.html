@@ -63,20 +63,14 @@
     </div>
 </section>
 
-<!-- 🔐 Защита через JWT -->
-<script type="module">
-import { requireAuth, getUserFromToken, logout } from "./js/auth.js";
+<script src="js/main.js"></script>
 
-requireAuth();
+<script>
+requireAdmin();
 
-const user = getUserFromToken();
-
-if (!user || user.role !== "admin") {
-    alert("Доступ запрещён. Только для администратора.");
-    window.location.href = "index.html";
-}
-
-document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    logout();
+});
 </script>
 
 </body>

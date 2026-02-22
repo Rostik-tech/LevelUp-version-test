@@ -14,7 +14,6 @@
 
 <div class="stars-background"></div>
 
-<!-- Header -->
 <header class="header">
     <div class="container">
         <nav class="navbar">
@@ -31,13 +30,11 @@
 
             <div class="nav-actions">
 
-                <!-- Login/Register -->
                 <div id="authButtons">
                     <a href="register.html" class="btn btn-primary">Регистрация</a>
                     <a href="login.html" class="btn btn-primary">Вход</a>
                 </div>
 
-                <!-- Profile -->
                 <div id="profileDropdown" style="display:none;">
                     <button class="btn btn-profile">
                         <i class="fas fa-user"></i> Профиль
@@ -58,7 +55,6 @@
     </div>
 </header>
 
-<!-- Page Header -->
 <section class="page-header">
     <div class="container">
         <h1 class="page-title">
@@ -67,12 +63,10 @@
     </div>
 </section>
 
-<!-- Checkout -->
 <section class="checkout-section">
     <div class="container">
         <div class="checkout-layout">
 
-            <!-- Form -->
             <div class="checkout-form-wrapper">
                 <form class="checkout-form" id="checkoutForm">
 
@@ -90,7 +84,6 @@
                 </form>
             </div>
 
-            <!-- Summary -->
             <div class="order-summary">
                 <h2>Сводка заказа</h2>
 
@@ -125,33 +118,11 @@
     </div>
 </footer>
 
-<!-- Scripts -->
 <script src="js/main.js"></script>
-<script type="module" src="js/checkout.js"></script>
+<script src="js/checkout.js"></script>
 
-<!-- 🔐 AUTH CONTROL -->
-<script type="module">
-import { getToken, requireAuth, logout } from "./js/auth.js";
-
-/* Защита страницы */
-requireAuth();
-
-/* Navbar управление */
-const token = getToken();
-
-const authButtons = document.getElementById("authButtons");
-const profileDropdown = document.getElementById("profileDropdown");
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (token) {
-    if (authButtons) authButtons.style.display = "none";
-    if (profileDropdown) profileDropdown.style.display = "block";
-
-    logoutBtn?.addEventListener("click", (e) => {
-        e.preventDefault();
-        logout();
-    });
-}
+<script>
+requireUser();
 </script>
 
 </body>

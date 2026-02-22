@@ -157,6 +157,14 @@
     </footer>
 
     <script src="js/main.js"></script>
-    <script src="js/profile.js"></script>
+<script src="js/profile.js"></script>
+
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    window.location.href = "login.html";
+}
+</script>>
 </body>
 </html>

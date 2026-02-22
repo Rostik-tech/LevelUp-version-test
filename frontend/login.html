@@ -47,7 +47,11 @@
     </div>
 </div>
 
+<script src="js/main.js"></script>
+
 <script>
+requireGuest();
+
 function togglePassword(id) {
     const input = document.getElementById(id);
     input.type = input.type === "password" ? "text" : "password";
@@ -63,9 +67,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     try {
         const response = await fetch("http://localhost:5000/api/auth/login", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
 
@@ -77,7 +79,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             return;
         }
 
-        // 🔥 Сохраняем JWT
+        // Сохраняем JWT
         localStorage.setItem("token", data.token);
 
         formMessage.className = "form-message success";
@@ -85,9 +87,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         setTimeout(() => {
             window.location.href = "index.html";
-        }, 1000);
+        }, 800);
 
-    } catch (error) {
+    } catch {
         formMessage.className = "form-message error";
         formMessage.textContent = "Ошибка соединения с сервером";
     }

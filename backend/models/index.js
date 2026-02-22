@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// ======================
+// SEQUELIZE INIT
+// ======================
+
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -15,14 +19,20 @@ export const sequelize = new Sequelize(
   }
 );
 
-// Импорт моделей
+// ======================
+// IMPORT MODELS
+// ======================
+
 import UserModel from "./user.js";
 import ProductModel from "./product.js";
 import OrderModel from "./order.js";
 import OrderItemModel from "./orderItem.js";
 import PaymentModel from "./payment.js";
 
-// Инициализация моделей
+// ======================
+// INIT MODELS
+// ======================
+
 export const User = UserModel(sequelize);
 export const Product = ProductModel(sequelize);
 export const Order = OrderModel(sequelize);
@@ -30,27 +40,51 @@ export const OrderItem = OrderItemModel(sequelize);
 export const Payment = PaymentModel(sequelize);
 
 // ======================
-// СВЯЗИ
+// RELATIONS (EXPLICIT FOREIGN KEYS)
 // ======================
 
-// User → Order
-User.hasMany(Order, { onDelete: "CASCADE" });
-Order.belongsTo(User);
+// User → Orders
+User.hasMany(Order, {
+  foreignKey: "UserId",
+  onDelete: "CASCADE",
+});
+Order.belongsTo(User, {
+  foreignKey: "UserId",
+});
 
-// Order → OrderItem
-Order.hasMany(OrderItem, { onDelete: "CASCADE" });
-OrderItem.belongsTo(Order);
+// Order → OrderItems
+Order.hasMany(OrderItem, {
+  foreignKey: "OrderId",
+  onDelete: "CASCADE",
+});
+OrderItem.belongsTo(Order, {
+  foreignKey: "OrderId",
+});
 
-// Product → OrderItem
-Product.hasMany(OrderItem);
-OrderItem.belongsTo(Product);
+// Product → OrderItems
+Product.hasMany(OrderItem, {
+  foreignKey: "ProductId",
+});
+OrderItem.belongsTo(Product, {
+  foreignKey: "ProductId",
+});
 
-// User → Payment
-User.hasMany(Payment, { onDelete: "CASCADE" });
-Payment.belongsTo(User);
+// User → Payments
+User.hasMany(Payment, {
+  foreignKey: "UserId",
+  onDelete: "CASCADE",
+});
+Payment.belongsTo(User, {
+  foreignKey: "UserId",
+});
 
-// 🔥 Новая связь: Order → Payment
-Order.hasOne(Payment, { onDelete: "CASCADE" });
-Payment.belongsTo(Order);
+// Order → Payment (1:1)
+Order.hasOne(Payment, {
+  foreignKey: "OrderId",
+  onDelete: "CASCADE",
+});
+Payment.belongsTo(Order, {
+  foreignKey: "OrderId",
+});
 
 export default sequelize;
