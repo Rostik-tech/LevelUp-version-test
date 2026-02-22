@@ -1,4 +1,3 @@
-// controllers/paymentController.js
 import axios from "axios";
 import dotenv from "dotenv";
 import {
@@ -42,25 +41,20 @@ const getAccessToken = async () => {
 // CREATE PAYPAL ORDER
 // ==============================
 export const createOrder = async (req, res) => {
-  const transaction = await sequelize.transaction();
-
   try {
     const { orderId } = req.body;
 
     if (!orderId) {
-      await transaction.rollback();
       return res.status(400).json({ message: "orderId обязателен" });
     }
 
-    const dbOrder = await Order.findByPk(orderId, { transaction });
+    const dbOrder = await Order.findByPk(orderId);
 
     if (!dbOrder) {
-      await transaction.rollback();
       return res.status(404).json({ message: "Заказ не найден" });
     }
 
     if (dbOrder.status !== "PENDING") {
-      await transaction.rollback();
       return res.status(400).json({ message: "Заказ уже обработан" });
     }
 
@@ -89,24 +83,31 @@ export const createOrder = async (req, res) => {
 
     const paypalOrderId = response.data.id;
 
-    await Payment.create(
-      {
-        OrderId: dbOrder.id,
-        UserId: dbOrder.UserId,
-        amount: dbOrder.totalPrice,
-        method: "PAYPAL",
-        paypalOrderId,
-        status: "PENDING",
-      },
-      { transaction }
-    );
+    // Короткая транзакция только на запись
+    const transaction = await sequelize.transaction();
 
-    await transaction.commit();
+    try {
+      await Payment.create(
+        {
+          OrderId: dbOrder.id,
+          UserId: dbOrder.UserId,
+          amount: dbOrder.totalPrice,
+          method: "PAYPAL",
+          paypalOrderId,
+          status: "PENDING",
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+    } catch (err) {
+      await transaction.rollback();
+      throw err;
+    }
 
     res.json(response.data);
 
   } catch (error) {
-    await transaction.rollback();
     res.status(500).json({
       error: error.response?.data || error.message,
     });
@@ -147,9 +148,11 @@ export const captureOrder = async (req, res) => {
       return res.status(400).json({ message: "Оплата не подтверждена" });
     }
 
+    // 🔒 Блокируем Payment
     const payment = await Payment.findOne({
       where: { paypalOrderId: id },
       transaction,
+      lock: transaction.LOCK.UPDATE,
     });
 
     if (!payment) {
@@ -157,17 +160,22 @@ export const captureOrder = async (req, res) => {
       return res.status(404).json({ message: "Payment не найден" });
     }
 
-    const dbOrder = await Order.findByPk(payment.OrderId, { transaction });
-
-    if (dbOrder.status === "PAID") {
+    // Если уже завершён — выходим безопасно
+    if (payment.status === "COMPLETED") {
       await transaction.commit();
       return res.json({ message: "Уже оплачено" });
     }
 
+    // 🔒 Блокируем Order
+    const dbOrder = await Order.findByPk(payment.OrderId, {
+      transaction,
+      lock: transaction.LOCK.UPDATE,
+    });
+
     if (!canTransition(dbOrder.status, "PAID")) {
       await transaction.rollback();
       return res.status(400).json({
-        message: `Недопустимый переход статуса`,
+        message: "Недопустимый переход статуса",
       });
     }
 
@@ -200,6 +208,7 @@ export const captureOrder = async (req, res) => {
 
     await transaction.commit();
 
+    // Email вне транзакции
     try {
       const fullItems = await OrderItem.findAll({
         where: { OrderId: dbOrder.id },
@@ -217,39 +226,36 @@ export const captureOrder = async (req, res) => {
     });
 
   } catch (error) {
-  await transaction.rollback();
+    await transaction.rollback();
 
-  // Если ошибка пришла от PayPal
-  if (error.response?.data?.name === "UNPROCESSABLE_ENTITY") {
-    const details = error.response.data.details?.[0];
+    if (error.response?.data?.name === "UNPROCESSABLE_ENTITY") {
+      const details = error.response.data.details?.[0];
 
-    if (details?.issue === "ORDER_ALREADY_CAPTURED") {
-      return res.status(200).json({
-        message: "Уже оплачено",
+      if (details?.issue === "ORDER_ALREADY_CAPTURED") {
+        return res.status(200).json({
+          message: "Уже оплачено",
+        });
+      }
+
+      return res.status(400).json({
+        message: "Ошибка бизнес-валидации PayPal",
+        details: error.response.data,
       });
     }
 
-    return res.status(400).json({
-      message: "Ошибка бизнес-валидации PayPal",
-      details: error.response.data,
+    if (error.response?.data) {
+      return res.status(400).json({
+        message: "Ошибка PayPal",
+        details: error.response.data,
+      });
+    }
+
+    console.error("CAPTURE ERROR:", error.message);
+
+    res.status(500).json({
+      message: "Внутренняя ошибка сервера",
     });
   }
-
-  // Любая другая PayPal ошибка
-  if (error.response?.data) {
-    return res.status(400).json({
-      message: "Ошибка PayPal",
-      details: error.response.data,
-    });
-  }
-
-  // Настоящая серверная ошибка
-  console.error("CAPTURE ERROR:", error.message);
-
-  res.status(500).json({
-    message: "Внутренняя ошибка сервера",
-  });
-}
 };
 
 // ==============================
