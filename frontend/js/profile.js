@@ -1,47 +1,98 @@
-// Profile Page Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-        window.location.href = 'login.html';
+// ========================================
+// Profile Page - Backend Connected Version
+// ========================================
+
+const API_BASE = "http://localhost:5000/api";
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
         return;
     }
-    
-    loadUserProfile();
-    loadUserStats();
-    
-    document.getElementById('profileForm')?.addEventListener('submit', handleProfileUpdate);
+
+    await loadUserProfile();
+    await loadUserStats();
+
+    document
+        .getElementById("profileForm")
+        ?.addEventListener("submit", handleProfileUpdate);
 });
 
-function loadUserProfile() {
-    const user = window.getCurrentUser ? window.getCurrentUser() : null;
-    
-    if (user) {
-        document.getElementById('profileName').textContent = user.fullName || 'Пользователь';
-        document.getElementById('profileEmail').textContent = user.email || 'user@example.com';
-        document.getElementById('fullNameInput').value = user.fullName || '';
-        document.getElementById('emailInput').value = user.email || '';
+// ========================================
+// Load Profile From Backend
+// ========================================
+async function loadUserProfile() {
+    try {
+        const response = await fetch(`${API_BASE}/users/me`, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки профиля");
+        }
+
+        const user = await response.json();
+
+        document.getElementById("profileName").textContent =
+            user.name || "Пользователь";
+
+        document.getElementById("profileEmail").textContent =
+            user.email || "user@example.com";
+
+        document.getElementById("profileName").textContent =
+    user.username || "Пользователь";
+
+document.getElementById("fullNameInput").value =
+    user.username || "";
+
+    } catch (error) {
+        console.error("PROFILE LOAD ERROR:", error.message);
     }
 }
 
-function loadUserStats() {
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    const totalOrders = orders.length;
-    const totalSpent = orders.reduce((sum, order) => sum + (order.total || 0), 0);
-    
-    document.getElementById('totalOrders').textContent = totalOrders;
-    document.getElementById('totalSpent').textContent = window.formatPrice ? window.formatPrice(totalSpent) : `$${totalSpent.toFixed(2)}`;
+// ========================================
+// Load Stats From Backend
+// ========================================
+async function loadUserStats() {
+    try {
+        const response = await fetch(`${API_BASE}/orders/my`, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+        });
+
+        if (!response.ok) return;
+
+        const orders = await response.json();
+
+        const totalOrders = orders.length;
+
+        const totalSpent = orders.reduce(
+            (sum, order) => sum + Number(order.totalPrice || 0),
+            0
+        );
+
+        document.getElementById("totalOrders").textContent = totalOrders;
+
+        document.getElementById("totalSpent").textContent =
+            "$" + totalSpent.toFixed(2);
+
+    } catch (error) {
+        console.error("STATS LOAD ERROR:", error.message);
+    }
 }
 
-function handleProfileUpdate(e) {
+// ========================================
+// Profile Update (Disabled Until API Ready)
+// ========================================
+async function handleProfileUpdate(e) {
     e.preventDefault();
-    
-    const user = window.getCurrentUser ? window.getCurrentUser() : {};
-    user.fullName = document.getElementById('fullNameInput').value;
-    user.email = document.getElementById('emailInput').value;
-    
-    localStorage.setItem('user', JSON.stringify(user));
-    
-    alert('Профиль успешно обновлен!');
-    loadUserProfile();
+
+    alert(
+        "Редактирование профиля будет доступно после реализации backend endpoint."
+    );
 }

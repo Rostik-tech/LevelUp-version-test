@@ -304,7 +304,9 @@ function requireUser() {
 
 function requireAdmin() {
     const payload = getTokenPayload();
-    if (!payload || payload.role !== 'admin') {
+    const role = payload?.role?.toString().trim().toUpperCase();
+
+    if (!role || role !== 'ADMIN') {
         window.location.href = 'index.html';
     }
 }
