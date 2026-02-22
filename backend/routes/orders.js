@@ -25,7 +25,6 @@ router.post("/", authenticateToken, async (req, res) => {
       shippingApartment,
     } = req.body;
 
-    // ===== ВАЛИДАЦИЯ =====
     if (!items || !Array.isArray(items) || items.length === 0) {
       await transaction.rollback();
       return res.status(400).json({ message: "Корзина пуста" });
@@ -47,7 +46,7 @@ router.post("/", authenticateToken, async (req, res) => {
 
     let totalPrice = 0;
 
-    // ===== ПРОВЕРКА ТОВАРОВ =====
+    // Проверяем товары
     for (const item of items) {
       const product = await Product.findByPk(item.productId);
 
@@ -66,7 +65,7 @@ router.post("/", authenticateToken, async (req, res) => {
       totalPrice += product.price * item.quantity;
     }
 
-    // ===== СОЗДАЕМ ЗАКАЗ =====
+    // Создаем заказ (stock НЕ трогаем)
     const order = await Order.create(
       {
         UserId: userId,
@@ -84,7 +83,7 @@ router.post("/", authenticateToken, async (req, res) => {
       { transaction }
     );
 
-    // ===== СОЗДАЕМ ПОЗИЦИИ =====
+    // Создаем позиции
     for (const item of items) {
       const product = await Product.findByPk(item.productId);
 
@@ -97,10 +96,6 @@ router.post("/", authenticateToken, async (req, res) => {
         },
         { transaction }
       );
-
-      // уменьшаем stock
-      product.stock -= item.quantity;
-      await product.save({ transaction });
     }
 
     await transaction.commit();
@@ -109,6 +104,7 @@ router.post("/", authenticateToken, async (req, res) => {
       message: "Заказ успешно создан",
       order,
     });
+
   } catch (err) {
     await transaction.rollback();
     res.status(500).json({ message: err.message });

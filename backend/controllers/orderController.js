@@ -35,10 +35,10 @@ export const createOrder = async (req, res) => {
       totalPrice += product.price * item.quantity;
     }
 
-    // Создаем заказ
+    // Создаем заказ (PENDING)
     const order = await Order.create(
       {
-        UserId: req.user.id, // 🔥 берем из JWT
+        UserId: req.user.id,
         totalPrice,
         status: "PENDING",
 
@@ -66,10 +66,6 @@ export const createOrder = async (req, res) => {
         },
         { transaction }
       );
-
-      // уменьшаем stock
-      product.stock -= item.quantity;
-      await product.save({ transaction });
     }
 
     await transaction.commit();

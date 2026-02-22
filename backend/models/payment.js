@@ -22,17 +22,17 @@ export default (sequelize) => {
 
       status: {
         type: DataTypes.ENUM(
-          "pending",
-          "completed",
-          "failed"
+          "PENDING",
+          "COMPLETED",
+          "FAILED"
         ),
         allowNull: false,
-        defaultValue: "pending",
+        defaultValue: "PENDING",
       },
     },
     {
-      tableName: "Payments",   // 🔥 ВАЖНО
-      freezeTableName: true,   // 🔥 Не создавать payments
+      tableName: "Payments",
+      freezeTableName: true,
       timestamps: true,
     }
   );
