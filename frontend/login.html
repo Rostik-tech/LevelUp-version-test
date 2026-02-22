@@ -2,133 +2,97 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Level Up Gaming</title>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/forms.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="stars-background" id="starsBackground"></div>
 
-    <!-- Auth Page -->
-    <div class="auth-page">
-        <div class="auth-container">
-            <form class="form-card" id="loginForm">
-                <h1 class="form-title" data-en="Welcome Back" data-ru="С Возвращением">С Возвращением</h1>
-                
-                <div id="formMessage"></div>
+<div class="auth-page">
+    <div class="auth-container">
 
-                <div class="form-group">
-                    <label class="form-label" data-en="Email or Username" data-ru="Email или Имя пользователя">Email или Имя пользователя</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" class="form-input" id="emailOrUsername" placeholder="ivan@example.com" required>
-                    </div>
+        <form class="form-card" id="loginForm">
+            <h1 class="form-title">С Возвращением</h1>
+
+            <div id="formMessage"></div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="email" class="form-input" id="email" required>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label" data-en="Password" data-ru="Пароль">Пароль</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" class="form-input" id="password" placeholder="••••••••" required>
-                        <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
-                    </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="form-input" id="password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
                 </div>
+            </div>
 
-                <div class="form-checkbox-group">
-                    <input type="checkbox" class="form-checkbox" id="remember">
-                    <label class="form-checkbox-label" for="remember">
-                        <span data-en="Remember me" data-ru="Запомнить меня">Запомнить меня</span>
-                    </label>
-                </div>
+            <button type="submit" class="btn btn-primary btn-large btn-block">
+                Войти
+            </button>
 
-                <button type="submit" class="btn btn-primary btn-large btn-block">
-                    <span data-en="Sign In" data-ru="Войти">Войти</span>
-                </button>
+            <div class="form-footer">
+                Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+            </div>
+        </form>
 
-                <div class="form-footer" style="margin-top: var(--spacing-md);">
-                    <a href="#" data-en="Forgot Password?" data-ru="Забыли пароль?">Забыли пароль?</a>
-                </div>
-
-                <div class="form-divider">
-                    <span data-en="OR" data-ru="ИЛИ">ИЛИ</span>
-                </div>
-
-                <div class="social-login-buttons">
-                    <button type="button" class="btn-social">
-                        <i class="fab fa-google"></i>
-                        <span data-en="Continue with Google" data-ru="Продолжить с Google">Продолжить с Google</span>
-                    </button>
-                    <button type="button" class="btn-social">
-                        <i class="fab fa-discord"></i>
-                        <span data-en="Continue with Discord" data-ru="Продолжить с Discord">Продолжить с Discord</span>
-                    </button>
-                </div>
-
-                <div class="form-footer">
-                    <span data-en="Don't have an account?" data-ru="Нет аккаунта?">Нет аккаунта?</span>
-                    <a href="register.html" data-en="Sign Up" data-ru="Зарегистрироваться">Зарегистрироваться</a>
-                </div>
-
-                <div class="form-footer" style="margin-top: var(--spacing-md);">
-                    <a href="index.html" data-en="Back to Home" data-ru="Вернуться на Главную">Вернуться на Главную</a>
-                </div>
-            </form>
-        </div>
     </div>
+</div>
 
-    <script src="js/main.js"></script>
-    <script>
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = input.parentElement.querySelector('.password-toggle');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+<script>
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formMessage = document.getElementById("formMessage");
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            formMessage.className = "form-message error";
+            formMessage.textContent = data.message || "Ошибка входа";
+            return;
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formMessage = document.getElementById('formMessage');
-            const emailOrUsername = document.getElementById('emailOrUsername').value;
-            const password = document.getElementById('password').value;
-            
-            // Simple validation (in real app, this would be server-side)
-            if (password.length < 6) {
-                formMessage.className = 'form-message error';
-                formMessage.textContent = 'Неверный пароль!';
-                return;
-            }
-            
-            // Create user object (in real app, this would come from server)
-            const userData = {
-                fullName: 'Test User',
-                email: emailOrUsername.includes('@') ? emailOrUsername : emailOrUsername + '@example.com',
-                username: emailOrUsername.includes('@') ? emailOrUsername.split('@')[0] : emailOrUsername,
-                loginAt: new Date().toISOString()
-            };
-            
-            // Success - save user and redirect
-            formMessage.className = 'form-message success';
-            formMessage.textContent = 'Вход выполнен успешно! Перенаправление...';
-            
-            setTimeout(() => {
-                window.login(userData);
-            }, 1500);
-        });
-    </script>
+        // 🔥 Сохраняем JWT
+        localStorage.setItem("token", data.token);
+
+        formMessage.className = "form-message success";
+        formMessage.textContent = "Вход выполнен успешно!";
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
+
+    } catch (error) {
+        formMessage.className = "form-message error";
+        formMessage.textContent = "Ошибка соединения с сервером";
+    }
+});
+</script>
+
 </body>
 </html>

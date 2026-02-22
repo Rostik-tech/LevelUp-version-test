@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -16,33 +15,61 @@ import { isAdmin } from "./middleware/adminMiddleware.js";
 
 const app = express();
 
-app.use(cors());
+/* =====================
+   CORS
+===================== */
+app.use(cors({
+  origin: [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500"
+  ],
+  credentials: true
+}));
 
-// 🔥 ВАЖНО: Webhook должен получать RAW body
+/* =====================
+   RAW body для Webhook
+===================== */
 app.use(
   "/api/payments/webhook",
   express.raw({ type: "application/json" })
 );
 
-// 🔥 Остальные роуты получают обычный JSON
+/* =====================
+   JSON parser
+===================== */
 app.use(express.json());
 
-// =====================
-// Роуты
-// =====================
+/* =====================
+   Роуты
+===================== */
 app.use("/api/auth", authRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/admin", adminRouter);
 
-app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
-  res.json({ message: "Admin access granted" });
+/* =====================
+   ТЕСТЫ АВТОРИЗАЦИИ
+===================== */
+
+// Проверка обычного пользователя
+app.get("/api/test-auth", authenticateToken, (req, res) => {
+  res.json({
+    message: "Auth works",
+    user: req.user
+  });
 });
 
-// =====================
-// Запуск сервера
-// =====================
+// Проверка админа
+app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
+  res.json({
+    message: "Admin access granted"
+  });
+});
+
+/* =====================
+   Запуск сервера
+===================== */
 const PORT = process.env.PORT || 5000;
 
 sequelize.sync({ alter: true })
