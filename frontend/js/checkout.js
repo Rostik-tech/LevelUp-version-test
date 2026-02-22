@@ -1,5 +1,7 @@
 import { getToken } from "./auth.js";
 
+const API_BASE = "http://localhost:5000/api";
+
 document.addEventListener("DOMContentLoaded", () => {
     const token = getToken();
 
@@ -9,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const cart = window.cart;
+
     if (!cart || cart.items.length === 0) {
         showEmptyCheckout();
         return;
@@ -50,47 +53,79 @@ async function handleCheckout(e) {
     e.preventDefault();
 
     const cart = window.cart;
+    const token = getToken();
 
     const shippingData = {
-        fullName: document.getElementById("fullName").value,
-        phone: document.getElementById("phone").value,
-        country: document.getElementById("country").value,
-        city: document.getElementById("city").value,
-        address: document.getElementById("address").value,
-        postalCode: document.getElementById("postalCode").value,
-        apartment: document.getElementById("apartment").value,
-        orderNotes: document.getElementById("orderNotes").value
+        shippingFullName: document.getElementById("fullName").value,
+        shippingPhone: document.getElementById("phone").value,
+        shippingCountry: document.getElementById("country").value,
+        shippingCity: document.getElementById("city").value,
+        shippingAddress: document.getElementById("address").value,
+        shippingPostalCode: document.getElementById("postalCode").value,
+        shippingApartment: document.getElementById("apartment").value
     };
 
     try {
-        const response = await fetch("http://localhost:5000/api/orders", {
+        // 1️⃣ Создаём Order в нашей БД
+        const orderResponse = await fetch(`${API_BASE}/orders`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + getToken()
+                "Authorization": "Bearer " + token
             },
             body: JSON.stringify({
-                items: cart.items,
-                shippingAddress: shippingData
+                items: cart.items.map(item => ({
+                    productId: item.id,
+                    quantity: item.quantity
+                })),
+                ...shippingData
             })
         });
 
-        const data = await response.json();
+        const orderData = await orderResponse.json();
 
-        if (!response.ok) {
-            alert(data.message || "Ошибка создания заказа");
+        if (!orderResponse.ok) {
+            alert(orderData.message || "Ошибка создания заказа");
             return;
         }
 
-        // Сохраняем ID заказа для PayPal
-        localStorage.setItem("currentOrderId", data.id);
+        const orderId = orderData.order.id;
 
-        alert("Заказ создан. Переход к оплате...");
+        // 2️⃣ Создаём PayPal order
+        const paymentResponse = await fetch(`${API_BASE}/payments/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ orderId })
+        });
 
-        // Здесь позже будет PayPal create
-        window.location.reload();
+        const paymentData = await paymentResponse.json();
+
+        if (!paymentResponse.ok) {
+            alert(paymentData.message || "Ошибка создания PayPal заказа");
+            return;
+        }
+
+        // 3️⃣ Находим approval link
+        const approvalLink = paymentData.links.find(
+            link => link.rel === "approve"
+        )?.href;
+
+        if (!approvalLink) {
+            alert("Не удалось получить ссылку оплаты");
+            return;
+        }
+
+        // 4️⃣ Сохраняем orderId для capture после возврата
+        localStorage.setItem("currentOrderId", orderId);
+
+        // 5️⃣ Redirect на PayPal
+        window.location.href = approvalLink;
 
     } catch (err) {
+        console.error(err);
         alert("Ошибка соединения с сервером");
     }
 }

@@ -1,20 +1,20 @@
-// routes/payments.js
 import express from "express";
 import {
   createOrder,
   captureOrder,
   paypalWebhook
 } from "../controllers/paymentController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Создание заказа PayPal
-router.post("/create", createOrder);
+// Создание PayPal order (только авторизованный пользователь)
+router.post("/create", authenticateToken, createOrder);
 
-// Подтверждение оплаты
-router.post("/capture/:id", captureOrder);
+// Capture (только авторизованный пользователь)
+router.post("/capture/:id", authenticateToken, captureOrder);
 
-// 🔥 Webhook от PayPal
+// Webhook от PayPal (без JWT!)
 router.post("/webhook", paypalWebhook);
 
 export default router;

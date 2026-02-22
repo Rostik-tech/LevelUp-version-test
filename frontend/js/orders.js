@@ -1,47 +1,70 @@
-// Orders Page Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-        window.location.href = 'login.html';
+import { getToken } from "./auth.js";
+
+const API_BASE = "http://localhost:5000/api";
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = getToken();
+
+    if (!token) {
+        window.location.href = "login.html";
         return;
     }
-    
-    displayOrders();
+
+    await loadOrders();
 });
 
-function displayOrders() {
-    const ordersList = document.getElementById('ordersList');
+async function loadOrders() {
+    const ordersList = document.getElementById("ordersList");
     if (!ordersList) return;
-    
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    const lang = window.currentLanguage ? window.currentLanguage() : 'ru';
-    
-    if (orders.length === 0) {
-        ordersList.innerHTML = `
-            <div class="empty-cart">
-                <div class="empty-cart-icon"><i class="fas fa-box-open"></i></div>
-                <p class="empty-cart-text">У вас пока нет заказов</p>
-                <a href="shop.html" class="btn btn-primary">Начать покупки</a>
-            </div>
-        `;
-        return;
+
+    try {
+        const response = await fetch(`${API_BASE}/orders/my`, {
+            headers: {
+                "Authorization": "Bearer " + getToken()
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        const orders = await response.json();
+
+        if (!orders || orders.length === 0) {
+            renderEmpty(ordersList);
+            return;
+        }
+
+        renderOrders(ordersList, orders);
+
+    } catch (err) {
+        console.error(err);
+        ordersList.innerHTML = `<p>Ошибка загрузки заказов</p>`;
     }
-    
-    ordersList.innerHTML = orders.reverse().map(order => {
-        const date = new Date(order.date).toLocaleDateString('ru-RU');
-        const total = window.formatPrice ? window.formatPrice(order.total) : `$${order.total.toFixed(2)}`;
-        
-        const itemsHTML = order.items.map(item => {
-            const name = item.name?.[lang] || item.name?.ru || 'Product';
-            const price = window.formatPrice ? window.formatPrice(item.price * item.quantity) : `$${(item.price * item.quantity).toFixed(2)}`;
-            return `
-                <div class="order-item">
-                    <span>${name} x${item.quantity}</span>
-                    <span>${price}</span>
-                </div>
-            `;
-        }).join('');
-        
+}
+
+function renderEmpty(container) {
+    container.innerHTML = `
+        <div class="empty-cart">
+            <div class="empty-cart-icon"><i class="fas fa-box-open"></i></div>
+            <p class="empty-cart-text">У вас пока нет заказов</p>
+            <a href="shop.html" class="btn btn-primary">Начать покупки</a>
+        </div>
+    `;
+}
+
+function renderOrders(container, orders) {
+    container.innerHTML = orders.map(order => {
+        const date = new Date(order.createdAt).toLocaleDateString("ru-RU");
+
+        const itemsHTML = order.OrderItems.map(item => `
+            <div class="order-item">
+                <span>${item.Product?.name?.ru || "Product"} x${item.quantity}</span>
+                <span>$${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+        `).join("");
+
         return `
             <div class="order-card">
                 <div class="order-header">
@@ -50,15 +73,34 @@ function displayOrders() {
                         <div class="order-date">${date}</div>
                     </div>
                     <div class="order-status ${order.status}">
-                        ${order.status === 'pending' ? 'В обработке' : 'Завершен'}
+                        ${formatStatus(order.status)}
                     </div>
                 </div>
                 <div class="order-items">${itemsHTML}</div>
                 <div class="order-footer">
                     <span>Итого:</span>
-                    <span class="order-total">${total}</span>
+                    <span class="order-total">$${Number(order.totalPrice).toFixed(2)}</span>
                 </div>
             </div>
         `;
-    }).join('');
+    }).join("");
+}
+
+function formatStatus(status) {
+    switch (status) {
+        case "PENDING":
+            return "Ожидает оплаты";
+        case "PAID":
+            return "Оплачен";
+        case "PROCESSING":
+            return "В обработке";
+        case "SHIPPED":
+            return "Отправлен";
+        case "DELIVERED":
+            return "Доставлен";
+        case "CANCELLED":
+            return "Отменён";
+        default:
+            return status;
+    }
 }

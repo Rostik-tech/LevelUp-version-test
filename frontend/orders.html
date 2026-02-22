@@ -95,7 +95,7 @@
         <div class="container">
             <div class="profile-content-card">
                 <div class="orders-list" id="ordersList">
-                    <!-- Orders will be loaded dynamically -->
+                    <!-- Orders loaded dynamically -->
                 </div>
             </div>
         </div>
@@ -111,16 +111,7 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <script src="js/orders.js"></script>
-
-    <!-- 🔐 JWT Protection -->
-    <script>
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            window.location.href = "login.html";
-        }
-    </script>
+    <script type="module" src="js/orders.js"></script>
 
 </body>
 </html>
