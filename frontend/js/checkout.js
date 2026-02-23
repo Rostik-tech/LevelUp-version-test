@@ -10,6 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const paypalToken = urlParams.get("token");
+
+    // 🔥 Если вернулись с PayPal — сразу capture
+    if (paypalToken) {
+        handleCapture(paypalToken);
+        return;
+    }
+
     const cart = window.cart;
 
     if (!cart || cart.items.length === 0) {
@@ -25,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         form.addEventListener("submit", handleCheckout);
     }
 });
+
 
 // ================================
 // Render order summary
@@ -61,6 +71,7 @@ function displayOrderSummary() {
         .join("");
 }
 
+
 // ================================
 // Totals calculation
 // ================================
@@ -86,6 +97,7 @@ function updateOrderTotals() {
         format(total);
 }
 
+
 // ================================
 // Submit checkout
 // ================================
@@ -94,11 +106,16 @@ async function handleCheckout(e) {
 
     const cart = window.cart;
     const token = getToken();
+    const button = document.getElementById("paypalButton");
 
     if (!cart || cart.items.length === 0) {
         alert("Корзина пуста");
         return;
     }
+
+    // 🔥 Disable кнопки во время запроса
+    button.disabled = true;
+    button.innerHTML = "Обработка...";
 
     const shippingData = {
         shippingFullName: document.getElementById("fullName").value,
@@ -112,7 +129,7 @@ async function handleCheckout(e) {
     };
 
     try {
-        // 1️⃣ Create Order in DB
+        // 1️⃣ Create Order
         const orderResponse = await fetch(`${API_BASE}/orders`, {
             method: "POST",
             headers: {
@@ -131,6 +148,8 @@ async function handleCheckout(e) {
         const orderData = await orderResponse.json();
 
         if (!orderResponse.ok) {
+            button.disabled = false;
+            button.innerHTML = "Оплатить через PayPal";
             alert(orderData.message || "Ошибка создания заказа");
             return;
         }
@@ -153,9 +172,11 @@ async function handleCheckout(e) {
         const paymentData = await paymentResponse.json();
 
         if (!paymentResponse.ok) {
+            button.disabled = false;
+            button.innerHTML = "Оплатить через PayPal";
             alert(
                 paymentData.message ||
-                    "Ошибка создания PayPal заказа"
+                "Ошибка создания PayPal заказа"
             );
             return;
         }
@@ -165,6 +186,8 @@ async function handleCheckout(e) {
         )?.href;
 
         if (!approvalLink) {
+            button.disabled = false;
+            button.innerHTML = "Оплатить через PayPal";
             alert("Не удалось получить ссылку оплаты");
             return;
         }
@@ -172,11 +195,57 @@ async function handleCheckout(e) {
         localStorage.setItem("currentOrderId", orderId);
 
         window.location.href = approvalLink;
+
     } catch (err) {
         console.error(err);
+        button.disabled = false;
+        button.innerHTML = "Оплатить через PayPal";
         alert("Ошибка соединения с сервером");
     }
 }
+
+
+// ================================
+// Capture after PayPal return
+// ================================
+async function handleCapture(paypalOrderId) {
+    const token = getToken();
+
+    try {
+        const response = await fetch(
+            `${API_BASE}/payments/capture/${paypalOrderId}`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Ошибка подтверждения оплаты");
+            return;
+        }
+
+        if (window.cart) {
+            window.cart.clear();
+        }
+
+        localStorage.removeItem("currentOrderId");
+
+        // 🔥 Убираем token из URL
+        window.history.replaceState({}, document.title, "checkout.html");
+
+        window.location.href = "success.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Ошибка подтверждения оплаты");
+    }
+}
+
 
 // ================================
 // Empty state
