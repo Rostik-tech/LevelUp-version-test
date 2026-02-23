@@ -12,16 +12,17 @@
 </head>
 <body>
 
-<div class="stars-background"></div>
+<div class="stars-background" id="starsBackground"></div>
 
 <header class="header">
     <div class="container">
         <nav class="navbar">
+
             <a href="index.html" class="logo">
                 <img src="images/logo.svg" class="logo-img">
             </a>
 
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Главная</a></li>
                 <li><a href="shop.html">Магазин</a></li>
                 <li><a href="about.html">О нас</a></li>
@@ -36,10 +37,10 @@
                 </div>
 
                 <div id="profileDropdown" style="display:none;">
-                    <button class="btn btn-profile">
+                    <button class="btn btn-profile" id="profileBtn">
                         <i class="fas fa-user"></i> Профиль
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" id="dropdownMenu">
                         <a href="profile.html">Мой профиль</a>
                         <a href="orders.html">Мои заказы</a>
                         <div class="dropdown-divider"></div>
@@ -49,7 +50,9 @@
 
                 <a href="cart.html" class="cart-btn">
                     <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
                 </a>
+
             </div>
         </nav>
     </div>
@@ -67,6 +70,7 @@
     <div class="container">
         <div class="checkout-layout">
 
+            <!-- LEFT SIDE -->
             <div class="checkout-form-wrapper">
                 <form class="checkout-form" id="checkoutForm">
 
@@ -84,28 +88,39 @@
                 </form>
             </div>
 
+            <!-- RIGHT SIDE -->
             <div class="order-summary">
+
                 <h2>Сводка заказа</h2>
 
                 <div id="summaryItems"></div>
 
-                <div>
-                    Подытог: <span id="subtotalAmount">$0.00</span>
-                </div>
-                <div>
-                    Налог (10%): <span id="taxAmount">$0.00</span>
-                </div>
-                <div>
-                    <strong>Итого: <span id="totalAmount">$0.00</span></strong>
+                <div class="summary-line">
+                    Подытог:
+                    <span id="subtotalAmount">$0.00</span>
                 </div>
 
-                <button type="submit"
-                        class="btn btn-primary btn-large btn-block"
-                        form="checkoutForm">
+                <div class="summary-line">
+                    Налог (10%):
+                    <span id="taxAmount">$0.00</span>
+                </div>
+
+                <div class="summary-total">
+                    Итого:
+                    <span id="totalAmount">$0.00</span>
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-large btn-block"
+                    form="checkoutForm">
                     Оплатить через PayPal
                 </button>
 
-                <a href="cart.html">Вернуться в корзину</a>
+                <a href="cart.html" class="btn btn-outline btn-block">
+                    Вернуться в корзину
+                </a>
+
             </div>
 
         </div>
@@ -118,8 +133,11 @@
     </div>
 </footer>
 
+<!-- MAIN -->
 <script src="js/main.js"></script>
-<script src="js/checkout.js"></script>
+
+<!-- CHECKOUT (MODULE!) -->
+<script type="module" src="js/checkout.js"></script>
 
 <script>
 requireUser();

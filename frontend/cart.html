@@ -7,7 +7,6 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/cart.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
@@ -24,28 +23,29 @@
             </a>
 
             <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html">Главная</a></li>
-                <li><a href="shop.html">Магазин</a></li>
-                <li><a href="about.html">О нас</a></li>
-                <li><a href="contact.html">Контакты</a></li>
+                <li><a href="index.html" data-en="Home" data-ru="Главная">Главная</a></li>
+                <li><a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a></li>
+                <li><a href="about.html" data-en="About" data-ru="О нас">О нас</a></li>
+                <li><a href="contact.html" data-en="Contact" data-ru="Контакты">Контакты</a></li>
             </ul>
 
             <div class="nav-actions">
 
                 <div id="authButtons">
-                    <a href="register.html" class="btn btn-primary">Регистрация</a>
-                    <a href="login.html" class="btn btn-primary">Вход</a>
+                    <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация">Регистрация</a>
+                    <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
                 </div>
 
                 <div id="profileDropdown" style="display:none;">
                     <button class="btn btn-profile" id="profileBtn">
-                        <i class="fas fa-user"></i> Профиль
+                        <i class="fas fa-user"></i>
+                        <span data-en="Profile" data-ru="Профиль">Профиль</span>
                     </button>
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="profile.html">Мой профиль</a>
-                        <a href="orders.html">Мои заказы</a>
+                        <a href="profile.html" data-en="My Profile" data-ru="Мой профиль">Мой профиль</a>
+                        <a href="orders.html" data-en="My Orders" data-ru="Мои заказы">Мои заказы</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutBtn">Выйти</a>
+                        <a href="#" id="logoutBtn" data-en="Logout" data-ru="Выйти">Выйти</a>
                     </div>
                 </div>
 
@@ -66,9 +66,17 @@
 <section class="page-header">
     <div class="container">
         <h1 class="page-title">
-            <span class="gradient-text">Корзина Покупок</span>
+            <span 
+                class="gradient-text"
+                data-en="Shopping Cart"
+                data-ru="Корзина Покупок">
+                Корзина Покупок
+            </span>
         </h1>
-        <p class="page-subtitle">
+        <p 
+            class="page-subtitle"
+            data-en="Review your items before checkout"
+            data-ru="Проверьте товары перед оформлением">
             Проверьте товары перед оформлением
         </p>
     </div>
@@ -81,36 +89,47 @@
             <div class="cart-items" id="cartItems"></div>
 
             <div class="cart-summary">
-                <h2 class="summary-title">Итого</h2>
+                <h2 class="summary-title"
+                    data-en="Order Summary"
+                    data-ru="Итого">
+                    Итого
+                </h2>
 
                 <div class="summary-row">
-                    <span>Подытог</span>
+                    <span data-en="Subtotal" data-ru="Подытог">Подытог</span>
                     <span id="subtotal">$0.00</span>
                 </div>
 
                 <div class="summary-row">
-                    <span>Доставка</span>
-                    <span>Бесплатно</span>
+                    <span data-en="Shipping" data-ru="Доставка">Доставка</span>
+                    <span data-en="Free" data-ru="Бесплатно">Бесплатно</span>
                 </div>
 
                 <div class="summary-row">
-                    <span>Налог</span>
+                    <span data-en="Tax" data-ru="Налог">Налог</span>
                     <span id="tax">$0.00</span>
                 </div>
 
                 <div class="summary-divider"></div>
 
                 <div class="summary-total">
-                    <span>Итого</span>
+                    <span data-en="Total" data-ru="Итого">Итого</span>
                     <span id="total">$0.00</span>
                 </div>
 
-                <button class="btn btn-primary btn-large btn-block" id="checkoutBtn">
-                    <i class="fab fa-paypal"></i>
+                <button 
+                    class="btn btn-primary btn-large btn-block"
+                    id="checkoutBtn"
+                    data-en="Checkout with PayPal"
+                    data-ru="Оформить через PayPal">
                     Оформить через PayPal
                 </button>
 
-                <a href="shop.html" class="btn btn-outline btn-block">
+                <a 
+                    href="shop.html"
+                    class="btn btn-outline btn-block"
+                    data-en="Continue Shopping"
+                    data-ru="Продолжить покупки">
                     Продолжить покупки
                 </a>
             </div>
@@ -127,10 +146,6 @@
 
 <script src="js/main.js"></script>
 <script src="js/cart-page.js"></script>
-
-<script>
-requireUser();
-</script>
 
 </body>
 </html>

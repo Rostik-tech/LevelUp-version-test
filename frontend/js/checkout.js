@@ -20,40 +20,85 @@ document.addEventListener("DOMContentLoaded", () => {
     displayOrderSummary();
     updateOrderTotals();
 
-    document
-        .getElementById("checkoutForm")
-        .addEventListener("submit", handleCheckout);
+    const form = document.getElementById("checkoutForm");
+    if (form) {
+        form.addEventListener("submit", handleCheckout);
+    }
 });
 
+// ================================
+// Render order summary
+// ================================
 function displayOrderSummary() {
     const summaryItems = document.getElementById("summaryItems");
     const cart = window.cart;
 
-    summaryItems.innerHTML = cart.items.map(item => `
-        <div class="summary-item">
-            <div class="summary-item-name">${item.name.ru}</div>
-            <div>${item.quantity} × $${item.price.toFixed(2)}</div>
-        </div>
-    `).join("");
+    if (!summaryItems || !cart) return;
+
+    const lang = window.currentLanguage
+        ? window.currentLanguage()
+        : "ru";
+
+    summaryItems.innerHTML = cart.items
+        .map((item) => {
+            const name =
+                item.name?.[lang] ||
+                item.name?.ru ||
+                item.name ||
+                "Product";
+
+            return `
+                <div class="summary-item">
+                    <div class="summary-item-name">
+                        ${name}
+                    </div>
+                    <div>
+                        ${item.quantity} × $${item.price.toFixed(2)}
+                    </div>
+                </div>
+            `;
+        })
+        .join("");
 }
 
+// ================================
+// Totals calculation
+// ================================
 function updateOrderTotals() {
     const cart = window.cart;
+    if (!cart) return;
 
     const subtotal = cart.getTotal();
     const tax = subtotal * 0.1;
     const total = subtotal + tax;
 
-    document.getElementById("subtotalAmount").textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById("taxAmount").textContent = `$${tax.toFixed(2)}`;
-    document.getElementById("totalAmount").textContent = `$${total.toFixed(2)}`;
+    const format = window.formatPrice
+        ? window.formatPrice
+        : (p) => `$${p.toFixed(2)}`;
+
+    document.getElementById("subtotalAmount").textContent =
+        format(subtotal);
+
+    document.getElementById("taxAmount").textContent =
+        format(tax);
+
+    document.getElementById("totalAmount").textContent =
+        format(total);
 }
 
+// ================================
+// Submit checkout
+// ================================
 async function handleCheckout(e) {
     e.preventDefault();
 
     const cart = window.cart;
     const token = getToken();
+
+    if (!cart || cart.items.length === 0) {
+        alert("Корзина пуста");
+        return;
+    }
 
     const shippingData = {
         shippingFullName: document.getElementById("fullName").value,
@@ -62,19 +107,20 @@ async function handleCheckout(e) {
         shippingCity: document.getElementById("city").value,
         shippingAddress: document.getElementById("address").value,
         shippingPostalCode: document.getElementById("postalCode").value,
-        shippingApartment: document.getElementById("apartment").value
+        shippingApartment: document.getElementById("apartment").value,
+        orderNotes: document.getElementById("orderNotes").value
     };
 
     try {
-        // 1️⃣ Создаём Order в нашей БД
+        // 1️⃣ Create Order in DB
         const orderResponse = await fetch(`${API_BASE}/orders`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
+                Authorization: "Bearer " + token
             },
             body: JSON.stringify({
-                items: cart.items.map(item => ({
+                items: cart.items.map((item) => ({
                     productId: item.id,
                     quantity: item.quantity
                 })),
@@ -91,26 +137,31 @@ async function handleCheckout(e) {
 
         const orderId = orderData.order.id;
 
-        // 2️⃣ Создаём PayPal order
-        const paymentResponse = await fetch(`${API_BASE}/payments/create`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({ orderId })
-        });
+        // 2️⃣ Create PayPal order
+        const paymentResponse = await fetch(
+            `${API_BASE}/payments/create`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ orderId })
+            }
+        );
 
         const paymentData = await paymentResponse.json();
 
         if (!paymentResponse.ok) {
-            alert(paymentData.message || "Ошибка создания PayPal заказа");
+            alert(
+                paymentData.message ||
+                    "Ошибка создания PayPal заказа"
+            );
             return;
         }
 
-        // 3️⃣ Находим approval link
         const approvalLink = paymentData.links.find(
-            link => link.rel === "approve"
+            (link) => link.rel === "approve"
         )?.href;
 
         if (!approvalLink) {
@@ -118,24 +169,30 @@ async function handleCheckout(e) {
             return;
         }
 
-        // 4️⃣ Сохраняем orderId для capture после возврата
         localStorage.setItem("currentOrderId", orderId);
 
-        // 5️⃣ Redirect на PayPal
         window.location.href = approvalLink;
-
     } catch (err) {
         console.error(err);
         alert("Ошибка соединения с сервером");
     }
 }
 
+// ================================
+// Empty state
+// ================================
 function showEmptyCheckout() {
-    const checkoutLayout = document.querySelector(".checkout-layout");
+    const checkoutLayout =
+        document.querySelector(".checkout-layout");
+
+    if (!checkoutLayout) return;
+
     checkoutLayout.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center;">
             <h2>Корзина пуста</h2>
-            <a href="shop.html" class="btn btn-primary">Перейти в магазин</a>
+            <a href="shop.html" class="btn btn-primary">
+                Перейти в магазин
+            </a>
         </div>
     `;
 }

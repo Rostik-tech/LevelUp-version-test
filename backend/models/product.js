@@ -1,4 +1,3 @@
-// backend/models/product.js
 import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
@@ -16,7 +15,7 @@ export default (sequelize) => {
       },
 
       price: {
-        type: DataTypes.DOUBLE, // 🔥 вместо FLOAT
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
 
@@ -25,10 +24,15 @@ export default (sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
+
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
-      tableName: "Products",   // 🔥 фиксируем UPPERCASE
-      freezeTableName: true,   // 🔥 не создавать products
+      tableName: "Products",
+      freezeTableName: true,
       timestamps: true,
     }
   );

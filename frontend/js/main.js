@@ -247,9 +247,9 @@ class ShoppingCart {
     }
 
     getTotal() {
-        return this.items.reduce(function (t, i) {
-            return t + i.price * i.quantity;
-        }, 0);
+    return this.items.reduce(function (t, i) {
+        return t + Number(i.price) * Number(i.quantity);
+    }, 0);
     }
 
     getItemCount() {
@@ -314,3 +314,4 @@ function requireAdmin() {
 window.requireGuest = requireGuest;
 window.requireUser = requireUser;
 window.requireAdmin = requireAdmin;
+window.updatePageLanguage = updatePageLanguage;
