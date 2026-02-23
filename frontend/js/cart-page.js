@@ -1,5 +1,5 @@
 // ========================================
-// Cart Page - JWT Version + i18n Support
+// Cart Page - Clean UI + JWT + i18n
 // ========================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -12,14 +12,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function displayCart() {
-    const cartItemsContainer = document.getElementById("cartItems");
-    if (!cartItemsContainer) return;
+    const container = document.getElementById("cartItems");
+    if (!container) return;
 
     const cart = window.cart;
     const lang = window.currentLanguage ? window.currentLanguage() : "ru";
 
     if (!cart || cart.items.length === 0) {
-        cartItemsContainer.innerHTML = `
+        container.innerHTML = `
             <div class="empty-cart">
                 <div class="empty-cart-icon">
                     <i class="fas fa-shopping-cart"></i>
@@ -39,52 +39,72 @@ function displayCart() {
                 </a>
             </div>
         `;
-
         triggerLanguageUpdate();
         return;
     }
 
-    cartItemsContainer.innerHTML = cart.items
-        .map((item) => {
-            const name =
-                item.name?.[lang] || item.name?.ru || "Product";
+    container.innerHTML = cart.items.map(item => {
 
-            const price = window.formatPrice
-                ? window.formatPrice(item.price)
-                : `$${item.price}`;
+        const name = item.name?.[lang] || item.name?.ru || "Product";
 
-            const total = window.formatPrice
-                ? window.formatPrice(item.price * item.quantity)
-                : `$${(item.price * item.quantity).toFixed(2)}`;
+        const price = window.formatPrice
+            ? window.formatPrice(item.price)
+            : `$${item.price.toFixed(2)}`;
 
-            return `
-                <div class="cart-item" data-item-id="${item.id}">
-                    <img src="${item.image}" alt="${name}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <h3>${name}</h3>
-                        <p>${price}</p>
+        const total = window.formatPrice
+            ? window.formatPrice(item.price * item.quantity)
+            : `$${(item.price * item.quantity).toFixed(2)}`;
 
-                        <div class="quantity-control">
-                            <button onclick="changeQuantity(${item.id}, -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="changeQuantity(${item.id}, 1)">+</button>
-                        </div>
+        return `
+            <div class="cart-item">
+
+                <img 
+                    src="${item.image || 'https://via.placeholder.com/120x120/1a0533/FF00FF?text=Item'}"
+                    class="cart-item-image"
+                >
+
+                <div class="cart-item-details">
+                    <h3 class="cart-item-name">${name}</h3>
+                    <p class="cart-item-price">${price}</p>
+
+                    <div class="quantity-control">
 
                         <button 
-                            onclick="removeFromCart(${item.id})"
-                            data-en="Remove"
-                            data-ru="Удалить">
-                            Удалить
+                            class="qty-btn"
+                            onclick="changeQuantity(${item.id}, -1)">
+                            <i class="fas fa-minus"></i>
                         </button>
+
+                        <span class="quantity-value">
+                            ${item.quantity}
+                        </span>
+
+                        <button 
+                            class="qty-btn"
+                            onclick="changeQuantity(${item.id}, 1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+
                     </div>
 
-                    <div class="cart-item-total">
-                        ${total}
-                    </div>
+                    <button 
+                        class="btn btn-outline remove-btn"
+                        onclick="removeFromCart(${item.id})"
+                        data-en="Remove"
+                        data-ru="Удалить">
+                        <i class="fas fa-trash"></i>
+                        Удалить
+                    </button>
+
                 </div>
-            `;
-        })
-        .join("");
+
+                <div class="cart-item-total">
+                    ${total}
+                </div>
+
+            </div>
+        `;
+    }).join("");
 
     triggerLanguageUpdate();
 }
@@ -114,7 +134,7 @@ function changeQuantity(productId, change) {
     const cart = window.cart;
     if (!cart) return;
 
-    const item = cart.items.find((i) => i.id === productId);
+    const item = cart.items.find(i => i.id === productId);
     if (!item) return;
 
     const newQuantity = item.quantity + change;
@@ -134,8 +154,12 @@ function removeFromCart(productId) {
     const cart = window.cart;
     if (!cart) return;
 
-    if (confirm("Удалить товар из корзины?")) {
-        cart.items = cart.items.filter((i) => i.id !== productId);
+    const confirmText = window.currentLanguage && window.currentLanguage() === "en"
+        ? "Remove item from cart?"
+        : "Удалить товар из корзины?";
+
+    if (confirm(confirmText)) {
+        cart.items = cart.items.filter(i => i.id !== productId);
         cart.saveCart();
         cart.updateCartCount();
         displayCart();
@@ -147,18 +171,18 @@ function handleCheckout() {
     const cart = window.cart;
 
     if (!cart || cart.items.length === 0) {
-        alert("Корзина пуста!");
+        alert(
+            window.currentLanguage && window.currentLanguage() === "en"
+                ? "Cart is empty!"
+                : "Корзина пуста!"
+        );
         return;
     }
 
     const token = localStorage.getItem("token");
 
     if (!token) {
-        if (
-            confirm(
-                "You need to login to proceed. Go to login page?"
-            )
-        ) {
+        if (confirm("You need to login to proceed. Go to login page?")) {
             window.location.href = "login.html";
         }
         return;
