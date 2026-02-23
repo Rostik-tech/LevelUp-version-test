@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оплата Отменена - Level Up Gaming</title>
+    <title>Оплата Успешна - Level Up Gaming</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/cancel.css">
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/success.css">
 </head>
 <body>
     <!-- Animated Background -->
@@ -24,7 +24,7 @@
             <nav class="navbar">
                 <!-- Logo -->
                 <a href="index.html" class="logo">
-                    <img src="images/logo.svg" alt="Level Up Logo" class="logo-img">
+                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
                 </a>
 
                 <!-- Navigation Menu -->
@@ -111,61 +111,71 @@
         </div>
     </header>
 
-    <!-- Cancel Content -->
-    <section class="cancel-section">
+    <!-- Success Content -->
+    <section class="success-section">
         <div class="container">
-            <div class="cancel-card">
-                <!-- Warning Icon (Animated) -->
-                <div class="warning-icon">
-                    <svg class="warning-triangle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-                        <path class="triangle-path" d="M32 8 L58 54 L6 54 Z" fill="none" stroke-width="3"/>
-                        <text x="32" y="42" class="exclamation-mark" text-anchor="middle" font-size="24" font-weight="bold">!</text>
+            <div class="success-card">
+                <!-- Success Icon (Animated Checkmark) -->
+                <div class="success-icon">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                     </svg>
                 </div>
 
-                <!-- Cancel Message -->
-                <h1 class="cancel-title">
-                    <span class="gradient-text warning-gradient" data-en="Payment Canceled" data-ru="Оплата Отменена">Оплата Отменена</span>
+                <!-- Success Message -->
+                <h1 class="success-title">
+                    <span class="gradient-text" data-en="Payment Successful!" data-ru="Оплата Успешна!">Оплата Успешна!</span>
                 </h1>
 
-                <p class="cancel-subtitle" data-en="You can try again or return to cart" data-ru="Вы можете попробовать снова или вернуться в корзину">
-                    Вы можете попробовать снова или вернуться в корзину
+                <p class="success-subtitle" data-en="Your order has been confirmed" data-ru="Ваш заказ подтвержден">
+                    Ваш заказ подтвержден
                 </p>
 
-                <!-- Info Message -->
-                <div class="info-message">
-                    <i class="fas fa-info-circle"></i>
-                    <span data-en="Your order has not been processed. Items remain in your cart." data-ru="Ваш заказ не был обработан. Товары остались в корзине.">
-                        Ваш заказ не был обработан. Товары остались в корзине.
+                <!-- Order Details -->
+                <div class="order-details">
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Order Number:" data-ru="Номер заказа:">Номер заказа:</span>
+                        <span class="detail-value order-number">#ORD-XXXX</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Total Amount:" data-ru="Общая сумма:">Общая сумма:</span>
+                        <span class="detail-value total-amount">$0.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Payment Method:" data-ru="Способ оплаты:">Способ оплаты:</span>
+                        <span class="detail-value payment-method">PayPal</span>
+                    </div>
+                </div>
+
+                <!-- Email Confirmation -->
+                <div class="email-confirmation">
+                    <i class="fas fa-envelope"></i>
+                    <span data-en="Confirmation email has been sent" data-ru="Письмо с подтверждением отправлено">
+                        Письмо с подтверждением отправлено
                     </span>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="cancel-actions">
-                    <a href="checkout.html" class="btn-primary btn-large">
-                        <i class="fas fa-redo"></i>
-                        <span data-en="Try Again" data-ru="Попробовать Снова">Попробовать Снова</span>
+                <div class="success-actions">
+                    <a href="orders.html" class="btn-primary btn-large">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span data-en="View My Orders" data-ru="Мои Заказы">Мои Заказы</span>
                     </a>
-                    <a href="cart.html" class="btn-secondary btn-large">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span data-en="Back to Cart" data-ru="Вернуться в Корзину">Вернуться в Корзину</span>
-                    </a>
-                    <a href="shop.html" class="btn-outline btn-large">
+                    <a href="shop.html" class="btn-secondary btn-large">
                         <i class="fas fa-store"></i>
                         <span data-en="Continue Shopping" data-ru="Продолжить Покупки">Продолжить Покупки</span>
                     </a>
                 </div>
 
-                <!-- Help Section -->
-                <div class="help-section">
-                    <p class="help-title" data-en="Need help?" data-ru="Нужна помощь?">Нужна помощь?</p>
-                    <p class="help-text" data-en="If you're experiencing issues with payment, please contact our support team." data-ru="Если у вас возникли проблемы с оплатой, свяжитесь с нашей службой поддержки.">
-                        Если у вас возникли проблемы с оплатой, свяжитесь с нашей службой поддержки.
+                <!-- Additional Info -->
+                <div class="additional-info">
+                    <p data-en="Thank you for shopping with Level Up Gaming!" data-ru="Спасибо за покупку в Level Up Gaming!">
+                        Спасибо за покупку в Level Up Gaming!
                     </p>
-                    <a href="contact.html" class="help-link">
-                        <i class="fas fa-headset"></i>
-                        <span data-en="Contact Support" data-ru="Связаться с Поддержкой">Связаться с Поддержкой</span>
-                    </a>
+                    <p data-en="Track your order status in the Orders section" data-ru="Отслеживайте статус заказа в разделе Заказы">
+                        Отслеживайте статус заказа в разделе Заказы
+                    </p>
                 </div>
             </div>
         </div>
@@ -205,7 +215,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/cancel.js"></script>
+    <script src="frontend/js/main.js"></script>
+    <script src="frontend/js/success.js"></script>
 </body>
 </html>

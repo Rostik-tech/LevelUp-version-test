@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Level Up Gaming</title>
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="stars-background" id="starsBackground"></div>
+
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="frontend/images/logo.svg" alt="Level Up" class="logo-img">
+            </a>
+
+            <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link active" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+
+            <div class="nav-actions">
+                <div class="auth-buttons" id="authButtons">
+                    <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация">Регистрация</a>
+                    <a href="login.html" class="btn btn-primary">Вход</a>
+                </div>
+
+                <div class="profile-dropdown" id="profileDropdown" style="display:none;">
+                    <button class="btn btn-profile active" id="profileBtn">
+                        <i class="fas fa-user"></i><span data-en="Profile" data-ru="Мой профиль">Профиль</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="profile.html" class="dropdown-item" data-en="My Profile" data-ru="Мой профиль">Мой профиль</a>
+                        <a href="orders.html" class="dropdown-item" data-en="My Orders" data-ru="Мои заказы">Мои заказы</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="logoutBtn" data-en="Logout" data-ru="Выйти">Выйти</a>
+                    </div>
+                </div>
+
+                <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+
+                <a href="cart.html" class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title"><span class="gradient-text" data-en="Profile" data-ru="Мой профиль">Мой профиль</span></h1>
+        <p class="page-subtitle" data-en="Manage your account" data-ru="Управление аккаунтом">Управление аккаунтом</p>
+    </div>
+</section>
+
+<section class="profile-section">
+    <div class="container">
+        <div class="profile-layout">
+
+            <aside class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 id="profileName" data-en="Loading..." data-ru="Загрузка...">Загрузка...</h3>
+                    <p id="profileEmail" data-en="Loading..." data-ru="Загрузка...">Загрузка...</p>
+                </div>
+            </aside>
+
+            <div class="profile-main">
+
+                <div class="profile-content-card">
+                    <h2 data-en="Profile Information" data-ru="Информация профиля">Информация профиля</h2>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label data-en="Full Name" data-ru="Полное имя">Полное имя</label>
+                            <input type="text" id="fullNameInput" class="form-input-simple">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="emailInput" class="form-input-simple" disabled>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" data-en="Save Changes" data-ru="Сохранить изменения">Сохранить изменения</button>
+                            
+                        
+                    </form>
+                </div>
+
+                <div class="profile-content-card">
+                    <h2 data-en="Statistics" data-ru="Статистика">Статистика</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalOrders">0</div>
+                            <div class="stat-label" data-en="Total Orders" data-ru="Всего заказов">Всего заказов</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalSpent">$0</div>
+                            <div class="stat-label">Потрачено</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p data-en="&copy; 2026 Level Up Gaming. All rights reserved." data-ru="&copy; 2026 Level Up Gaming. Все права защищены.">© 2026 Level Up Gaming. Все права защищены.</p>
+    </div>
+</footer>
+
+<script src="frontend/js/main.js"></script>
+<script type="module" src="frontend/js/profile.js"></script>
+
+</body>
+</html>

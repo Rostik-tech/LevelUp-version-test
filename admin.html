@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - Level Up Gaming</title>
+
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="stars-background"></div>
+
+<header class="admin-header">
+    <div class="container">
+        <div class="admin-nav">
+            <a href="index.html" class="logo">
+                <img src="frontend/images/logo.svg" class="logo-img">
+            </a>
+
+            <h1 class="admin-title">
+                <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">Админ Панель</span>
+            </h1>
+
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn"><i class="fas fa-globe"></i><span id="currentLang">RU</span></button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+                    
+
+            <button class="btn btn-outline" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-layout">
+
+            <aside class="admin-sidebar">
+                <nav class="admin-menu">
+                    <a href="#dashboard" class="admin-menu-link active">
+                        <i class="fas fa-chart-line"></i>
+                        <span data-en="Dashboard" data-ru="Панель управления">Панель управления</span>
+                    </a>
+                    <a href="#products" class="admin-menu-link">
+                        <i class="fas fa-box"></i>
+                        <span data-en="Products" data-ru="Товары">Товары</span>
+                    </a>
+                    <a href="#orders" class="admin-menu-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span data-en="Orders" data-ru="Заказы">Заказы</span>
+                    </a>
+                    <a href="#users" class="admin-menu-link">
+                        <i class="fas fa-users"></i>
+                        <span data-en="Users" data-ru="Пользователи">Пользователи</span>
+                    </a>
+                    <a href="#settings" class="admin-menu-link">
+                        <i class="fas fa-cog"></i>
+                        <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <div class="admin-main">
+                <h2 class="admin-welcome" data-en="Welcome to Admin Panel" data-ru="Добро пожаловать в админ-панель">Добро пожаловать в админ-панель</h2>
+                <p data-en="Access is restricted to administrators only." data-ru="Доступ разрешён только администраторам.">Доступ разрешён только администраторам.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script src="frontend/js/main.js"></script>
+
+<script>
+requireAdmin();
+
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    logout();
+});
+</script>
+
+</body>
+</html>

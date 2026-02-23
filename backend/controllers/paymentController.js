@@ -16,9 +16,10 @@ const PAYPAL_BASE =
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
-// ==============================
-// GET PAYPAL ACCESS TOKEN
-// ==============================
+// ========================================
+// PAYPAL ACCESS TOKEN
+// ========================================
+
 const getAccessToken = async () => {
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
@@ -36,9 +37,10 @@ const getAccessToken = async () => {
   return response.data.access_token;
 };
 
-// ==============================
-// CREATE PAYPAL ORDER
-// ==============================
+// ========================================
+// CREATE PAYPAL ORDER (PRODUCTION READY)
+// ========================================
+
 export const createOrder = async (req, res) => {
   try {
     const { orderId } = req.body;
@@ -65,12 +67,20 @@ export const createOrder = async (req, res) => {
         intent: "CAPTURE",
         purchase_units: [
           {
+            reference_id: dbOrder.id.toString(),
             amount: {
               currency_code: "USD",
-              value: dbOrder.totalPrice.toString(),
+              value: dbOrder.totalPrice.toFixed(2),
             },
           },
         ],
+        application_context: {
+          return_url: "http://127.0.0.1:5500/success.html",
+          cancel_url: "http://127.0.0.1:5500/cancel.html",
+          brand_name: "Level Up Gaming",
+          landing_page: "LOGIN",
+          user_action: "PAY_NOW",
+        },
       },
       {
         headers: {
@@ -106,24 +116,33 @@ export const createOrder = async (req, res) => {
     res.json(response.data);
 
   } catch (error) {
+    console.error("CREATE PAYPAL ORDER ERROR:", error.message);
+
     res.status(500).json({
-      error: error.response?.data || error.message,
+      message: "Ошибка создания PayPal заказа",
+      details: error.response?.data || error.message,
     });
   }
 };
 
-// ==============================
-// CAPTURE PAYPAL ORDER (REST: /capture/:id)
-// ==============================
+// ========================================
+// CAPTURE PAYPAL ORDER
+// ========================================
+
 export const captureOrder = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
-    const { id } = req.params; // paypalOrderId
+    const { id } = req.params;
 
     if (!id) {
       await transaction.rollback();
       return res.status(400).json({ message: "paypalOrderId обязателен" });
+    }
+
+    if (!req.user || !req.user.id) {
+      await transaction.rollback();
+      return res.status(401).json({ message: "Требуется авторизация" });
     }
 
     // 🔒 1. Блокируем Payment
@@ -138,13 +157,25 @@ export const captureOrder = async (req, res) => {
       return res.status(404).json({ message: "Payment не найден" });
     }
 
-    // ✅ Idempotency — если уже завершено
-    if (payment.status === "COMPLETED") {
-      await transaction.commit();
-      return res.status(200).json({ message: "Уже оплачено" });
+    // 🔐 2. Проверка владельца
+    if (payment.UserId !== req.user.id) {
+      await transaction.rollback();
+      return res.status(403).json({
+        message: "Вы не можете подтвердить чужой заказ",
+      });
     }
 
-    // 🔒 2. Блокируем Order
+    // ✅ Idempotency
+    if (payment.status === "COMPLETED") {
+      const existingOrder = await Order.findByPk(payment.OrderId);
+      await transaction.commit();
+      return res.status(200).json({
+        message: "Уже оплачено",
+        order: existingOrder,
+      });
+    }
+
+    // 🔒 3. Блокируем Order
     const dbOrder = await Order.findByPk(payment.OrderId, {
       transaction,
       lock: transaction.LOCK.UPDATE,
@@ -155,6 +186,13 @@ export const captureOrder = async (req, res) => {
       return res.status(404).json({ message: "Заказ не найден" });
     }
 
+    if (dbOrder.UserId !== req.user.id) {
+      await transaction.rollback();
+      return res.status(403).json({
+        message: "Вы не можете подтвердить чужой заказ",
+      });
+    }
+
     if (dbOrder.status !== "PENDING") {
       await transaction.rollback();
       return res.status(400).json({
@@ -162,32 +200,21 @@ export const captureOrder = async (req, res) => {
       });
     }
 
-    // 🔑 3. Вызываем PayPal Capture
+    // 🔑 4. Capture у PayPal
     const accessToken = await getAccessToken();
 
-    try {
-      await axios.post(
-        `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      if (
-        error.response?.data?.details?.[0]?.issue ===
-        "ORDER_ALREADY_CAPTURED"
-      ) {
-        await transaction.commit();
-        return res.status(200).json({ message: "Уже оплачено" });
+    await axios.post(
+      `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
       }
-      throw error;
-    }
+    );
 
-    // 🔍 4. Проверяем статус
+    // 🔍 5. Проверка статуса PayPal
     const verifyResponse = await axios.get(
       `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
       {
@@ -195,14 +222,18 @@ export const captureOrder = async (req, res) => {
       }
     );
 
-    if (verifyResponse.data.status !== "COMPLETED") {
+    if (
+      verifyResponse.data.status !== "COMPLETED" ||
+      verifyResponse.data.purchase_units[0].amount.value !==
+        dbOrder.totalPrice.toFixed(2)
+    ) {
       await transaction.rollback();
       return res.status(400).json({
-        message: "Оплата не подтверждена",
+        message: "Оплата не подтверждена или сумма не совпадает",
       });
     }
 
-    // 🔥 5. Уменьшаем stock с блокировкой
+    // 🔥 6. Уменьшаем stock
     const items = await OrderItem.findAll({
       where: { OrderId: dbOrder.id },
       transaction,
@@ -214,7 +245,8 @@ export const captureOrder = async (req, res) => {
         lock: transaction.LOCK.UPDATE,
       });
 
-      if (!product) throw new Error("Товар не найден");
+      if (!product)
+        throw new Error("Товар не найден");
 
       if (product.stock < item.quantity)
         throw new Error("Недостаточно товара на складе");
@@ -223,7 +255,7 @@ export const captureOrder = async (req, res) => {
       await product.save({ transaction });
     }
 
-    // 🔄 6. Обновляем статусы
+    // 🔄 7. Обновление статусов
     dbOrder.status = "PAID";
     await dbOrder.save({ transaction });
 
@@ -232,7 +264,7 @@ export const captureOrder = async (req, res) => {
 
     await transaction.commit();
 
-    // 📧 Email вне транзакции
+    // 📧 Email
     try {
       const fullItems = await OrderItem.findAll({
         where: { OrderId: dbOrder.id },
@@ -251,35 +283,21 @@ export const captureOrder = async (req, res) => {
 
   } catch (error) {
     await transaction.rollback();
-
-    if (error.response?.data) {
-      return res.status(400).json({
-        message: "Ошибка PayPal",
-        details: error.response.data,
-      });
-    }
-
     console.error("CAPTURE ERROR:", error.message);
 
     res.status(500).json({
-      message: "Внутренняя ошибка сервера",
+      message: "Ошибка подтверждения оплаты",
     });
   }
 };
+// ========================================
+// WEBHOOK (optional fallback)
+// ========================================
 
-// ==============================
-// WEBHOOK (fallback only)
-// ==============================
 export const paypalWebhook = async (req, res) => {
   try {
-    const event = req.body;
-
-    if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
-      console.warn("Webhook received (fallback)");
-    }
-
+    console.warn("Webhook received (optional fallback)");
     res.status(200).send("Webhook processed");
-
   } catch (error) {
     console.error("WEBHOOK ERROR:", error.message);
     res.status(500).send("Webhook error");

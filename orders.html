@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders - Level Up Gaming</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
@@ -16,37 +16,37 @@
         <div class="container">
             <nav class="navbar">
                 <a href="index.html" class="logo">
-                    <img src="images/logo.svg" alt="Level Up" class="logo-img">
+                    <img src="frontend/images/logo.svg" alt="Level Up" class="logo-img">
                 </a>
 
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">ГЛАВНАЯ</a></li>
-                    <li><a href="shop.html" class="nav-link">МАГАЗИН</a></li>
-                    <li><a href="about.html" class="nav-link">О НАС</a></li>
-                    <li><a href="contact.html" class="nav-link">КОНТАКТЫ</a></li>
+                    <li><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
                 </ul>
 
                 <div class="nav-actions">
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
                     </div>
 
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span>Профиль</span>
+                            <span data-en="Profile" data-ru="Мой профиль">Профиль</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
-                                <i class="fas fa-user-circle"></i><span>Мой профиль</span>
+                                <i class="fas fa-user-circle"></i><span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
-                                <i class="fas fa-box"></i><span>Мои заказы</span>
+                                <i class="fas fa-box"></i><span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
-                                <i class="fas fa-sign-out-alt"></i><span>Выйти</span>
+                                <i class="fas fa-sign-out-alt"></i><span data-en="Logout" data-ru="Выйти">Выйти</span>
                             </a>
                         </div>
                     </div>
@@ -85,9 +85,9 @@
     <section class="page-header">
         <div class="container">
             <h1 class="page-title">
-                <span class="gradient-text">Мои Заказы</span>
+                <span class="gradient-text" data-en="My Orders" data-ru="Мои заказы">Мои Заказы</span>
             </h1>
-            <p class="page-subtitle">История ваших покупок</p>
+            <p class="page-subtitle" data-en="Your purchase history" data-ru="История ваших покупок">История ваших покупок</p>
         </div>
     </section>
 
@@ -104,14 +104,14 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-bottom">
-                <p>&copy; 2026 Level Up Gaming Accessories. Все права защищены.</p>
+                <p data-en="&copy; 2026 Level Up Gaming Accessories. All rights reserved." data-ru="&copy; 2026 Level Up Gaming Accessories. Все права защищены.">© 2026 Level Up Gaming Accessories. Все права защищены.</p>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script type="module" src="js/orders.js"></script>
+    <script src="frontend/js/main.js"></script>
+    <script type="module" src="frontend/js/orders.js"></script>
 
 </body>
 </html>

@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Level Up Gaming Accessories</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/shop.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
 <body>
 
-<div class="stars-background" id="starsBackground"></div>
+    <div class="stars-background" id="starsBackground"></div>
 
-<header class="header">
-    <div class="container">
-        <nav class="navbar">
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
 
-            <a href="index.html" class="logo">
-                <img src="images/logo.svg" alt="Level Up Logo" class="logo-img">
+                <a href="index.html" class="logo">
+                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
             </a>
 
             <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
-                <li><a href="shop.html" class="active" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
-                <li><a href="about.html" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
-                <li><a href="contact.html" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
-            </ul>
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
 
             <div class="nav-actions">
 
@@ -35,18 +36,31 @@
                     <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
                 </div>
 
-                <div class="profile-dropdown" id="profileDropdown" style="display:none;">
-                    <button class="btn btn-profile" id="profileBtn">
-                        <i class="fas fa-user"></i>
-                        <span data-en="Profile" data-ru="Профиль">Профиль</span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="profile.html" data-en="My Profile" data-ru="Мой профиль">Мой профиль</a>
-                        <a href="orders.html" data-en="My Orders" data-ru="Мои заказы">Мои заказы</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" id="logoutBtn" data-en="Logout" data-ru="Выйти">Выйти</a>
+                <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i>
+                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                            </a>
+                            <a href="profile.html#settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
                 <div class="switcher language-switcher">
                     <button class="switcher-btn" id="langBtn">
@@ -112,8 +126,8 @@
     </div>
 </footer>
 
-<script src="js/main.js"></script>
-<script src="js/shop.js"></script>
+<script src="frontend/js/main.js"></script>
+<script src="frontend/js/shop.js"></script>
 
 </body>
 </html>
