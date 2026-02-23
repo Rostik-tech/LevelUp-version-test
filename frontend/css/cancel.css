@@ -1,0 +1,324 @@
+/* ========================================
+   Cancel Page Styles - Level Up Gaming
+   ======================================== */
+
+/* Cancel Section */
+.cancel-section {
+    padding: 160px 0 80px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cancel Card */
+.cancel-card {
+    background: linear-gradient(135deg, rgba(26, 0, 46, 0.95) 0%, rgba(10, 1, 24, 0.98) 100%);
+    border: 2px solid rgba(255, 165, 0, 0.3);
+    border-radius: 20px;
+    padding: 60px 40px;
+    box-shadow: 0 10px 50px rgba(255, 165, 0, 0.2), 
+                0 0 100px rgba(255, 140, 0, 0.15);
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto;
+    animation: cardFadeIn 0.8s ease-out;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Warning Icon (Animated Triangle) */
+.warning-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    position: relative;
+}
+
+.warning-triangle {
+    width: 120px;
+    height: 120px;
+    display: block;
+    animation: warningPulse 2s ease-in-out infinite;
+}
+
+.triangle-path {
+    stroke: #FFA500;
+    fill: rgba(255, 165, 0, 0.1);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 15px rgba(255, 165, 0, 0.6));
+    animation: triangleStroke 1s ease-out forwards;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+}
+
+.exclamation-mark {
+    fill: #FFA500;
+    font-family: var(--font-primary);
+    font-weight: 900;
+    filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.8));
+    animation: exclamationAppear 0.5s ease-out 1s forwards;
+    opacity: 0;
+}
+
+@keyframes triangleStroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes exclamationAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes warningPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Cancel Title */
+.cancel-title {
+    font-family: var(--font-primary);
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.warning-gradient {
+    background: linear-gradient(135deg, #FFA500 0%, #FF6B00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+.cancel-subtitle {
+    font-family: var(--font-secondary);
+    font-size: 18px;
+    color: var(--text-gray);
+    margin-bottom: 30px;
+}
+
+/* Info Message */
+.info-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 165, 0, 0.1);
+    border: 1px solid rgba(255, 165, 0, 0.3);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 40px;
+    color: #FFA500;
+    font-family: var(--font-secondary);
+    font-size: 14px;
+}
+
+.info-message i {
+    font-size: 18px;
+}
+
+/* Cancel Actions */
+.cancel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.btn-large {
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #FFA500 0%, #FF6B00 100%);
+    border: none;
+    color: #0a0118;
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 165, 0, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--primary-cyan);
+    color: var(--primary-cyan);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid rgba(255, 165, 0, 0.5);
+    color: #FFA500;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 165, 0, 0.1);
+    border-color: #FFA500;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 165, 0, 0.3);
+}
+
+/* Help Section */
+.help-section {
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 165, 0, 0.2);
+}
+
+.help-title {
+    font-family: var(--font-primary);
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFA500;
+    margin-bottom: 10px;
+}
+
+.help-text {
+    font-family: var(--font-secondary);
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.help-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-cyan);
+    font-family: var(--font-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.help-link:hover {
+    color: #FFA500;
+    transform: translateX(5px);
+}
+
+.help-link i {
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cancel-section {
+        padding: 140px 20px 60px;
+    }
+
+    .cancel-card {
+        padding: 40px 30px;
+    }
+
+    .warning-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .warning-triangle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .cancel-title {
+        font-size: 32px;
+    }
+
+    .cancel-subtitle {
+        font-size: 16px;
+    }
+
+    .info-message {
+        flex-direction: column;
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .cancel-actions {
+        gap: 12px;
+    }
+
+    .btn-large {
+        padding: 14px 24px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cancel-card {
+        padding: 30px 20px;
+    }
+
+    .warning-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .warning-triangle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .cancel-title {
+        font-size: 26px;
+    }
+
+    .cancel-subtitle {
+        font-size: 14px;
+    }
+
+    .btn-large {
+        padding: 12px 20px;
+        font-size: 13px;
+    }
+
+    .help-text {
+        font-size: 13px;
+    }
+}

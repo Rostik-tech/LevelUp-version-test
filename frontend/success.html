@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата Успешна - Level Up Gaming</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/success.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background" id="starsBackground"></div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <img src="images/logo.svg" alt="Level Up Logo" class="logo-img">
+                </a>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+
+                <!-- Right Side Buttons -->
+                <div class="nav-actions">
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
+                    </div>
+
+                    <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i>
+                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                            </a>
+                            <a href="profile.html#settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Language Switcher -->
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+
+                    <!-- Currency Switcher -->
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart -->
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Success Content -->
+    <section class="success-section">
+        <div class="container">
+            <div class="success-card">
+                <!-- Success Icon (Animated Checkmark) -->
+                <div class="success-icon">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="success-title">
+                    <span class="gradient-text" data-en="Payment Successful!" data-ru="Оплата Успешна!">Оплата Успешна!</span>
+                </h1>
+
+                <p class="success-subtitle" data-en="Your order has been confirmed" data-ru="Ваш заказ подтвержден">
+                    Ваш заказ подтвержден
+                </p>
+
+                <!-- Order Details -->
+                <div class="order-details">
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Order Number:" data-ru="Номер заказа:">Номер заказа:</span>
+                        <span class="detail-value order-number">#ORD-XXXX</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Total Amount:" data-ru="Общая сумма:">Общая сумма:</span>
+                        <span class="detail-value total-amount">$0.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-en="Payment Method:" data-ru="Способ оплаты:">Способ оплаты:</span>
+                        <span class="detail-value payment-method">PayPal</span>
+                    </div>
+                </div>
+
+                <!-- Email Confirmation -->
+                <div class="email-confirmation">
+                    <i class="fas fa-envelope"></i>
+                    <span data-en="Confirmation email has been sent" data-ru="Письмо с подтверждением отправлено">
+                        Письмо с подтверждением отправлено
+                    </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="success-actions">
+                    <a href="orders.html" class="btn-primary btn-large">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span data-en="View My Orders" data-ru="Мои Заказы">Мои Заказы</span>
+                    </a>
+                    <a href="shop.html" class="btn-secondary btn-large">
+                        <i class="fas fa-store"></i>
+                        <span data-en="Continue Shopping" data-ru="Продолжить Покупки">Продолжить Покупки</span>
+                    </a>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="additional-info">
+                    <p data-en="Thank you for shopping with Level Up Gaming!" data-ru="Спасибо за покупку в Level Up Gaming!">
+                        Спасибо за покупку в Level Up Gaming!
+                    </p>
+                    <p data-en="Track your order status in the Orders section" data-ru="Отслеживайте статус заказа в разделе Заказы">
+                        Отслеживайте статус заказа в разделе Заказы
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Level Up Gaming</h3>
+                    <p data-en="Premium gaming accessories for champions" data-ru="Премиальные игровые аксессуары для чемпионов">Премиальные игровые аксессуары для чемпионов</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Quick Links" data-ru="Быстрые ссылки">Быстрые ссылки</h4>
+                    <ul>
+                        <li><a href="index.html" data-en="Home" data-ru="Главная">Главная</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a></li>
+                        <li><a href="about.html" data-en="About" data-ru="О нас">О нас</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Follow Us" data-ru="Мы в соцсетях">Мы в соцсетях</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Level Up Gaming. <span data-en="All rights reserved" data-ru="Все права защищены">Все права защищены</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/success.js"></script>
+</body>
+</html>
