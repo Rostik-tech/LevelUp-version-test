@@ -20,17 +20,21 @@
             </a>
 
             <h1 class="admin-title">
-                <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">Админ Панель</span>
+                <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">
+                    Админ Панель
+                </span>
             </h1>
 
-                    <div class="switcher language-switcher">
-                        <button class="switcher-btn" id="langBtn"><i class="fas fa-globe"></i><span id="currentLang">RU</span></button>
-                        <div class="switcher-menu" id="langMenu">
-                            <button class="switcher-option" data-lang="ru">RU</button>
-                            <button class="switcher-option" data-lang="en">EN</button>
-                        </div>
-                    </div>
-                    
+            <div class="switcher language-switcher">
+                <button class="switcher-btn" id="langBtn">
+                    <i class="fas fa-globe"></i>
+                    <span id="currentLang">RU</span>
+                </button>
+                <div class="switcher-menu" id="langMenu">
+                    <button class="switcher-option" data-lang="ru">RU</button>
+                    <button class="switcher-option" data-lang="en">EN</button>
+                </div>
+            </div>
 
             <button class="btn btn-outline" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i>
@@ -48,7 +52,9 @@
                 <nav class="admin-menu">
                     <a href="#dashboard" class="admin-menu-link active">
                         <i class="fas fa-chart-line"></i>
-                        <span data-en="Dashboard" data-ru="Панель управления">Панель управления</span>
+                        <span data-en="Dashboard" data-ru="Панель управления">
+                            Панель управления
+                        </span>
                     </a>
                     <a href="#products" class="admin-menu-link">
                         <i class="fas fa-box"></i>
@@ -60,25 +66,45 @@
                     </a>
                     <a href="#users" class="admin-menu-link">
                         <i class="fas fa-users"></i>
-                        <span data-en="Users" data-ru="Пользователи">Пользователи</span>
+                        <span data-en="Users" data-ru="Пользователи">
+                            Пользователи
+                        </span>
                     </a>
                     <a href="#settings" class="admin-menu-link">
                         <i class="fas fa-cog"></i>
-                        <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                        <span data-en="Settings" data-ru="Настройки">
+                            Настройки
+                        </span>
                     </a>
                 </nav>
             </aside>
 
             <div class="admin-main">
-                <h2 class="admin-welcome" data-en="Welcome to Admin Panel" data-ru="Добро пожаловать в админ-панель">Добро пожаловать в админ-панель</h2>
-                <p data-en="Access is restricted to administrators only." data-ru="Доступ разрешён только администраторам.">Доступ разрешён только администраторам.</p>
+
+                <h2 class="admin-welcome"
+                    data-en="Welcome to Admin Panel"
+                    data-ru="Добро пожаловать в админ-панель">
+                    Добро пожаловать в админ-панель
+                </h2>
+
+                <p data-en="Access is restricted to administrators only."
+                   data-ru="Доступ разрешён только администраторам.">
+                   Доступ разрешён только администраторам.
+                </p>
+
+                <!-- ORDERS SECTION -->
+                <div id="ordersSection" style="margin-top:40px;">
+                    <h3 data-en="Orders" data-ru="Заказы">Заказы</h3>
+                    <div id="ordersList"></div>
+                </div>
+
             </div>
 
         </div>
     </div>
 </section>
 
-
+<script src="frontend/js/main.js"></script>
 
 <script>
 requireAdmin();
@@ -87,7 +113,8 @@ document.getElementById("logoutBtn").addEventListener("click", function () {
     logout();
 });
 </script>
-<script src="frontend/js/main.js"></script>
+
 <script type="module" src="frontend/js/admin.js"></script>
+
 </body>
 </html>

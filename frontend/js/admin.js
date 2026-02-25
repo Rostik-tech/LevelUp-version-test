@@ -1,7 +1,15 @@
 const API_URL = "http://localhost:5000/api";
 
+/* =========================
+   API HELPER
+========================= */
 async function apiRequest(path, options = {}) {
   const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "index.html";
+    return;
+  }
 
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
@@ -30,9 +38,9 @@ async function apiRequest(path, options = {}) {
    SERVER-SIDE ADMIN CHECK
 ========================= */
 async function verifyAdmin() {
-  const user = await apiRequest("/auth/me");
-
-  if (!user || user.role !== "ADMIN") {
+  try {
+    await apiRequest("/test-admin");
+  } catch (err) {
     window.location.href = "index.html";
   }
 }
@@ -62,19 +70,25 @@ function setupNavigation() {
 async function loadSection(section) {
   const container = document.querySelector(".admin-main");
 
-  if (section === "orders") {
-    const orders = await apiRequest("/admin/orders");
-    renderOrders(container, orders);
-  }
+  try {
 
-  if (section === "products") {
-    const products = await apiRequest("/admin/products");
-    renderProducts(container, products);
-  }
+    if (section === "orders") {
+      const orders = await apiRequest("/admin/orders");
+      renderOrders(container, orders);
+    }
 
-  if (section === "users") {
-    const users = await apiRequest("/admin/users");
-    renderUsers(container, users);
+    if (section === "products") {
+      const products = await apiRequest("/admin/products");
+      renderProducts(container, products);
+    }
+
+    if (section === "users") {
+      const users = await apiRequest("/admin/users");
+      renderUsers(container, users);
+    }
+
+  } catch (err) {
+    container.innerHTML = `<p>Ошибка: ${err.message}</p>`;
   }
 }
 
@@ -84,6 +98,7 @@ async function loadSection(section) {
 function renderOrders(container, orders) {
   container.innerHTML = `
     <h2>Orders</h2>
+    ${orders.length === 0 ? "<p>No orders</p>" : ""}
     ${orders.map(order => `
       <div class="admin-card">
         <strong>Order #${order.id}</strong>
@@ -94,7 +109,7 @@ function renderOrders(container, orders) {
         ${
           order.status === "PAID" ||
           order.status === "PARTIALLY_REFUNDED"
-            ? `<button class="refund-btn" data-id="${order.id}">
+            ? `<button class="refund-btn btn btn-outline" data-id="${order.id}">
                 Refund
                </button>`
             : ""
@@ -167,4 +182,7 @@ function renderUsers(container, users) {
 (async function init() {
   await verifyAdmin();
   setupNavigation();
+
+  // Автоматически грузим Orders при открытии
+  await loadSection("orders");
 })();

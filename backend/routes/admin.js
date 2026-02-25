@@ -154,12 +154,14 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
   const transaction = await sequelize.transaction();
 
   try {
+    const { amount, reason } = req.body;
+
     const order = await Order.findByPk(req.params.id, {
       transaction,
       lock: transaction.LOCK.UPDATE,
     });
 
-    if (!order || order.status !== "PAID") {
+    if (!order || !["PAID", "PARTIALLY_REFUNDED"].includes(order.status)) {
       await transaction.rollback();
       return res.status(400).json({ message: "Refund only for paid orders" });
     }
@@ -175,11 +177,26 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
       return res.status(400).json({ message: "No capture found" });
     }
 
+    const refundable = payment.amount - payment.refundedAmount;
+    const refundAmount = amount ? parseFloat(amount) : refundable;
+
+    if (refundAmount <= 0 || refundAmount > refundable) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Invalid refund amount" });
+    }
+
     const accessToken = await getAccessToken();
 
     const paypalResponse = await axios.post(
       `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
-      {},
+      refundAmount
+        ? {
+            amount: {
+              value: refundAmount.toFixed(2),
+              currency_code: "USD",
+            },
+          }
+        : {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -190,14 +207,22 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
 
     await Refund.create({
       PaymentId: payment.id,
-      amount: payment.amount,
+      amount: refundAmount,
       currency: "USD",
       paypalRefundId: paypalResponse.data.id,
-      status: "COMPLETED"
+      status: "COMPLETED",
+      reason: reason || null
     }, { transaction });
 
-    payment.status = "REFUNDED";
-    order.status = "REFUNDED";
+    payment.refundedAmount += refundAmount;
+
+    if (payment.refundedAmount >= payment.amount) {
+      payment.status = "REFUNDED";
+      order.status = "REFUNDED";
+    } else {
+      payment.status = "PARTIALLY_REFUNDED";
+      order.status = "PARTIALLY_REFUNDED";
+    }
 
     await payment.save({ transaction });
     await order.save({ transaction });
@@ -208,8 +233,8 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
 
   } catch (error) {
     await transaction.rollback();
+    console.error("REFUND ERROR:", error.response?.data || error.message);
     res.status(500).json({ message: "Refund failed" });
   }
 });
-
 export default router;
