@@ -1,8 +1,9 @@
 // backend/server.js
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config();
+import helmet from "helmet";
 
 import authRouter from "./routes/auth.js";
 import orderRouter from "./routes/orders.js";
@@ -15,7 +16,14 @@ import { sequelize } from "./models/index.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import { isAdmin } from "./middleware/adminMiddleware.js";
 
+dotenv.config();
+
 const app = express();
+
+/* =====================
+   Security Middleware
+===================== */
+app.use(helmet());
 
 /* =====================
    CORS
@@ -29,7 +37,7 @@ app.use(cors({
 }));
 
 /* =====================
-   RAW body для Webhook
+   RAW body для PayPal Webhook
 ===================== */
 app.use(
   "/api/payments/webhook",
@@ -42,7 +50,7 @@ app.use(
 app.use(express.json());
 
 /* =====================
-   Роуты
+   Routes
 ===================== */
 app.use("/api/auth", authRouter);
 app.use("/api/orders", orderRouter);
@@ -50,11 +58,10 @@ app.use("/api/products", productRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/users", usersRoutes);
-/* =====================
-   ТЕСТЫ АВТОРИЗАЦИИ
-===================== */
 
-// Проверка обычного пользователя
+/* =====================
+   Auth Test Endpoints
+===================== */
 app.get("/api/test-auth", authenticateToken, (req, res) => {
   res.json({
     message: "Auth works",
@@ -62,7 +69,6 @@ app.get("/api/test-auth", authenticateToken, (req, res) => {
   });
 });
 
-// Проверка админа
 app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
   res.json({
     message: "Admin access granted"
@@ -70,17 +76,36 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 });
 
 /* =====================
-   Запуск сервера
+   Global Error Handler
+===================== */
+app.use((err, req, res, next) => {
+  console.error("UNHANDLED ERROR:", err);
+  res.status(500).json({ message: "Internal Server Error" });
+});
+
+/* =====================
+   Database & Server Start
 ===================== */
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: true })
-  .then(() => {
-    console.log("База данных синхронизирована");
-    app.listen(PORT, () =>
-      console.log(`Сервер запущен на порту ${PORT}`)
-    );
-  })
-  .catch((err) =>
-    console.log("Ошибка синхронизации базы:", err)
-  );
+const startServer = async () => {
+  try {
+    if (process.env.NODE_ENV === "development") {
+      await sequelize.sync({ alter: true });
+      console.log("DB synced (development mode)");
+    } else {
+      await sequelize.authenticate();
+      console.log("DB connected (production mode)");
+    }
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("Server startup error:", err);
+    process.exit(1);
+  }
+};
+
+startServer();

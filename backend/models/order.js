@@ -1,17 +1,47 @@
 // backend/models/order.js
+
 import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   return sequelize.define(
     "Order",
     {
+      /* ======================
+         💰 PAYMENT INFO
+      ====================== */
+
       totalPrice: {
         type: DataTypes.DOUBLE,
         allowNull: false,
         defaultValue: 0,
       },
 
-      // 🔒 ENUM в UPPERCASE (совпадает с БД)
+      refundedAmount: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+        defaultValue: 0,
+      },
+
+      currency: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        defaultValue: "USD",
+      },
+
+      paypalOrderId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      paypalCaptureId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      /* ======================
+         📦 STATUS
+      ====================== */
+
       status: {
         type: DataTypes.ENUM(
           "PENDING",
@@ -19,15 +49,17 @@ export default (sequelize) => {
           "PROCESSING",
           "SHIPPED",
           "DELIVERED",
-          "CANCELLED"
+          "CANCELLED",
+          "PARTIALLY_REFUNDED",
+          "REFUNDED"
         ),
         allowNull: false,
         defaultValue: "PENDING",
       },
 
-      // ======================
-      // SHIPPING INFO
-      // ======================
+      /* ======================
+         🚚 SHIPPING INFO
+      ====================== */
 
       shippingFullName: {
         type: DataTypes.STRING,
@@ -58,9 +90,20 @@ export default (sequelize) => {
       },
     },
     {
-      tableName: "Orders",     // 🔥 ВАЖНО
-      freezeTableName: true,   // 🔥 Не создавать orders
+      tableName: "Orders",
+      freezeTableName: true,
       timestamps: true,
+      indexes: [
+        {
+          fields: ["status"],
+        },
+        {
+          fields: ["paypalOrderId"],
+        },
+        {
+          fields: ["paypalCaptureId"],
+        },
+      ],
     }
   );
 };

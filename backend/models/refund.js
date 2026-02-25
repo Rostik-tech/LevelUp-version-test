@@ -1,24 +1,18 @@
-// backend/models/payment.js
+// backend/models/refund.js
 
 import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   return sequelize.define(
-    "Payment",
+    "Refund",
     {
       /* ======================
-         💰 BASIC PAYMENT INFO
+         💰 REFUND AMOUNT
       ====================== */
 
       amount: {
         type: DataTypes.DOUBLE,
         allowNull: false,
-      },
-
-      refundedAmount: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
-        defaultValue: 0,
       },
 
       currency: {
@@ -27,24 +21,14 @@ export default (sequelize) => {
         defaultValue: "USD",
       },
 
-      method: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: "PAYPAL",
-      },
-
       /* ======================
-         🔗 PAYPAL IDS
+         🔗 PAYPAL DATA
       ====================== */
 
-      paypalOrderId: {
+      paypalRefundId: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-
-      paypalCaptureId: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        unique: true, // защита от дублирования
       },
 
       /* ======================
@@ -55,22 +39,28 @@ export default (sequelize) => {
         type: DataTypes.ENUM(
           "PENDING",
           "COMPLETED",
-          "FAILED",
-          "PARTIALLY_REFUNDED",
-          "REFUNDED"
+          "FAILED"
         ),
         allowNull: false,
         defaultValue: "PENDING",
       },
+
+      /* ======================
+         📝 OPTIONAL
+      ====================== */
+
+      reason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
-      tableName: "Payments",
+      tableName: "Refunds",
       freezeTableName: true,
       timestamps: true,
       indexes: [
         { fields: ["status"] },
-        { fields: ["paypalOrderId"] },
-        { fields: ["paypalCaptureId"] }
+        { fields: ["paypalRefundId"] },
       ],
     }
   );

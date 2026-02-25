@@ -215,23 +215,29 @@ export const captureOrder = async (req, res) => {
     );
 
     // 🔍 5. Проверка статуса PayPal
-    const verifyResponse = await axios.get(
-      `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+const verifyResponse = await axios.get(
+  `${PAYPAL_BASE}/v2/checkout/orders/${id}`,
+  {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  }
+);
 
-    if (
-      verifyResponse.data.status !== "COMPLETED" ||
-      verifyResponse.data.purchase_units[0].amount.value !==
-        dbOrder.totalPrice.toFixed(2)
-    ) {
-      await transaction.rollback();
-      return res.status(400).json({
-        message: "Оплата не подтверждена или сумма не совпадает",
-      });
-    }
+if (
+  verifyResponse.data.status !== "COMPLETED" ||
+  verifyResponse.data.purchase_units[0].amount.value !==
+    dbOrder.totalPrice.toFixed(2)
+) {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Оплата не подтверждена или сумма не совпадает",
+  });
+}
+
+// 🔥 ВАЖНО: сохраняем captureId
+const captureId =
+  verifyResponse.data.purchase_units[0].payments.captures[0].id;
+
+payment.paypalCaptureId = captureId;
 
     // 🔥 6. Уменьшаем stock
     const items = await OrderItem.findAll({
