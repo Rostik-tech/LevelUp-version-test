@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Refund Policy - Level Up Gaming" data-ru="Политика возврата - Level Up Gaming">Политика возврата - Level Up Gaming</title>
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/refund-policy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background"></div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
+                </a>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+
+                <!-- Right Side Buttons -->
+                <div class="nav-actions">
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
+                    </div>
+
+                    <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i>
+                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                            </a>
+                            <a href="profile.html#settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Language Switcher -->
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+
+                    <!-- Currency Switcher -->
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart -->
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Refund Policy Content -->
+    <main class="refund-section">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-icon">
+                    <i class="fas fa-undo-alt"></i>
+                </div>
+                <h1 class="page-title" data-en="Refund Policy" data-ru="Политика возврата">Политика возврата</h1>
+                <p class="page-subtitle" data-en="Your satisfaction is our priority" data-ru="Ваше удовлетворение - наш приоритет">Ваше удовлетворение - наш приоритет</p>
+                <p class="page-updated" data-en="Last updated: February 2026" data-ru="Последнее обновление: Февраль 2026">Последнее обновление: Февраль 2026</p>
+            </div>
+
+            <!-- Refund Content -->
+            <div class="refund-content">
+                <!-- Section 1: Eligibility -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="section-title" data-en="1. Refund Eligibility" data-ru="1. Право на возврат">1. Право на возврат</h2>
+                    <div class="section-content">
+                        <p data-en="We offer refunds on eligible products purchased through our website. To qualify for a refund, certain conditions must be met." data-ru="Мы предлагаем возврат средств за соответствующие товары, купленные через наш веб-сайт. Чтобы иметь право на возврат, должны быть выполнены определенные условия.">
+                            Мы предлагаем возврат средств за соответствующие товары, купленные через наш веб-сайт. Чтобы иметь право на возврат, должны быть выполнены определенные условия.
+                        </p>
+                        
+                        <div class="eligibility-grid">
+                            <div class="eligibility-card">
+                                <i class="fas fa-calendar-check"></i>
+                                <h4 data-en="14-Day Window" data-ru="14 дней">14 дней</h4>
+                                <p data-en="Return within 14 days of delivery" data-ru="Возврат в течение 14 дней с момента доставки">Возврат в течение 14 дней с момента доставки</p>
+                            </div>
+                            <div class="eligibility-card">
+                                <i class="fas fa-credit-card"></i>
+                                <h4 data-en="Paid Orders Only" data-ru="Только оплаченные">Только оплаченные</h4>
+                                <p data-en="Order must be paid in full" data-ru="Заказ должен быть полностью оплачен">Заказ должен быть полностью оплачен</p>
+                            </div>
+                            <div class="eligibility-card">
+                                <i class="fas fa-box"></i>
+                                <h4 data-en="Original Condition" data-ru="Оригинальное состояние">Оригинальное состояние</h4>
+                                <p data-en="Unused with original packaging" data-ru="Неиспользованный с оригинальной упаковкой">Неиспользованный с оригинальной упаковкой</p>
+                            </div>
+                            <div class="eligibility-card">
+                                <i class="fas fa-receipt"></i>
+                                <h4 data-en="Proof of Purchase" data-ru="Подтверждение покупки">Подтверждение покупки</h4>
+                                <p data-en="Valid order ID required" data-ru="Требуется действительный ID заказа">Требуется действительный ID заказа</p>
+                            </div>
+                        </div>
+
+                        <div class="requirements-box">
+                            <h3 data-en="Requirements for Refund:" data-ru="Требования для возврата:">Требования для возврата:</h3>
+                            <ul class="refund-list">
+                                <li data-en="Product must be returned within 14 days of delivery date" data-ru="Товар должен быть возвращен в течение 14 дней с даты доставки">
+                                    <span data-en="Product must be returned within 14 days of delivery date" data-ru="Товар должен быть возвращен в течение 14 дней с даты доставки">Товар должен быть возвращен в течение 14 дней с даты доставки</span>
+                                </li>
+                                <li data-en="Item must be unused, unworn, and in original condition" data-ru="Товар должен быть неиспользованным, неношеным и в оригинальном состоянии">
+                                    <span data-en="Item must be unused, unworn, and in original condition" data-ru="Товар должен быть неиспользованным, неношеным и в оригинальном состоянии">Товар должен быть неиспользованным, неношеным и в оригинальном состоянии</span>
+                                </li>
+                                <li data-en="Original packaging and all accessories must be included" data-ru="Оригинальная упаковка и все аксессуары должны быть включены">
+                                    <span data-en="Original packaging and all accessories must be included" data-ru="Оригинальная упаковка и все аксессуары должны быть включены">Оригинальная упаковка и все аксессуары должны быть включены</span>
+                                </li>
+                                <li data-en="You must provide your Order ID (found in confirmation email)" data-ru="Вы должны предоставить ID заказа (находится в письме-подтверждении)">
+                                    <span data-en="You must provide your Order ID (found in confirmation email)" data-ru="Вы должны предоставить ID заказа (находится в письме-подтверждении)">Вы должны предоставить ID заказа (находится в письме-подтверждении)</span>
+                                </li>
+                                <li data-en="Product must not show signs of use or damage" data-ru="Товар не должен иметь следов использования или повреждений">
+                                    <span data-en="Product must not show signs of use or damage" data-ru="Товар не должен иметь следов использования или повреждений">Товар не должен иметь следов использования или повреждений</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Partial Refunds -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h2 class="section-title" data-en="2. Partial Refunds" data-ru="2. Частичный возврат">2. Частичный возврат</h2>
+                    <div class="section-content">
+                        <p data-en="In certain situations, partial refunds may be granted instead of full refunds." data-ru="В определенных ситуациях может быть предоставлен частичный возврат вместо полного возврата.">
+                            В определенных ситуациях может быть предоставлен частичный возврат вместо полного возврата.
+                        </p>
+                        
+                        <div class="partial-refund-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4 data-en="When Partial Refunds Apply" data-ru="Когда применяется частичный возврат">Когда применяется частичный возврат</h4>
+                                <p data-en="A partial refund may be issued if the product shows signs of use or is not in perfect condition." data-ru="Частичный возврат может быть выдан, если товар имеет следы использования или не в идеальном состоянии.">
+                                    Частичный возврат может быть выдан, если товар имеет следы использования или не в идеальном состоянии.
+                                </p>
+                            </div>
+                        </div>
+
+                        <h3 class="subsection-title" data-en="Partial refunds are granted for:" data-ru="Частичный возврат предоставляется за:">Частичный возврат предоставляется за:</h3>
+                        <ul class="refund-list">
+                            <li data-en="Products with obvious signs of use or wear" data-ru="Товары с явными признаками использования или износа">
+                                <span data-en="Products with obvious signs of use or wear" data-ru="Товары с явными признаками использования или износа">Товары с явными признаками использования или износа</span>
+                            </li>
+                            <li data-en="Items returned more than 14 days after delivery (at our discretion)" data-ru="Товары, возвращенные более чем через 14 дней после доставки (по нашему усмотрению)">
+                                <span data-en="Items returned more than 14 days after delivery (at our discretion)" data-ru="Товары, возвращенные более чем через 14 дней после доставки (по нашему усмотрению)">Товары, возвращенные более чем через 14 дней после доставки (по нашему усмотрению)</span>
+                            </li>
+                            <li data-en="Products with damaged or missing packaging" data-ru="Товары с поврежденной или отсутствующей упаковкой">
+                                <span data-en="Products with damaged or missing packaging" data-ru="Товары с поврежденной или отсутствующей упаковкой">Товары с поврежденной или отсутствующей упаковкой</span>
+                            </li>
+                            <li data-en="Items missing accessories or components" data-ru="Товары с отсутствующими аксессуарами или компонентами">
+                                <span data-en="Items missing accessories or components" data-ru="Товары с отсутствующими аксессуарами или компонентами">Товары с отсутствующими аксессуарами или компонентами</span>
+                            </li>
+                            <li data-en="Products damaged due to customer negligence" data-ru="Товары, поврежденные из-за небрежности клиента">
+                                <span data-en="Products damaged due to customer negligence" data-ru="Товары, поврежденные из-за небрежности клиента">Товары, поврежденные из-за небрежности клиента</span>
+                            </li>
+                        </ul>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <h4 data-en="Refund Amount" data-ru="Сумма возврата">Сумма возврата</h4>
+                                <p data-en="The exact amount of the partial refund will be determined based on the condition of the returned product. Typically, partial refunds range from 50% to 80% of the original purchase price." data-ru="Точная сумма частичного возврата будет определена на основе состояния возвращенного товара. Обычно частичный возврат составляет от 50% до 80% от первоначальной цены покупки.">
+                                    Точная сумма частичного возврата будет определена на основе состояния возвращенного товара. Обычно частичный возврат составляет от 50% до 80% от первоначальной цены покупки.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Non-Refundable Items -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h2 class="section-title" data-en="3. Non-Refundable Items" data-ru="3. Товары без возврата">3. Товары без возврата</h2>
+                    <div class="section-content">
+                        <p data-en="Certain items cannot be returned or refunded due to hygiene, safety, or nature of the product." data-ru="Некоторые товары не могут быть возвращены или возмещены из-за гигиены, безопасности или характера товара.">
+                            Некоторые товары не могут быть возвращены или возмещены из-за гигиены, безопасности или характера товара.
+                        </p>
+
+                        <div class="non-refundable-grid">
+                            <div class="non-refundable-item">
+                                <i class="fas fa-headphones"></i>
+                                <h4 data-en="Opened Headsets" data-ru="Открытые наушники">Открытые наушники</h4>
+                                <p data-en="Due to hygiene concerns" data-ru="Из соображений гигиены">Из соображений гигиены</p>
+                            </div>
+                            <div class="non-refundable-item">
+                                <i class="fas fa-gift"></i>
+                                <h4 data-en="Gift Cards" data-ru="Подарочные карты">Подарочные карты</h4>
+                                <p data-en="Cannot be refunded" data-ru="Невозможно вернуть">Невозможно вернуть</p>
+                            </div>
+                            <div class="non-refundable-item">
+                                <i class="fas fa-download"></i>
+                                <h4 data-en="Digital Products" data-ru="Цифровые товары">Цифровые товары</h4>
+                                <p data-en="Software & downloads" data-ru="ПО и загрузки">ПО и загрузки</p>
+                            </div>
+                            <div class="non-refundable-item">
+                                <i class="fas fa-tag"></i>
+                                <h4 data-en="Sale Items" data-ru="Товары со скидкой">Товары со скидкой</h4>
+                                <p data-en="Final sale only" data-ru="Только окончательная продажа">Только окончательная продажа</p>
+                            </div>
+                        </div>
+
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <h4 data-en="Important Notice" data-ru="Важное уведомление">Важное уведомление</h4>
+                                <p data-en="Please review product descriptions carefully before purchase. Items marked as 'Final Sale' or 'Non-Refundable' cannot be returned under any circumstances." data-ru="Пожалуйста, внимательно ознакомьтесь с описанием товара перед покупкой. Товары с пометкой 'Окончательная продажа' или 'Без возврата' не могут быть возвращены ни при каких обстоятельствах.">
+                                    Пожалуйста, внимательно ознакомьтесь с описанием товара перед покупкой. Товары с пометкой "Окончательная продажа" или "Без возврата" не могут быть возвращены ни при каких обстоятельствах.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Refund Process -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h2 class="section-title" data-en="4. How to Request a Refund" data-ru="4. Как запросить возврат">4. Как запросить возврат</h2>
+                    <div class="section-content">
+                        <p data-en="Follow these simple steps to initiate a refund request:" data-ru="Следуйте этим простым шагам, чтобы инициировать запрос на возврат:">
+                            Следуйте этим простым шагам, чтобы инициировать запрос на возврат:
+                        </p>
+
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4 data-en="Contact Support" data-ru="Свяжитесь с поддержкой">Свяжитесь с поддержкой</h4>
+                                    <p data-en="Email us at support@levelupgaming.com or call +7 (495) 123-45-67" data-ru="Напишите нам на support@levelupgaming.com или позвоните +7 (495) 123-45-67">
+                                        Напишите нам на support@levelupgaming.com или позвоните +7 (495) 123-45-67
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4 data-en="Provide Order ID" data-ru="Предоставьте ID заказа">Предоставьте ID заказа</h4>
+                                    <p data-en="Include your Order ID from the confirmation email (e.g., #ORD-12345678)" data-ru="Укажите ID заказа из письма-подтверждения (например, #ORD-12345678)">
+                                        Укажите ID заказа из письма-подтверждения (например, #ORD-12345678)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4 data-en="Explain the Reason" data-ru="Объясните причину">Объясните причину</h4>
+                                    <p data-en="Tell us why you want to return the product (defect, wrong item, etc.)" data-ru="Расскажите нам, почему вы хотите вернуть товар (дефект, неправильный товар и т.д.)">
+                                        Расскажите нам, почему вы хотите вернуть товар (дефект, неправильный товар и т.д.)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4 data-en="Receive Instructions" data-ru="Получите инструкции">Получите инструкции</h4>
+                                    <p data-en="We'll send you return instructions and a return address" data-ru="Мы отправим вам инструкции по возврату и адрес для возврата">
+                                        Мы отправим вам инструкции по возврату и адрес для возврата
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4 data-en="Ship the Item" data-ru="Отправьте товар">Отправьте товар</h4>
+                                    <p data-en="Pack the item securely and ship it to the provided address" data-ru="Надежно упакуйте товар и отправьте его по указанному адресу">
+                                        Надежно упакуйте товар и отправьте его по указанному адресу
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="process-step">
+                                <div class="step-number">6</div>
+                                <div class="step-content">
+                                    <h4 data-en="Receive Refund" data-ru="Получите возврат">Получите возврат</h4>
+                                    <p data-en="Once we receive and inspect the item, your refund will be processed" data-ru="После того как мы получим и проверим товар, ваш возврат будет обработан">
+                                        После того как мы получим и проверим товар, ваш возврат будет обработан
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="paypal-box">
+                            <i class="fab fa-paypal"></i>
+                            <div>
+                                <h4 data-en="PayPal Refund" data-ru="Возврат через PayPal">Возврат через PayPal</h4>
+                                <p data-en="All refunds are processed through PayPal and will be credited to your original payment method within 5-10 business days." data-ru="Все возвраты обрабатываются через PayPal и будут зачислены на ваш исходный способ оплаты в течение 5-10 рабочих дней.">
+                                    Все возвраты обрабатываются через PayPal и будут зачислены на ваш исходный способ оплаты в течение 5-10 рабочих дней.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Processing Time -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h2 class="section-title" data-en="5. Refund Processing Time" data-ru="5. Сроки обработки возврата">5. Сроки обработки возврата</h2>
+                    <div class="section-content">
+                        <p data-en="Once we receive your returned item, we will inspect it and process your refund as quickly as possible." data-ru="Как только мы получим ваш возвращенный товар, мы проверим его и обработаем ваш возврат как можно быстрее.">
+                            Как только мы получим ваш возвращенный товар, мы проверим его и обработаем ваш возврат как можно быстрее.
+                        </p>
+
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4 data-en="Shipping to Us" data-ru="Доставка к нам">Доставка к нам</h4>
+                                    <p class="timeline-duration" data-en="3-7 business days" data-ru="3-7 рабочих дней">3-7 рабочих дней</p>
+                                    <p data-en="Time for your return package to reach our warehouse" data-ru="Время для доставки вашей посылки в наш склад">Время для доставки вашей посылки в наш склад</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4 data-en="Inspection" data-ru="Проверка">Проверка</h4>
+                                    <p class="timeline-duration" data-en="1-2 business days" data-ru="1-2 рабочих дня">1-2 рабочих дня</p>
+                                    <p data-en="We inspect the item to verify its condition" data-ru="Мы проверяем товар, чтобы убедиться в его состоянии">Мы проверяем товар, чтобы убедиться в его состоянии</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4 data-en="Refund Processing" data-ru="Обработка возврата">Обработка возврата</h4>
+                                    <p class="timeline-duration" data-en="5-10 business days" data-ru="5-10 рабочих дней">5-10 рабочих дней</p>
+                                    <p data-en="Time for the refund to appear in your PayPal account" data-ru="Время для появления возврата в вашем аккаунте PayPal">Время для появления возврата в вашем аккаунте PayPal</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-marker">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4 data-en="Completed" data-ru="Завершено">Завершено</h4>
+                                    <p class="timeline-duration" data-en="Total: 9-19 days" data-ru="Всего: 9-19 дней">Всего: 9-19 дней</p>
+                                    <p data-en="Full refund process completed" data-ru="Полный процесс возврата завершен">Полный процесс возврата завершен</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            <i class="fas fa-bell"></i>
+                            <div>
+                                <h4 data-en="Email Notifications" data-ru="Email уведомления">Email уведомления</h4>
+                                <p data-en="You will receive email updates at each stage of the refund process. Please check your spam folder if you don't see our emails." data-ru="Вы будете получать обновления по электронной почте на каждом этапе процесса возврата. Пожалуйста, проверьте папку спам, если вы не видите наших писем.">
+                                    Вы будете получать обновления по электронной почте на каждом этапе процесса возврата. Пожалуйста, проверьте папку спам, если вы не видите наших писем.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Contact & Support -->
+                <section class="refund-section-item">
+                    <div class="section-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h2 class="section-title" data-en="6. Need Help?" data-ru="6. Нужна помощь?">6. Нужна помощь?</h2>
+                    <div class="section-content">
+                        <p data-en="If you have any questions about our refund policy or need assistance with a return, please don't hesitate to contact us." data-ru="Если у вас есть вопросы о нашей политике возврата или вам нужна помощь с возвратом, пожалуйста, не стесняйтесь связаться с нами.">
+                            Если у вас есть вопросы о нашей политике возврата или вам нужна помощь с возвратом, пожалуйста, не стесняйтесь связаться с нами.
+                        </p>
+
+                        <div class="contact-grid">
+                            <div class="contact-card">
+                                <i class="fas fa-envelope"></i>
+                                <h4 data-en="Email Support" data-ru="Email поддержка">Email поддержка</h4>
+                                <a href="mailto:support@levelupgaming.com">support@levelupgaming.com</a>
+                                <p data-en="Response within 24 hours" data-ru="Ответ в течение 24 часов">Ответ в течение 24 часов</p>
+                            </div>
+
+                            <div class="contact-card">
+                                <i class="fas fa-phone"></i>
+                                <h4 data-en="Phone Support" data-ru="Телефон поддержка">Телефон поддержка</h4>
+                                <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+                                <p data-en="Mon-Fri, 9:00-18:00 MSK" data-ru="Пн-Пт, 9:00-18:00 МСК">Пн-Пт, 9:00-18:00 МСК</p>
+                            </div>
+
+                            <div class="contact-card">
+                                <i class="fas fa-comments"></i>
+                                <h4 data-en="Live Chat" data-ru="Онлайн-чат">Онлайн-чат</h4>
+                                <a href="contact.html" data-en="Start Chat" data-ru="Начать чат">Начать чат</a>
+                                <p data-en="Instant support available" data-ru="Мгновенная поддержка">Мгновенная поддержка</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Related Policies -->
+            <div class="related-policies">
+                <h3 data-en="Related Policies" data-ru="Связанные политики">Связанные политики</h3>
+                <div class="policies-grid">
+                    <a href="privacy.html" class="policy-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4 data-en="Privacy Policy" data-ru="Политика конфиденциальности">Политика конфиденциальности</h4>
+                    </a>
+                    <a href="terms.html" class="policy-card">
+                        <i class="fas fa-file-contract"></i>
+                        <h4 data-en="Terms of Service" data-ru="Условия использования">Условия использования</h4>
+                    </a>
+                    <a href="contact.html" class="policy-card">
+                        <i class="fas fa-headset"></i>
+                        <h4 data-en="Contact Support" data-ru="Связаться с поддержкой">Связаться с поддержкой</h4>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Back to Top -->
+            <div class="back-to-top">
+                <a href="#" class="btn-primary">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-en="Back to Top" data-ru="Наверх">Наверх</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up">О Level Up</h4>
+                    <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.">
+                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки">Быстрые ссылки</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-en="Home" data-ru="Главная">Главная</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас">О нас</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты">Контакты</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов">Обслуживание клиентов</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-en="Shipping Info" data-ru="Информация о доставке">Информация о доставке</a></li>
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования">Условия использования</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка">Поддержка</a></li>
+                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами">Следите за нами</h4>
+                    <div class="social-links">
+                        <a href="https://www.google.com/search?q=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0&oq=&gs_lcrp=EgZjaHJvbWUqCQgEECMYJxjqAjIJCAAQIxgnGOoCMgkIARAjGCcY6gIyCQgCECMYJxjqAjIJCAMQIxgnGOoCMgkIBBAjGCcY6gIyCQgFECMYJxjqAjIJCAYQIxgnGOoCMgkIBxAjGCcY6gLSAQkyMTI5ajBqMTWoAgiwAgHxBTpa6iwvmtpq&sourceid=chrome&ie=UTF-8" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены.">Все права защищены.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="frontend/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Level Up Gaming Admin</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/admin-analytics.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background" id="starsBackground"></div>
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-nav">
+                <a href="index.html" class="logo">
+                    <img src="frontend/images/logo.svg" alt="Level Up" class="logo-img">
+                </a>
+                <h1 class="admin-title">
+                    <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">Админ Панель</span>
+                </h1>
+                <div class="admin-actions">
+                    <a href="admin.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i>
+                        <span data-en="Back to Admin" data-ru="К Админке">К Админке</span>
+                    </a>
+                    <button class="btn btn-outline" onclick="window.location.href='index.html'">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span data-en="Exit" data-ru="Выйти">Выйти</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Analytics Section -->
+    <section class="analytics-section">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="gradient-text" data-en="Analytics Dashboard" data-ru="Панель Аналитики">Панель Аналитики</span>
+                    </h1>
+                    <p class="page-subtitle" data-en="Business performance overview" data-ru="Обзор эффективности бизнеса">
+                        Обзор эффективности бизнеса
+                    </p>
+                </div>
+                <button class="btn btn-primary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span data-en="Refresh Data" data-ru="Обновить Данные">Обновить Данные</span>
+                </button>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="filter-card">
+                <h3 class="filter-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span data-en="Date Range" data-ru="Период">Период</span>
+                </h3>
+                <div class="filter-content">
+                    <div class="date-inputs">
+                        <div class="input-group">
+                            <label data-en="From" data-ru="С">С</label>
+                            <input type="date" id="dateFrom" class="date-input">
+                        </div>
+                        <div class="input-group">
+                            <label data-en="To" data-ru="До">До</label>
+                            <input type="date" id="dateTo" class="date-input">
+                        </div>
+                        <button class="btn btn-primary" id="applyFilter">
+                            <i class="fas fa-filter"></i>
+                            <span data-en="Apply Filter" data-ru="Применить Фильтр">Применить Фильтр</span>
+                        </button>
+                    </div>
+                    <div class="quick-filters">
+                        <button class="btn-quick" data-days="7">
+                            <i class="fas fa-calendar-week"></i>
+                            <span data-en="Last 7 Days" data-ru="Последние 7 Дней">Последние 7 Дней</span>
+                        </button>
+                        <button class="btn-quick active" data-days="30">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span data-en="Last 30 Days" data-ru="Последние 30 Дней">Последние 30 Дней</span>
+                        </button>
+                        <button class="btn-quick" data-days="90">
+                            <i class="fas fa-calendar"></i>
+                            <span data-en="Last 90 Days" data-ru="Последние 90 Дней">Последние 90 Дней</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div class="loader" id="loader" style="display: none;">
+                <div class="spinner"></div>
+                <p data-en="Loading analytics data..." data-ru="Загрузка аналитики...">Загрузка аналитики...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3 data-en="No Data Available" data-ru="Нет Данных">Нет Данных</h3>
+                <p data-en="No data for selected period" data-ru="Нет данных за выбранный период">Нет данных за выбранный период</p>
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <i class="fas fa-redo"></i>
+                    <span data-en="Try Again" data-ru="Попробовать Снова">Попробовать Снова</span>
+                </button>
+            </div>
+
+            <!-- Analytics Content -->
+            <div class="analytics-content" id="analyticsContent">
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <!-- Total Revenue -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon revenue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalRevenue">$0</div>
+                            <div class="kpi-label" data-en="Total Revenue" data-ru="Общая Выручка">Общая Выручка</div>
+                            <div class="kpi-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+12.5%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Net Revenue -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon net">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="netRevenue">$0</div>
+                            <div class="kpi-label" data-en="Net Revenue" data-ru="Чистая Выручка">Чистая Выручка</div>
+                            <div class="kpi-description" data-en="Net after refunds" data-ru="После возвратов">После возвратов</div>
+                        </div>
+                    </div>
+
+                    <!-- Orders -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon orders">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalOrders">0</div>
+                            <div class="kpi-label" data-en="Orders" data-ru="Заказы">Заказы</div>
+                            <div class="kpi-description" data-en="Orders in period" data-ru="Заказов за период">Заказов за период</div>
+                        </div>
+                    </div>
+
+                    <!-- Refund Rate -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon refund">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="refundRate">0%</div>
+                            <div class="kpi-label" data-en="Refund Rate" data-ru="Процент Возвратов">Процент Возвратов</div>
+                            <div class="kpi-description" data-en="Refund ratio" data-ru="Коэффициент возврата">Коэффициент возврата</div>
+                        </div>
+                    </div>
+
+                    <!-- Average Order Value -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon aov">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="avgOrderValue">$0</div>
+                            <div class="kpi-label" data-en="Average Order Value" data-ru="Средний Чек">Средний Чек</div>
+                            <div class="kpi-description" data-en="Revenue per order" data-ru="Выручка на заказ">Выручка на заказ</div>
+                        </div>
+                    </div>
+
+                    <!-- Customers -->
+                    <div class="kpi-card">
+                        <div class="kpi-icon customers">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-value" id="totalCustomers">0</div>
+                            <div class="kpi-label" data-en="Customers" data-ru="Клиенты">Клиенты</div>
+                            <div class="kpi-description" data-en="Unique customers" data-ru="Уникальные клиенты">Уникальные клиенты</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>
+                            <i class="fas fa-chart-area"></i>
+                            <span data-en="Revenue Over Time" data-ru="Выручка по Времени">Выручка по Времени</span>
+                        </h3>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color revenue"></span>
+                                <span data-en="Revenue" data-ru="Выручка">Выручка</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color orders"></span>
+                                <span data-en="Orders" data-ru="Заказы">Заказы</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Products Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>
+                            <i class="fas fa-trophy"></i>
+                            <span data-en="Top Selling Products" data-ru="Топ Продаж">Топ Продаж</span>
+                        </h3>
+                        <button class="btn btn-outline btn-sm" id="exportBtn">
+                            <i class="fas fa-download"></i>
+                            <span data-en="Export" data-ru="Экспорт">Экспорт</span>
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="products-table">
+                            <thead>
+                                <tr>
+                                    <th data-en="Rank" data-ru="Место">#</th>
+                                    <th data-en="Product" data-ru="Товар">Товар</th>
+                                    <th data-en="Units Sold" data-ru="Продано">Продано</th>
+                                    <th data-en="Revenue" data-ru="Выручка">Выручка</th>
+                                    <th data-en="Actions" data-ru="Действия">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Table rows will be inserted by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="frontend/css/admin-analytics.css"></script>
+    <script src="js/admin-analytics.js"></script>
+</body>
+</html>

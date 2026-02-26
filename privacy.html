@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Privacy Policy - Level Up Gaming" data-ru="Политика конфиденциальности - Level Up Gaming">Политика конфиденциальности - Level Up Gaming</title>
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/privacy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
+                </a>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+
+                <!-- Right Side Buttons -->
+                <div class="nav-actions">
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
+                    </div>
+
+                    <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i>
+                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                            </a>
+                            <a href="profile.html#settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Language Switcher -->
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+
+                    <!-- Currency Switcher -->
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart -->
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Privacy Policy Content -->
+    <main class="privacy-section">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title" data-en="Privacy Policy" data-ru="Политика конфиденциальности">Политика конфиденциальности</h1>
+                <p class="page-subtitle" data-en="Last updated: February 2026" data-ru="Последнее обновление: Февраль 2026">Последнее обновление: Февраль 2026</p>
+            </div>
+
+            <!-- Privacy Content -->
+            <div class="privacy-content">
+                <!-- Section 1: Introduction -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="1. Introduction" data-ru="1. Введение">1. Введение</h2>
+                    <div class="section-content">
+                        <p data-en="Welcome to Level Up Gaming. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website and make purchases." data-ru="Добро пожаловать в Level Up Gaming. Мы стремимся защитить вашу личную информацию и ваше право на конфиденциальность. Эта Политика конфиденциальности объясняет, как мы собираем, используем и защищаем вашу информацию при посещении нашего сайта и совершении покупок.">
+                            Добро пожаловать в Level Up Gaming. Мы стремимся защитить вашу личную информацию и ваше право на конфиденциальность. Эта Политика конфиденциальности объясняет, как мы собираем, используем и защищаем вашу информацию при посещении нашего сайта и совершении покупок.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 2: Information We Collect -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="2. Information We Collect" data-ru="2. Информация, которую мы собираем">2. Информация, которую мы собираем</h2>
+                    <div class="section-content">
+                        <p data-en="We collect the following types of information:" data-ru="Мы собираем следующие типы информации:">Мы собираем следующие типы информации:</p>
+                        <ul class="privacy-list">
+                            <li data-en="Personal Information: Name, email address, username" data-ru="Личная информация: Имя, адрес электронной почты, имя пользователя">
+                                <strong data-en="Personal Information:" data-ru="Личная информация:">Личная информация:</strong> 
+                                <span data-en="Name, email address, username" data-ru="Имя, адрес электронной почты, имя пользователя">Имя, адрес электронной почты, имя пользователя</span>
+                            </li>
+                            <li data-en="Shipping Information: Delivery address, phone number, postal code" data-ru="Информация о доставке: Адрес доставки, номер телефона, почтовый индекс">
+                                <strong data-en="Shipping Information:" data-ru="Информация о доставке:">Информация о доставке:</strong> 
+                                <span data-en="Delivery address, phone number, postal code" data-ru="Адрес доставки, номер телефона, почтовый индекс">Адрес доставки, номер телефона, почтовый индекс</span>
+                            </li>
+                            <li data-en="Payment Information: Payment method (processed securely via PayPal)" data-ru="Платежная информация: Способ оплаты (обрабатывается безопасно через PayPal)">
+                                <strong data-en="Payment Information:" data-ru="Платежная информация:">Платежная информация:</strong> 
+                                <span data-en="Payment method (processed securely via PayPal)" data-ru="Способ оплаты (обрабатывается безопасно через PayPal)">Способ оплаты (обрабатывается безопасно через PayPal)</span>
+                            </li>
+                            <li data-en="Order Information: Products purchased, order history, preferences" data-ru="Информация о заказах: Купленные товары, история заказов, предпочтения">
+                                <strong data-en="Order Information:" data-ru="Информация о заказах:">Информация о заказах:</strong> 
+                                <span data-en="Products purchased, order history, preferences" data-ru="Купленные товары, история заказов, предпочтения">Купленные товары, история заказов, предпочтения</span>
+                            </li>
+                            <li data-en="Technical Information: Browser type, device information, IP address" data-ru="Техническая информация: Тип браузера, информация об устройстве, IP-адрес">
+                                <strong data-en="Technical Information:" data-ru="Техническая информация:">Техническая информация:</strong> 
+                                <span data-en="Browser type, device information, IP address" data-ru="Тип браузера, информация об устройстве, IP-адрес">Тип браузера, информация об устройстве, IP-адрес</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 3: How We Use Your Information -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="3. How We Use Your Information" data-ru="3. Как мы используем вашу информацию">3. Как мы используем вашу информацию</h2>
+                    <div class="section-content">
+                        <p data-en="We use your information for the following purposes:" data-ru="Мы используем вашу информацию для следующих целей:">Мы используем вашу информацию для следующих целей:</p>
+                        <ul class="privacy-list">
+                            <li data-en="Process and fulfill your orders" data-ru="Обработка и выполнение ваших заказов">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Process and fulfill your orders" data-ru="Обработка и выполнение ваших заказов">Обработка и выполнение ваших заказов</span>
+                            </li>
+                            <li data-en="Send order confirmations and shipping updates" data-ru="Отправка подтверждений заказов и обновлений о доставке">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Send order confirmations and shipping updates" data-ru="Отправка подтверждений заказов и обновлений о доставке">Отправка подтверждений заказов и обновлений о доставке</span>
+                            </li>
+                            <li data-en="Provide customer support and respond to inquiries" data-ru="Предоставление поддержки клиентов и ответы на запросы">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Provide customer support and respond to inquiries" data-ru="Предоставление поддержки клиентов и ответы на запросы">Предоставление поддержки клиентов и ответы на запросы</span>
+                            </li>
+                            <li data-en="Improve our website and services" data-ru="Улучшение нашего сайта и услуг">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Improve our website and services" data-ru="Улучшение нашего сайта и услуг">Улучшение нашего сайта и услуг</span>
+                            </li>
+                            <li data-en="Analyze website usage and trends" data-ru="Анализ использования сайта и тенденций">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Analyze website usage and trends" data-ru="Анализ использования сайта и тенденций">Анализ использования сайта и тенденций</span>
+                            </li>
+                            <li data-en="Send promotional offers (with your consent)" data-ru="Отправка рекламных предложений (с вашего согласия)">
+                                <i class="fas fa-check-circle"></i> 
+                                <span data-en="Send promotional offers (with your consent)" data-ru="Отправка рекламных предложений (с вашего согласия)">Отправка рекламных предложений (с вашего согласия)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 4: Payment Processing -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="4. Payment Processing" data-ru="4. Обработка платежей">4. Обработка платежей</h2>
+                    <div class="section-content">
+                        <p data-en="All payments are processed securely through PayPal. We do not store your credit card information on our servers. PayPal's privacy policy governs the handling of your payment information." data-ru="Все платежи обрабатываются безопасно через PayPal. Мы не храним информацию о вашей кредитной карте на наших серверах. Политика конфиденциальности PayPal регулирует обработку вашей платежной информации.">
+                            Все платежи обрабатываются безопасно через PayPal. Мы не храним информацию о вашей кредитной карте на наших серверах. Политика конфиденциальности PayPal регулирует обработку вашей платежной информации.
+                        </p>
+                        <div class="info-box">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4 data-en="Secure Payment Processing" data-ru="Безопасная обработка платежей">Безопасная обработка платежей</h4>
+                                <p data-en="Your payment information is encrypted and processed by PayPal, one of the world's most trusted payment platforms." data-ru="Ваша платежная информация шифруется и обрабатывается PayPal, одной из самых надежных платежных платформ в мире.">
+                                    Ваша платежная информация шифруется и обрабатывается PayPal, одной из самых надежных платежных платформ в мире.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Data Security -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="5. Data Security" data-ru="5. Безопасность данных">5. Безопасность данных</h2>
+                    <div class="section-content">
+                        <p data-en="We implement industry-standard security measures to protect your information:" data-ru="Мы применяем стандартные меры безопасности для защиты вашей информации:">Мы применяем стандартные меры безопасности для защиты вашей информации:</p>
+                        <div class="security-features">
+                            <div class="security-item">
+                                <i class="fas fa-lock"></i>
+                                <h4 data-en="SSL Encryption" data-ru="SSL шифрование">SSL шифрование</h4>
+                                <p data-en="All data transmitted between your browser and our servers is encrypted" data-ru="Все данные, передаваемые между вашим браузером и нашими серверами, зашифрованы">Все данные, передаваемые между вашим браузером и нашими серверами, зашифрованы</p>
+                            </div>
+                            <div class="security-item">
+                                <i class="fas fa-database"></i>
+                                <h4 data-en="Secure Storage" data-ru="Безопасное хранение">Безопасное хранение</h4>
+                                <p data-en="Your data is stored securely with restricted access" data-ru="Ваши данные хранятся безопасно с ограниченным доступом">Ваши данные хранятся безопасно с ограниченным доступом</p>
+                            </div>
+                            <div class="security-item">
+                                <i class="fas fa-user-shield"></i>
+                                <h4 data-en="Access Control" data-ru="Контроль доступа">Контроль доступа</h4>
+                                <p data-en="Only authorized personnel have access to your personal information" data-ru="Только уполномоченный персонал имеет доступ к вашей личной информации">Только уполномоченный персонал имеет доступ к вашей личной информации</p>
+                            </div>
+                            <div class="security-item">
+                                <i class="fas fa-shield-virus"></i>
+                                <h4 data-en="Regular Audits" data-ru="Регулярные аудиты">Регулярные аудиты</h4>
+                                <p data-en="We regularly review and update our security practices" data-ru="Мы регулярно проверяем и обновляем наши меры безопасности">Мы регулярно проверяем и обновляем наши меры безопасности</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Cookies and Tracking -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="6. Cookies and Tracking" data-ru="6. Файлы cookie и отслеживание">6. Файлы cookie и отслеживание</h2>
+                    <div class="section-content">
+                        <p data-en="We use localStorage and similar technologies to enhance your experience:" data-ru="Мы используем localStorage и аналогичные технологии для улучшения вашего опыта:">Мы используем localStorage и аналогичные технологии для улучшения вашего опыта:</p>
+                        <ul class="privacy-list">
+                            <li data-en="Remember your language and currency preferences" data-ru="Запоминание ваших языковых и валютных предпочтений">
+                                <span data-en="Remember your language and currency preferences" data-ru="Запоминание ваших языковых и валютных предпочтений">Запоминание ваших языковых и валютных предпочтений</span>
+                            </li>
+                            <li data-en="Keep items in your shopping cart" data-ru="Сохранение товаров в корзине">
+                                <span data-en="Keep items in your shopping cart" data-ru="Сохранение товаров в корзине">Сохранение товаров в корзине</span>
+                            </li>
+                            <li data-en="Maintain your login session" data-ru="Поддержание вашей сессии входа">
+                                <span data-en="Maintain your login session" data-ru="Поддержание вашей сессии входа">Поддержание вашей сессии входа</span>
+                            </li>
+                            <li data-en="Analyze website usage and performance" data-ru="Анализ использования и производительности сайта">
+                                <span data-en="Analyze website usage and performance" data-ru="Анализ использования и производительности сайта">Анализ использования и производительности сайта</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 7: Your Rights -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="7. Your Rights" data-ru="7. Ваши права">7. Ваши права</h2>
+                    <div class="section-content">
+                        <p data-en="You have the following rights regarding your personal information:" data-ru="У вас есть следующие права в отношении вашей личной информации:">У вас есть следующие права в отношении вашей личной информации:</p>
+                        <div class="rights-grid">
+                            <div class="right-item">
+                                <i class="fas fa-eye"></i>
+                                <h4 data-en="Access" data-ru="Доступ">Доступ</h4>
+                                <p data-en="Request a copy of your personal data" data-ru="Запросить копию ваших личных данных">Запросить копию ваших личных данных</p>
+                            </div>
+                            <div class="right-item">
+                                <i class="fas fa-edit"></i>
+                                <h4 data-en="Correction" data-ru="Исправление">Исправление</h4>
+                                <p data-en="Update or correct your information" data-ru="Обновить или исправить вашу информацию">Обновить или исправить вашу информацию</p>
+                            </div>
+                            <div class="right-item">
+                                <i class="fas fa-trash"></i>
+                                <h4 data-en="Deletion" data-ru="Удаление">Удаление</h4>
+                                <p data-en="Request deletion of your personal data" data-ru="Запросить удаление ваших личных данных">Запросить удаление ваших личных данных</p>
+                            </div>
+                            <div class="right-item">
+                                <i class="fas fa-ban"></i>
+                                <h4 data-en="Opt-Out" data-ru="Отказ">Отказ</h4>
+                                <p data-en="Unsubscribe from marketing communications" data-ru="Отписаться от маркетинговых рассылок">Отписаться от маркетинговых рассылок</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 8: Contact Information -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="8. Contact Us" data-ru="8. Свяжитесь с нами">8. Свяжитесь с нами</h2>
+                    <div class="section-content">
+                        <p data-en="If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us:" data-ru="Если у вас есть вопросы о данной Политике конфиденциальности или вы хотите воспользоваться своими правами, пожалуйста, свяжитесь с нами:">
+                            Если у вас есть вопросы о данной Политике конфиденциальности или вы хотите воспользоваться своими правами, пожалуйста, свяжитесь с нами:
+                        </p>
+                        <div class="contact-box">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h4 data-en="Email" data-ru="Электронная почта">Электронная почта</h4>
+                                    <a href="mailto:privacy@levelupgaming.com">privacy@levelupgaming.com</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <h4 data-en="Phone" data-ru="Телефон">Телефон</h4>
+                                    <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <h4 data-en="Address" data-ru="Адрес">Адрес</h4>
+                                    <p data-en="Moscow, Russia" data-ru="Москва, Россия">Москва, Россия</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 9: Policy Updates -->
+                <section class="privacy-section-item">
+                    <h2 class="section-title" data-en="9. Changes to This Policy" data-ru="9. Изменения в политике">9. Изменения в политике</h2>
+                    <div class="section-content">
+                        <p data-en="We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'Last updated' date." data-ru="Мы можем время от времени обновлять эту Политику конфиденциальности. Мы уведомим вас о любых изменениях, разместив новую Политику конфиденциальности на этой странице и обновив дату 'Последнее обновление'.">
+                            Мы можем время от времени обновлять эту Политику конфиденциальности. Мы уведомим вас о любых изменениях, разместив новую Политику конфиденциальности на этой странице и обновив дату "Последнее обновление".
+                        </p>
+                        <div class="info-box warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4 data-en="Important Notice" data-ru="Важное уведомление">Важное уведомление</h4>
+                                <p data-en="Continued use of our website after any changes indicates your acceptance of the updated Privacy Policy." data-ru="Продолжение использования нашего сайта после любых изменений означает ваше согласие с обновленной Политикой конфиденциальности.">
+                                    Продолжение использования нашего сайта после любых изменений означает ваше согласие с обновленной Политикой конфиденциальности.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Back to Top Button -->
+            <div class="back-to-top">
+                <a href="#" class="btn-primary">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-en="Back to Top" data-ru="Наверх">Наверх</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+     <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up">О Level Up</h4>
+                    <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.">
+                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки">Быстрые ссылки</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-en="Home" data-ru="Главная">Главная</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас">О нас</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов">Обслуживание клиентов</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-en="Shipping Info" data-ru="Информация о доставке">Информация о доставке</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты">Возвраты</a></li>
+                        
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка">Поддержка</a></li>
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования">Условия использования</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами">Следите за нами</h4>
+                    <div class="social-links">
+                        <a href="https://www.google.com/search?q=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0&oq=&gs_lcrp=EgZjaHJvbWUqCQgEECMYJxjqAjIJCAAQIxgnGOoCMgkIARAjGCcY6gIyCQgCECMYJxjqAjIJCAMQIxgnGOoCMgkIBBAjGCcY6gIyCQgFECMYJxjqAjIJCAYQIxgnGOoCMgkIBxAjGCcY6gLSAQkyMTI5ajBqMTWoAgiwAgHxBTpa6iwvmtpq&sourceid=chrome&ie=UTF-8" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены.">Все права защищены.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="frontend/js/main.js"></script>
+</body>
+</html>

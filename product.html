@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Reviews - Level Up Gaming</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/products.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="stars-background" id="starsBackground"></div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
+                </a>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link active" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                </ul>
+
+                <!-- Right Side Buttons -->
+                <div class="nav-actions">
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
+                    </div>
+
+                    <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                            </a>
+                            <a href="orders.html" class="dropdown-item">
+                                <i class="fas fa-box"></i>
+                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                            </a>
+                            <a href="profile.html#settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Language Switcher -->
+                    <div class="switcher language-switcher">
+                        <button class="switcher-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">RU</span>
+                        </button>
+                        <div class="switcher-menu" id="langMenu">
+                            <button class="switcher-option" data-lang="ru">RU</button>
+                            <button class="switcher-option" data-lang="en">EN</button>
+                        </div>
+                    </div>
+
+                    <!-- Currency Switcher -->
+                    <div class="switcher currency-switcher">
+                        <button class="switcher-btn" id="currencyBtn">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span id="currentCurrency">USD</span>
+                        </button>
+                        <div class="switcher-menu" id="currencyMenu">
+                            <button class="switcher-option" data-currency="usd">USD</button>
+                            <button class="switcher-option" data-currency="eur">EUR</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart -->
+                    <a href="cart.html" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Product Section -->
+    <section class="product-section">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="index.html" data-en="Home" data-ru="Главная">Главная</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a>
+                <i class="fas fa-chevron-right"></i>
+                <span id="breadcrumbProduct">Product</span>
+            </nav>
+
+            <!-- Product Details -->
+            <div class="product-details">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <img id="productImage" src="https://via.placeholder.com/500x500/1a0533/FF00FF?text=Product" alt="Product">
+                    <div class="product-badge" id="productBadge" style="display: none;">
+                        <span>NEW</span>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info">
+                    <h1 class="product-title" id="productTitle">Product Name</h1>
+                    
+                    <!-- Rating Summary Small -->
+                    <div class="rating-summary-small">
+                        <div class="stars" id="headerStars">
+                            ★★★★★
+                        </div>
+                        <span class="rating-text">
+                            <span id="headerRating">4.3</span> / 5
+                        </span>
+                        <span class="reviews-count">
+                            (<span id="headerReviewsCount">0</span> <span data-en="reviews" data-ru="отзывов">отзывов</span>)
+                        </span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="product-price">
+                        <span class="current-price" id="productPrice">$0.00</span>
+                        <span class="old-price" id="productOldPrice" style="display: none;">$0.00</span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="product-description">
+                        <h3 data-en="Description" data-ru="Описание">Описание</h3>
+                        <p id="productDescription">Product description will be loaded here...</p>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <div class="product-actions">
+                        <button class="btn btn-primary btn-large" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span data-en="Add to Cart" data-ru="Добавить в Корзину">Добавить в Корзину</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    <span data-en="Customer Reviews" data-ru="Отзывы Покупателей">Отзывы Покупателей</span>
+                </h2>
+
+                <!-- Rating Summary -->
+                <div class="rating-summary">
+                    <div class="rating-overview">
+                        <div class="average-rating">
+                            <span class="rating-number" id="avgRating">0.0</span>
+                            <div class="stars large" id="summaryStars">★★★★★</div>
+                            <p class="rating-subtitle">
+                                <span data-en="Based on" data-ru="На основе">На основе</span>
+                                <span id="totalReviews">0</span>
+                                <span data-en="reviews" data-ru="отзывов">отзывов</span>
+                            </p>
+                        </div>
+
+                        <div class="rating-bars">
+                            <div class="rating-bar" data-rating="5">
+                                <span class="bar-label">5 <i class="fas fa-star"></i></span>
+                                <div class="bar-bg">
+                                    <div class="bar-fill" id="bar5" style="width: 0%"></div>
+                                </div>
+                                <span class="bar-count" id="count5">0</span>
+                            </div>
+                            <div class="rating-bar" data-rating="4">
+                                <span class="bar-label">4 <i class="fas fa-star"></i></span>
+                                <div class="bar-bg">
+                                    <div class="bar-fill" id="bar4" style="width: 0%"></div>
+                                </div>
+                                <span class="bar-count" id="count4">0</span>
+                            </div>
+                            <div class="rating-bar" data-rating="3">
+                                <span class="bar-label">3 <i class="fas fa-star"></i></span>
+                                <div class="bar-bg">
+                                    <div class="bar-fill" id="bar3" style="width: 0%"></div>
+                                </div>
+                                <span class="bar-count" id="count3">0</span>
+                            </div>
+                            <div class="rating-bar" data-rating="2">
+                                <span class="bar-label">2 <i class="fas fa-star"></i></span>
+                                <div class="bar-bg">
+                                    <div class="bar-fill" id="bar2" style="width: 0%"></div>
+                                </div>
+                                <span class="bar-count" id="count2">0</span>
+                            </div>
+                            <div class="rating-bar" data-rating="1">
+                                <span class="bar-label">1 <i class="fas fa-star"></i></span>
+                                <div class="bar-bg">
+                                    <div class="bar-fill" id="bar1" style="width: 0%"></div>
+                                </div>
+                                <span class="bar-count" id="count1">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Write Review Form -->
+                <div class="write-review-form" id="reviewForm">
+                    <h3 data-en="Write a Review" data-ru="Написать Отзыв">Написать Отзыв</h3>
+                    
+                    <!-- Not Purchased Message -->
+                    <div class="alert alert-warning" id="notPurchasedMsg" style="display: none;">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-en="You must purchase this product to leave a review." data-ru="Вы должны купить этот товар, чтобы оставить отзыв.">
+                            Вы должны купить этот товар, чтобы оставить отзыв.
+                        </span>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="alert alert-success" id="reviewSuccessMsg" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-en="Review submitted for moderation." data-ru="Отзыв отправлен на модерацию.">
+                            Отзыв отправлен на модерацию.
+                        </span>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="reviewFormElement" class="review-form">
+                        <!-- Star Rating Selector -->
+                        <div class="form-group">
+                            <label data-en="Your Rating" data-ru="Ваша Оценка">Ваша Оценка</label>
+                            <div class="star-rating-selector">
+                                <i class="fas fa-star" data-rating="1"></i>
+                                <i class="fas fa-star" data-rating="2"></i>
+                                <i class="fas fa-star" data-rating="3"></i>
+                                <i class="fas fa-star" data-rating="4"></i>
+                                <i class="fas fa-star" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="ratingInput" value="0" required>
+                        </div>
+
+                        <!-- Review Text -->
+                        <div class="form-group">
+                            <label data-en="Your Review" data-ru="Ваш Отзыв">Ваш Отзыв</label>
+                            <textarea id="reviewText" rows="5" placeholder="Write your review..." required data-en-placeholder="Write your review..." data-ru-placeholder="Напишите ваш отзыв..."></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            <span data-en="Submit Review" data-ru="Отправить Отзыв">Отправить Отзыв</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="reviews-list" id="reviewsList">
+                    <!-- Reviews will be inserted here by JavaScript -->
+                </div>
+
+                <!-- No Reviews Message -->
+                <div class="no-reviews" id="noReviews" style="display: none;">
+                    <i class="fas fa-comments"></i>
+                    <p data-en="No reviews yet. Be the first to review!" data-ru="Пока нет отзывов. Станьте первым!">
+                        Пока нет отзывов. Станьте первым!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="frontend/js/main.js"></script>
+    <script src="frontend/js/products.js"></script>
+</body>
+</html>
