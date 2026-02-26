@@ -11,7 +11,7 @@ export default (sequelize) => {
       ====================== */
 
       amount: {
-        type: DataTypes.DOUBLE,
+        type: DataTypes.DECIMAL(10, 2), // ❗ правильно для денег
         allowNull: false,
       },
 
@@ -22,13 +22,28 @@ export default (sequelize) => {
       },
 
       /* ======================
+         🔐 IDEMPOTENCY
+      ====================== */
+
+      idempotencyKey: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true, // защита от повторных запросов
+      },
+
+      /* ======================
          🔗 PAYPAL DATA
       ====================== */
 
       paypalRefundId: {
         type: DataTypes.STRING,
         allowNull: true,
-        unique: true, // защита от дублирования
+        unique: true, // защита от дублирования PayPal
+      },
+
+      rawResponse: {
+        type: DataTypes.JSONB, // сохраняем полный ответ PayPal
+        allowNull: true,
       },
 
       /* ======================
@@ -43,6 +58,15 @@ export default (sequelize) => {
         ),
         allowNull: false,
         defaultValue: "PENDING",
+      },
+
+      /* ======================
+         👤 ADMIN TRACKING
+      ====================== */
+
+      adminId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
 
       /* ======================
@@ -61,6 +85,8 @@ export default (sequelize) => {
       indexes: [
         { fields: ["status"] },
         { fields: ["paypalRefundId"] },
+        { fields: ["PaymentId"] },
+        { fields: ["idempotencyKey"] },
       ],
     }
   );

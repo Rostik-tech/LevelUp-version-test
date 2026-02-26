@@ -300,12 +300,136 @@ payment.paypalCaptureId = captureId;
 // WEBHOOK (optional fallback)
 // ========================================
 
+import crypto from "crypto";
+
+/* ========================================
+   PAYPAL WEBHOOK (PRODUCTION LEVEL)
+======================================== */
+
 export const paypalWebhook = async (req, res) => {
+  const transmissionId = req.headers["paypal-transmission-id"];
+  const transmissionTime = req.headers["paypal-transmission-time"];
+  const certUrl = req.headers["paypal-cert-url"];
+  const authAlgo = req.headers["paypal-auth-algo"];
+  const transmissionSig = req.headers["paypal-transmission-sig"];
+
   try {
-    console.warn("Webhook received (optional fallback)");
-    res.status(200).send("Webhook processed");
+    const accessToken = await getAccessToken();
+
+    // 🔐 Verify webhook signature via PayPal API
+    const verifyResponse = await axios.post(
+      `${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`,
+      {
+        transmission_id: transmissionId,
+        transmission_time: transmissionTime,
+        cert_url: certUrl,
+        auth_algo: authAlgo,
+        transmission_sig: transmissionSig,
+        webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+        webhook_event: req.body,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (verifyResponse.data.verification_status !== "SUCCESS") {
+      console.warn("⚠️ Invalid webhook signature");
+      return res.status(400).send("Invalid signature");
+    }
+
+    const event = req.body;
+    const eventType = event.event_type;
+
+    console.log("📩 PayPal Webhook:", eventType);
+
+    const transaction = await sequelize.transaction();
+
+    try {
+      // ===============================
+      // PAYMENT COMPLETED
+      // ===============================
+      if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
+        const captureId = event.resource.id;
+
+        const payment = await Payment.findOne({
+          where: { paypalCaptureId: captureId },
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+        });
+
+        if (payment && payment.status !== "COMPLETED") {
+          payment.status = "COMPLETED";
+          await payment.save({ transaction });
+
+          const order = await Order.findByPk(payment.OrderId, {
+            transaction,
+            lock: transaction.LOCK.UPDATE,
+          });
+
+          if (order && order.status !== "PAID") {
+            order.status = "PAID";
+            await order.save({ transaction });
+          }
+        }
+      }
+
+      // ===============================
+      // REFUND COMPLETED
+      // ===============================
+      if (eventType === "PAYMENT.CAPTURE.REFUNDED") {
+        const refund = event.resource;
+        const captureId = refund.links.find(
+          (l) => l.rel === "up"
+        )?.href?.split("/").pop();
+
+        const payment = await Payment.findOne({
+          where: { paypalCaptureId: captureId },
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+        });
+
+        if (payment) {
+          payment.refundedAmount =
+            parseFloat(payment.refundedAmount) +
+            parseFloat(refund.amount.value);
+
+          if (payment.refundedAmount >= payment.amount) {
+            payment.status = "REFUNDED";
+          } else {
+            payment.status = "PARTIALLY_REFUNDED";
+          }
+
+          await payment.save({ transaction });
+
+          const order = await Order.findByPk(payment.OrderId, {
+            transaction,
+            lock: transaction.LOCK.UPDATE,
+          });
+
+          if (order) {
+            order.status = payment.status;
+            await order.save({ transaction });
+          }
+        }
+      }
+
+      await transaction.commit();
+    } catch (dbError) {
+      await transaction.rollback();
+      console.error("Webhook DB error:", dbError.message);
+    }
+
+    return res.status(200).send("Webhook processed");
+
   } catch (error) {
-    console.error("WEBHOOK ERROR:", error.message);
-    res.status(500).send("Webhook error");
+    console.error(
+      "WEBHOOK ERROR:",
+      error.response?.data || error.message
+    );
+    return res.status(500).send("Webhook error");
   }
 };

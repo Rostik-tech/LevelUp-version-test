@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 import authRouter from "./routes/auth.js";
 import orderRouter from "./routes/orders.js";
@@ -26,13 +27,39 @@ const app = express();
 app.use(helmet());
 
 /* =====================
-   CORS
+   Rate Limiting
+===================== */
+
+// Общий лимит
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  message: "Too many requests. Please try again later."
+});
+
+// Строгий лимит для auth
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: "Too many login attempts."
+});
+
+// Строгий лимит для admin
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many admin requests."
+});
+
+app.use(generalLimiter);
+
+/* =====================
+   CORS (Production Safe)
 ===================== */
 app.use(cors({
-  origin: [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500"
-  ],
+  origin: process.env.FRONTEND_URLS
+    ? process.env.FRONTEND_URLS.split(",")
+    : ["http://127.0.0.1:5500"],
   credentials: true
 }));
 
@@ -52,35 +79,43 @@ app.use(express.json());
 /* =====================
    Routes
 ===================== */
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authLimiter, authRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/products", productRouter);
 app.use("/api/payments", paymentRouter);
-app.use("/api/admin", adminRouter);
+app.use("/api/admin", authenticateToken, isAdmin, adminLimiter, adminRouter);
 app.use("/api/users", usersRoutes);
 
 /* =====================
    Auth Test Endpoints
 ===================== */
 app.get("/api/test-auth", authenticateToken, (req, res) => {
-  res.json({
-    message: "Auth works",
-    user: req.user
-  });
+  res.json({ message: "Auth works", user: req.user });
 });
 
 app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
-  res.json({
-    message: "Admin access granted"
-  });
+  res.json({ message: "Admin access granted" });
 });
 
 /* =====================
-   Global Error Handler
+   Centralized Error Handler
 ===================== */
+import logger from "./utils/logger.js";
+
 app.use((err, req, res, next) => {
-  console.error("UNHANDLED ERROR:", err);
-  res.status(500).json({ message: "Internal Server Error" });
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    path: req.originalUrl,
+    method: req.method,
+  });
+
+  res.status(500).json({
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Internal Server Error",
+  });
 });
 
 /* =====================

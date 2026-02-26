@@ -1,5 +1,7 @@
+//backend/routes/admin.js
 import express from "express";
 import axios from "axios";
+import { Op } from "sequelize";
 import {
   sequelize,
   Product,
@@ -149,92 +151,167 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
 /* =========================
    REFUND
 ========================= */
-router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) => {
+import crypto from "crypto";
 
-  const transaction = await sequelize.transaction();
+/* =========================
+   REFUND (ENTERPRISE LEVEL)
+========================= */
+router.post(
+  "/orders/:id/refund",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
+    const transaction = await sequelize.transaction();
 
-  try {
-    const { amount, reason } = req.body;
+    try {
+      const { amount, reason } = req.body;
 
-    const order = await Order.findByPk(req.params.id, {
-      transaction,
-      lock: transaction.LOCK.UPDATE,
-    });
+      // 🔒 1. Lock Order
+      const order = await Order.findByPk(req.params.id, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
 
-    if (!order || !["PAID", "PARTIALLY_REFUNDED"].includes(order.status)) {
-      await transaction.rollback();
-      return res.status(400).json({ message: "Refund only for paid orders" });
-    }
-
-    const payment = await Payment.findOne({
-      where: { OrderId: order.id },
-      transaction,
-      lock: transaction.LOCK.UPDATE,
-    });
-
-    if (!payment || !payment.paypalCaptureId) {
-      await transaction.rollback();
-      return res.status(400).json({ message: "No capture found" });
-    }
-
-    const refundable = payment.amount - payment.refundedAmount;
-    const refundAmount = amount ? parseFloat(amount) : refundable;
-
-    if (refundAmount <= 0 || refundAmount > refundable) {
-      await transaction.rollback();
-      return res.status(400).json({ message: "Invalid refund amount" });
-    }
-
-    const accessToken = await getAccessToken();
-
-    const paypalResponse = await axios.post(
-      `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
-      refundAmount
-        ? {
-            amount: {
-              value: refundAmount.toFixed(2),
-              currency_code: "USD",
-            },
-          }
-        : {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
+      if (!order) {
+        await transaction.rollback();
+        return res.status(404).json({ message: "Order not found" });
       }
-    );
 
-    await Refund.create({
-      PaymentId: payment.id,
-      amount: refundAmount,
-      currency: "USD",
-      paypalRefundId: paypalResponse.data.id,
-      status: "COMPLETED",
-      reason: reason || null
-    }, { transaction });
+      if (!["PAID", "PARTIALLY_REFUNDED"].includes(order.status)) {
+        await transaction.rollback();
+        return res.status(400).json({
+          message: "Refund allowed only for paid orders",
+        });
+      }
 
-    payment.refundedAmount += refundAmount;
+      // 🔒 2. Lock correct Payment
+      const payment = await Payment.findOne({
+        where: {
+          OrderId: order.id,
+          paypalCaptureId: { [Op.ne]: null },
+        },
+        order: [["createdAt", "DESC"]],
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
 
-    if (payment.refundedAmount >= payment.amount) {
-      payment.status = "REFUNDED";
-      order.status = "REFUNDED";
-    } else {
-      payment.status = "PARTIALLY_REFUNDED";
-      order.status = "PARTIALLY_REFUNDED";
+      if (!payment) {
+        await transaction.rollback();
+        return res.status(400).json({ message: "Capture not found" });
+      }
+
+      // 🔥 3. Fresh recalculation AFTER LOCK
+      await payment.reload({
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      const currentRefunded = parseFloat(payment.refundedAmount);
+      const totalAmount = parseFloat(payment.amount);
+      const remaining = totalAmount - currentRefunded;
+
+      if (remaining <= 0) {
+        await transaction.rollback();
+        return res.status(400).json({
+          message: "Nothing left to refund",
+        });
+      }
+
+      const refundAmount = amount
+        ? parseFloat(amount)
+        : remaining;
+
+      if (
+        isNaN(refundAmount) ||
+        refundAmount <= 0 ||
+        refundAmount > remaining
+      ) {
+        await transaction.rollback();
+        return res.status(400).json({
+          message: "Invalid refund amount",
+        });
+      }
+
+      // 🔥 4. Reserve money BEFORE PayPal call
+      payment.refundedAmount = currentRefunded + refundAmount;
+
+      if (payment.refundedAmount >= totalAmount) {
+        payment.status = "REFUNDED";
+        order.status = "REFUNDED";
+      } else {
+        payment.status = "PARTIALLY_REFUNDED";
+        order.status = "PARTIALLY_REFUNDED";
+      }
+
+      await payment.save({ transaction });
+      await order.save({ transaction });
+
+      // 🔐 Stable idempotency key (NO Date.now)
+      const idempotencyKey = crypto
+        .createHash("sha256")
+        .update(`${payment.id}-${refundAmount}-${currentRefunded}`)
+        .digest("hex");
+
+      const accessToken = await getAccessToken();
+
+      const paypalResponse = await axios.post(
+        `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
+        {
+          amount: {
+            value: refundAmount.toFixed(2),
+            currency_code: "USD",
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+            "PayPal-Request-Id": idempotencyKey,
+          },
+        }
+      );
+
+      const paypalData = paypalResponse.data;
+
+      if (!paypalData || paypalData.status !== "COMPLETED") {
+        throw new Error("PayPal refund not completed");
+      }
+
+      // 🔥 5. Save refund record
+      await Refund.create(
+        {
+          PaymentId: payment.id,
+          amount: refundAmount,
+          currency: "USD",
+          paypalRefundId: paypalData.id,
+          idempotencyKey,
+          rawResponse: paypalData,
+          status: paypalData.status,
+          adminId: req.user.id,
+          reason: reason || null,
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+
+      return res.json({
+        message: "Refund successful",
+        refundedAmount: refundAmount,
+      });
+
+    } catch (error) {
+      await transaction.rollback();
+
+      console.error(
+        "REFUND ERROR:",
+        error.response?.data || error.message
+      );
+
+      return res.status(500).json({
+        message: "Refund failed",
+      });
     }
-
-    await payment.save({ transaction });
-    await order.save({ transaction });
-
-    await transaction.commit();
-
-    res.json({ message: "Refund successful" });
-
-  } catch (error) {
-    await transaction.rollback();
-    console.error("REFUND ERROR:", error.response?.data || error.message);
-    res.status(500).json({ message: "Refund failed" });
   }
-});
+);
 export default router;
