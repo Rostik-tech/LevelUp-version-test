@@ -80,6 +80,8 @@
     padding: 30px;
     margin-bottom: var(--spacing-xl);
     box-shadow: 0 8px 32px rgba(255, 0, 255, 0.15);
+    position: relative;
+    overflow: visible;
 }
 
 .filter-title {
@@ -140,6 +142,8 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    position: relative;
+    overflow: visible;
 }
 
 .btn-quick {
@@ -553,3 +557,5 @@
         padding: 20px;
     }
 }
+
+

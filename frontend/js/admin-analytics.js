@@ -1,285 +1,300 @@
 // ========================================
-// Admin Analytics Script
+// Admin Analytics (PRODUCTION VERSION)
 // ========================================
 
 let revenueChart = null;
+let selectedStatus = "ALL";
+
 let currentDateRange = {
     from: null,
-    to: null,
-    days: 30
+    to: null
 };
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Check admin access
+// ========================================
+// INIT
+// ========================================
+
+document.addEventListener('DOMContentLoaded', () => {
     checkAdminAccess();
-    
-    // Set default date range (last 30 days)
     setDateRange(30);
-    
-    // Load analytics data
-    loadAnalytics();
-    
-    // Setup event listeners
     setupEventListeners();
+    initStatusDropdown();
+    loadAnalytics();
+    setInterval(loadAnalytics, 60000);
 });
 
-// Check Admin Access
+// ========================================
+// ADMIN CHECK (JWT)
+// ========================================
+
 function checkAdminAccess() {
-    const adminPassword = localStorage.getItem('adminPassword');
-    
-    if (adminPassword !== 'admin123') {
-        const password = prompt('Введите пароль администратора:');
-        
-        if (password === 'admin123') {
-            localStorage.setItem('adminPassword', password);
-        } else {
-            alert('Неверный пароль! Доступ запрещен.');
-            window.location.href = 'index.html';
-        }
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Access denied");
+        window.location.href = "login.html";
     }
 }
 
-// Setup Event Listeners
+// ========================================
+// EVENTS
+// ========================================
+
 function setupEventListeners() {
-    // Apply Filter button
-    document.getElementById('applyFilter').addEventListener('click', applyCustomFilter);
-    
-    // Quick filter buttons
-    document.querySelectorAll('.btn-quick').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const days = parseInt(this.dataset.days);
-            setDateRange(days);
-            
-            // Update active state
-            document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
+    document.getElementById('applyFilter')
+        ?.addEventListener('click', applyCustomFilter);
+
+    document.getElementById('refreshBtn')
+        ?.addEventListener('click', loadAnalytics);
+
+    document.getElementById('exportBtn')
+        ?.addEventListener('click', exportData);
+
+    document.querySelectorAll('.btn-quick')
+        .forEach(btn => {
+            btn.addEventListener('click', function () {
+                const days = parseInt(this.dataset.days);
+                setDateRange(days);
+
+                document.querySelectorAll('.btn-quick')
+                    .forEach(b => b.classList.remove('active'));
+
+                this.classList.add('active');
+                loadAnalytics();
+            });
+        });
+}
+
+// ========================================
+// STATUS DROPDOWN
+// ========================================
+
+function initStatusDropdown() {
+    const statusBtn = document.getElementById("statusBtn");
+    const statusMenu = document.getElementById("statusMenu");
+    const statusOptions = document.querySelectorAll(".status-option");
+    const selectedText = document.getElementById("selectedStatusText");
+
+    if (!statusBtn || !statusMenu) return;
+
+    statusBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        statusMenu.classList.toggle("show");
+    });
+
+    statusOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            selectedStatus = option.dataset.status;
+            selectedText.textContent = option.textContent;
+            statusMenu.classList.remove("show");
             loadAnalytics();
         });
     });
-    
-    // Refresh button
-    document.getElementById('refreshBtn').addEventListener('click', loadAnalytics);
-    
-    // Export button
-    document.getElementById('exportBtn').addEventListener('click', exportData);
+
+    document.addEventListener("click", (e) => {
+        if (!statusBtn.contains(e.target) &&
+            !statusMenu.contains(e.target)) {
+            statusMenu.classList.remove("show");
+        }
+    });
 }
 
-// Set Date Range
+// ========================================
+// DATE RANGE
+// ========================================
+
 function setDateRange(days) {
     const today = new Date();
-    const fromDate = new Date();
-    fromDate.setDate(today.getDate() - days);
-    
-    currentDateRange.from = fromDate;
+    const from = new Date();
+    from.setDate(today.getDate() - days);
+
+    currentDateRange.from = from;
     currentDateRange.to = today;
-    currentDateRange.days = days;
-    
-    // Update date inputs
-    document.getElementById('dateFrom').valueAsDate = fromDate;
-    document.getElementById('dateTo').valueAsDate = today;
+
+    const fromInput = document.getElementById('dateFrom');
+    const toInput = document.getElementById('dateTo');
+
+    if (fromInput) fromInput.valueAsDate = from;
+    if (toInput) toInput.valueAsDate = today;
 }
 
-// Apply Custom Filter
 function applyCustomFilter() {
-    const fromInput = document.getElementById('dateFrom').value;
-    const toInput = document.getElementById('dateTo').value;
-    
+    const fromInput = document.getElementById('dateFrom')?.value;
+    const toInput = document.getElementById('dateTo')?.value;
+
     if (!fromInput || !toInput) {
-        alert('Пожалуйста, выберите обе даты');
+        alert("Select both dates");
         return;
     }
-    
-    currentDateRange.from = new Date(fromInput);
-    currentDateRange.to = new Date(toInput);
-    currentDateRange.days = Math.ceil((currentDateRange.to - currentDateRange.from) / (1000 * 60 * 60 * 24));
-    
-    // Remove active state from quick filters
-    document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active'));
-    
+
+    const fromDate = new Date(fromInput);
+    const toDate = new Date(toInput);
+
+    if (fromDate > toDate) {
+        alert("From date cannot be greater than To date");
+        return;
+    }
+
+    currentDateRange.from = fromDate;
+    currentDateRange.to = toDate;
+
+    document.querySelectorAll('.btn-quick')
+        .forEach(b => b.classList.remove('active'));
+
     loadAnalytics();
 }
 
-// Load Analytics Data
-function loadAnalytics() {
-    showLoader();
-    
-    // Simulate API call
-    setTimeout(() => {
-        try {
-            const data = generateAnalyticsData();
-            
-            if (!data || data.orders.length === 0) {
-                showError();
-                return;
+// ========================================
+// LOAD FROM BACKEND
+// ========================================
+
+async function loadAnalytics() {
+    try {
+        showLoader();
+
+        const token = localStorage.getItem("token");
+
+        const from = currentDateRange.from.toISOString();
+        const to = currentDateRange.to.toISOString();
+
+        const response = await fetch(
+            `http://localhost:5000/api/admin/analytics?from=${from}&to=${to}&status=${selectedStatus}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             }
-            
-            displayKPIs(data);
-            displayChart(data);
-            displayTopProducts(data);
-            
-            hideLoader();
-        } catch (error) {
-            console.error('Error loading analytics:', error);
+        );
+
+        if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (!response.ok) throw new Error("Failed to load analytics");
+
+        const data = await response.json();
+
+        if (!data || !data.dailyData) {
             showError();
+            return;
         }
-    }, 1000);
-}
 
-// Generate Analytics Data (Demo)
-function generateAnalyticsData() {
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    
-    // Filter orders by date range
-    const filteredOrders = orders.filter(order => {
-        const orderDate = new Date(order.date);
-        return orderDate >= currentDateRange.from && orderDate <= currentDateRange.to;
-    });
-    
-    // Calculate metrics
-    const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.total, 0);
-    const refundedOrders = filteredOrders.filter(o => o.status === 'refunded');
-    const refundAmount = refundedOrders.reduce((sum, order) => sum + order.total, 0);
-    const netRevenue = totalRevenue - refundAmount;
-    const refundRate = filteredOrders.length > 0 ? (refundedOrders.length / filteredOrders.length * 100) : 0;
-    const avgOrderValue = filteredOrders.length > 0 ? totalRevenue / filteredOrders.length : 0;
-    
-    // Get unique customers
-    const uniqueCustomers = new Set(filteredOrders.map(o => o.userId || 'guest')).size;
-    
-    // Generate daily data for chart
-    const dailyData = generateDailyData(filteredOrders);
-    
-    // Get top products
-    const topProducts = getTopProducts(filteredOrders);
-    
-    return {
-        totalRevenue,
-        netRevenue,
-        orders: filteredOrders.length,
-        refundRate: refundRate.toFixed(1),
-        avgOrderValue,
-        customers: uniqueCustomers,
-        dailyData,
-        topProducts
-    };
-}
+        displayKPIs(data);
+        displayChart(data.dailyData);
+        displayTopProducts(data.topProducts || []);
 
-// Generate Daily Data for Chart
-function generateDailyData(orders) {
-    const dailyMap = new Map();
-    const days = currentDateRange.days;
-    
-    // Initialize all days with 0
-    for (let i = 0; i < days; i++) {
-        const date = new Date(currentDateRange.from);
-        date.setDate(date.getDate() + i);
-        const dateKey = date.toISOString().split('T')[0];
-        dailyMap.set(dateKey, { revenue: 0, orders: 0 });
+        hideLoader();
+
+    } catch (error) {
+        console.error("Analytics error:", error);
+        showError();
     }
-    
-    // Fill with actual data
-    orders.forEach(order => {
-        const dateKey = new Date(order.date).toISOString().split('T')[0];
-        if (dailyMap.has(dateKey)) {
-            const day = dailyMap.get(dateKey);
-            day.revenue += order.total;
-            day.orders += 1;
-        }
-    });
-    
-    return Array.from(dailyMap.entries()).map(([date, data]) => ({
-        date,
-        revenue: data.revenue,
-        orders: data.orders
-    }));
 }
 
-// Get Top Products
-function getTopProducts(orders) {
-    const productMap = new Map();
-    
-    orders.forEach(order => {
-        order.items.forEach(item => {
-            const key = item.id;
-            if (productMap.has(key)) {
-                const product = productMap.get(key);
-                product.units += item.quantity;
-                product.revenue += item.price * item.quantity;
-            } else {
-                productMap.set(key, {
-                    id: item.id,
-                    name: item.name?.ru || item.name || 'Product',
-                    units: item.quantity,
-                    revenue: item.price * item.quantity,
-                    image: item.image
-                });
-            }
-        });
-    });
-    
-    // Convert to array and sort by revenue
-    return Array.from(productMap.values())
-        .sort((a, b) => b.revenue - a.revenue)
-        .slice(0, 10);
-}
+// ========================================
+// KPI
+// ========================================
 
-// Display KPIs
 function displayKPIs(data) {
-    const currency = localStorage.getItem('currency') || 'usd';
-    const symbol = currency === 'usd' ? '$' : '€';
-    const rate = currency === 'eur' ? 0.92 : 1;
-    
-    document.getElementById('totalRevenue').textContent = `${symbol}${(data.totalRevenue * rate).toFixed(0).toLocaleString()}`;
-    document.getElementById('netRevenue').textContent = `${symbol}${(data.netRevenue * rate).toFixed(0).toLocaleString()}`;
-    document.getElementById('totalOrders').textContent = data.orders;
-    document.getElementById('refundRate').textContent = `${data.refundRate}%`;
-    document.getElementById('avgOrderValue').textContent = `${symbol}${(data.avgOrderValue * rate).toFixed(0)}`;
-    document.getElementById('totalCustomers').textContent = data.customers;
+    const currency = localStorage.getItem("currency") || "usd";
+    const symbol = currency === "usd" ? "$" : "€";
+    const rate = currency === "eur" ? 0.92 : 1;
+
+    document.getElementById('totalRevenue').textContent =
+        `${symbol}${(data.totalRevenue * rate).toFixed(2)}`;
+
+    document.getElementById('netRevenue').textContent =
+        `${symbol}${(data.netRevenue * rate).toFixed(2)}`;
+
+    document.getElementById('totalOrders').textContent =
+        data.orders;
+
+    document.getElementById('refundRate').textContent =
+        `${Number(data.refundRate || 0).toFixed(2)}%`;
+
+    document.getElementById('avgOrderValue').textContent =
+        `${symbol}${(data.avgOrderValue * rate).toFixed(2)}`;
+
+    document.getElementById('totalCustomers').textContent =
+        data.customers;
+
+    if (data.comparison) {
+        renderGrowth("totalRevenue", data.comparison.revenueGrowth);
+        renderGrowth("totalOrders", data.comparison.ordersGrowth);
+    }
 }
 
-// Display Chart
-function displayChart(data) {
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    
-    // Destroy existing chart
-    if (revenueChart) {
-        revenueChart.destroy();
+// ========================================
+// GROWTH DISPLAY
+// ========================================
+
+function renderGrowth(elementId, growthValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    const parent = element.closest(".kpi-content");
+    if (!parent) return;
+
+    let growthEl = parent.querySelector(".kpi-growth");
+
+    if (!growthEl) {
+        growthEl = document.createElement("div");
+        growthEl.className = "kpi-growth";
+        parent.appendChild(growthEl);
     }
-    
-    const labels = data.dailyData.map(d => {
-        const date = new Date(d.date);
-        return date.toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' });
-    });
-    
-    const currency = localStorage.getItem('currency') || 'usd';
-    const symbol = currency === 'usd' ? '$' : '€';
-    const rate = currency === 'eur' ? 0.92 : 1;
-    
+
+    const value = Number(growthValue || 0).toFixed(2);
+
+    if (growthValue > 0) {
+        growthEl.innerHTML = `↑ ${value}%`;
+        growthEl.style.color = "#00ff99";
+    } else if (growthValue < 0) {
+        growthEl.innerHTML = `↓ ${Math.abs(value)}%`;
+        growthEl.style.color = "#ff4d4d";
+    } else {
+        growthEl.innerHTML = `0%`;
+        growthEl.style.color = "#999";
+    }
+}
+
+// ========================================
+// CHART (Dual Axis)
+// ========================================
+
+function displayChart(dailyData) {
+    const ctx = document.getElementById('revenueChart')?.getContext('2d');
+    if (!ctx) return;
+
+    if (revenueChart) revenueChart.destroy();
+
+    const currency = localStorage.getItem("currency") || "usd";
+    const symbol = currency === "usd" ? "$" : "€";
+    const rate = currency === "eur" ? 0.92 : 1;
+
     revenueChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels: dailyData.map(d =>
+                new Date(d.date).toLocaleDateString()
+            ),
             datasets: [
                 {
-                    label: 'Выручка',
-                    data: data.dailyData.map(d => (d.revenue * rate).toFixed(2)),
+                    label: 'Revenue',
+                    data: dailyData.map(d => Number(d.revenue) * rate),
                     borderColor: '#00f0ff',
-                    backgroundColor: 'rgba(0, 240, 255, 0.1)',
-                    borderWidth: 3,
+                    backgroundColor: 'rgba(0,240,255,0.1)',
                     tension: 0.4,
                     fill: true,
                     yAxisID: 'y'
                 },
                 {
-                    label: 'Заказы',
-                    data: data.dailyData.map(d => d.orders),
+                    label: 'Orders',
+                    data: dailyData.map(d => d.orders),
                     borderColor: '#ff00ff',
-                    backgroundColor: 'rgba(255, 0, 255, 0.1)',
-                    borderWidth: 3,
+                    backgroundColor: 'rgba(255,0,255,0.1)',
                     tension: 0.4,
-                    fill: true,
+                    fill: false,
                     yAxisID: 'y1'
                 }
             ]
@@ -287,137 +302,99 @@ function displayChart(data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(10, 1, 24, 0.95)',
-                    titleColor: '#00f0ff',
-                    bodyColor: '#ffffff',
-                    borderColor: '#ff00ff',
-                    borderWidth: 2,
-                    padding: 12,
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.datasetIndex === 0) {
-                                label += symbol + context.parsed.y;
-                            } else {
-                                label += context.parsed.y;
-                            }
-                            return label;
-                        }
-                    }
-                }
-            },
             scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    grid: {
-                        color: 'rgba(255, 0, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: '#00f0ff',
-                        callback: function(value) {
-                            return symbol + value;
-                        }
-                    }
-                },
+                y: { position: 'left' },
                 y1: {
-                    type: 'linear',
-                    display: true,
                     position: 'right',
-                    grid: {
-                        drawOnChartArea: false
-                    },
-                    ticks: {
-                        color: '#ff00ff'
-                    }
-                },
-                x: {
-                    grid: {
-                        color: 'rgba(255, 0, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: '#ffffff'
-                    }
+                    grid: { drawOnChartArea: false }
                 }
             }
         }
     });
 }
 
-// Display Top Products
-function displayTopProducts(data) {
+// ========================================
+// TABLE
+// ========================================
+
+function displayTopProducts(products) {
     const tbody = document.getElementById('productsTableBody');
-    const currency = localStorage.getItem('currency') || 'usd';
-    const symbol = currency === 'usd' ? '$' : '€';
-    const rate = currency === 'eur' ? 0.92 : 1;
-    
-    tbody.innerHTML = data.topProducts.map((product, index) => `
+    if (!tbody) return;
+
+    if (!products.length) {
+        tbody.innerHTML =
+            `<tr><td colspan="5" style="text-align:center;padding:30px;">
+                No data
+             </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = products.map((p, i) => `
         <tr>
-            <td class="product-rank">${index + 1}</td>
-            <td class="product-name">${product.name}</td>
-            <td class="product-units">${product.units}</td>
-            <td class="product-revenue">${symbol}${(product.revenue * rate).toFixed(2)}</td>
+            <td>${i + 1}</td>
+            <td>${p.name}</td>
+            <td>${p.units}</td>
+            <td>$${Number(p.revenue).toFixed(2)}</td>
             <td>
-                <button class="btn btn-outline btn-sm" onclick="viewProduct('${product.id}')">
-                    <i class="fas fa-eye"></i>
-                    <span data-en="View" data-ru="Просмотр">Просмотр</span>
+                <button class="btn btn-outline btn-sm"
+                    onclick="viewProduct('${p.id}')">
+                    View
                 </button>
             </td>
         </tr>
     `).join('');
-    
-    if (data.topProducts.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-gray);">
-                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
-                    <span data-en="No products data" data-ru="Нет данных о товарах">Нет данных о товарах</span>
-                </td>
-            </tr>
-        `;
-    }
 }
 
-// View Product
 function viewProduct(productId) {
     window.location.href = `shop.html?product=${productId}`;
 }
 
-// Export Data
+// ========================================
+// EXPORT CSV
+// ========================================
+
 function exportData() {
-    alert('Функция экспорта данных будет доступна в следующей версии!');
-    // TODO: Implement CSV export
+    if (!revenueChart) {
+        alert("No data to export");
+        return;
+    }
+
+    const rows = [["Date", "Revenue", "Orders"]];
+
+    revenueChart.data.labels.forEach((label, index) => {
+        const revenue = revenueChart.data.datasets[0].data[index];
+        const orders = revenueChart.data.datasets[1].data[index];
+        rows.push([label, revenue, orders]);
+    });
+
+    const csvContent = rows.map(r => r.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "analytics_export.csv";
+    link.click();
 }
 
-// Show Loader
+// ========================================
+// UI
+// ========================================
+
 function showLoader() {
     document.getElementById('loader').style.display = 'block';
-    document.getElementById('errorMessage').style.display = 'none';
     document.getElementById('analyticsContent').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
 }
 
-// Hide Loader
 function hideLoader() {
     document.getElementById('loader').style.display = 'none';
     document.getElementById('analyticsContent').style.display = 'block';
 }
 
-// Show Error
 function showError() {
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('errorMessage').style.display = 'block';
     document.getElementById('analyticsContent').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'block';
 }

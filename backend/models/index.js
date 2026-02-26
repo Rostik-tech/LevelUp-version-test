@@ -29,7 +29,8 @@ import ProductModel from "./product.js";
 import OrderModel from "./order.js";
 import OrderItemModel from "./orderItem.js";
 import PaymentModel from "./payment.js";
-import RefundModel from "./refund.js"; // ← НОВОЕ
+import RefundModel from "./refund.js";
+import ReviewModel from "./review.js"; // ✅ NEW
 
 /* ======================
    INIT MODELS
@@ -40,7 +41,8 @@ export const Product = ProductModel(sequelize);
 export const Order = OrderModel(sequelize);
 export const OrderItem = OrderItemModel(sequelize);
 export const Payment = PaymentModel(sequelize);
-export const Refund = RefundModel(sequelize); // ← НОВОЕ
+export const Refund = RefundModel(sequelize);
+export const Review = ReviewModel(sequelize); // ✅ NEW
 
 /* ======================
    RELATIONS
@@ -115,6 +117,28 @@ Payment.hasMany(Refund, {
 });
 Refund.belongsTo(Payment, {
   foreignKey: "PaymentId",
+});
+
+// ======================
+// REVIEWS SYSTEM (NEW)
+// ======================
+
+// User → Reviews
+User.hasMany(Review, {
+  foreignKey: "UserId",
+  onDelete: "CASCADE",
+});
+Review.belongsTo(User, {
+  foreignKey: "UserId",
+});
+
+// Product → Reviews
+Product.hasMany(Review, {
+  foreignKey: "ProductId",
+  onDelete: "CASCADE",
+});
+Review.belongsTo(Product, {
+  foreignKey: "ProductId",
 });
 
 export default sequelize;

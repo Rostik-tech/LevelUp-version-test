@@ -1,7 +1,6 @@
-//backend/routes/admin.js
 import express from "express";
 import axios from "axios";
-import { Op } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 import {
   sequelize,
   Product,
@@ -15,17 +14,197 @@ import {
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/adminMiddleware.js";
 import { canTransition } from "../utils/orderStatus.js";
+import crypto from "crypto";
 
 const router = express.Router();
+
+/* =====================================================
+   ================= ANALYTICS =========================
+===================================================== */
+
+router.get(
+  "/analytics",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
+    try {
+      const { from, to } = req.query;
+
+      if (!from || !to) {
+        return res.status(400).json({
+          message: "from and to query parameters required"
+        });
+      }
+
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      if (isNaN(fromDate) || isNaN(toDate)) {
+        return res.status(400).json({
+          message: "Invalid date format"
+        });
+      }
+
+      if (fromDate > toDate) {
+        return res.status(400).json({
+          message: "from date cannot be greater than to date"
+        });
+      }
+
+      const diff = toDate.getTime() - fromDate.getTime();
+      const prevFrom = new Date(fromDate.getTime() - diff);
+      const prevTo = new Date(toDate.getTime() - diff);
+
+      /* ================= CURRENT KPI ================= */
+
+      const currentKpi = await sequelize.query(
+        `
+        SELECT
+          COUNT(DISTINCT o.id) AS orders,
+          COALESCE(SUM(p.amount),0) AS total_revenue,
+          COALESCE(SUM(p."refundedAmount"),0) AS refund_amount,
+          COUNT(DISTINCT o."UserId") AS customers
+        FROM "Orders" o
+        JOIN "Payments" p ON p."OrderId" = o.id
+        WHERE o."createdAt" BETWEEN :from AND :to
+        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+        `,
+        {
+          replacements: { from: fromDate, to: toDate },
+          type: QueryTypes.SELECT
+        }
+      );
+
+      const prevKpi = await sequelize.query(
+        `
+        SELECT
+          COUNT(DISTINCT o.id) AS orders,
+          COALESCE(SUM(p.amount),0) AS total_revenue
+        FROM "Orders" o
+        JOIN "Payments" p ON p."OrderId" = o.id
+        WHERE o."createdAt" BETWEEN :from AND :to
+        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+        `,
+        {
+          replacements: { from: prevFrom, to: prevTo },
+          type: QueryTypes.SELECT
+        }
+      );
+
+      const current = currentKpi[0] || {};
+      const previous = prevKpi[0] || {};
+
+      const totalRevenue = Number(current.total_revenue) || 0;
+      const refundAmount = Number(current.refund_amount) || 0;
+      const orders = Number(current.orders) || 0;
+      const customers = Number(current.customers) || 0;
+
+      const previousRevenue = Number(previous.total_revenue) || 0;
+      const previousOrders = Number(previous.orders) || 0;
+
+      const netRevenue = totalRevenue - refundAmount;
+
+      const refundRate =
+        totalRevenue > 0
+          ? Number(((refundAmount / totalRevenue) * 100).toFixed(2))
+          : 0;
+
+      const avgOrderValue =
+        orders > 0
+          ? Number((totalRevenue / orders).toFixed(2))
+          : 0;
+
+      const revenueGrowth =
+        previousRevenue > 0
+          ? Number((((totalRevenue - previousRevenue) / previousRevenue) * 100).toFixed(2))
+          : 0;
+
+      const ordersGrowth =
+        previousOrders > 0
+          ? Number((((orders - previousOrders) / previousOrders) * 100).toFixed(2))
+          : 0;
+
+      /* ================= DAILY ================= */
+
+      const dailyData = await sequelize.query(
+        `
+        SELECT
+          DATE(o."createdAt") AS date,
+          SUM(p.amount) AS revenue,
+          COUNT(o.id) AS orders
+        FROM "Orders" o
+        JOIN "Payments" p ON p."OrderId" = o.id
+        WHERE o."createdAt" BETWEEN :from AND :to
+        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+        GROUP BY DATE(o."createdAt")
+        ORDER BY date ASC
+        `,
+        {
+          replacements: { from: fromDate, to: toDate },
+          type: QueryTypes.SELECT
+        }
+      );
+
+      /* ================= TOP PRODUCTS ================= */
+
+      const topProducts = await sequelize.query(
+        `
+        SELECT
+          pr.id,
+          pr.name,
+          SUM(oi.quantity) AS units,
+          SUM(oi.quantity * oi.price) AS revenue
+        FROM "OrderItems" oi
+        JOIN "Orders" o ON o.id = oi."OrderId"
+        JOIN "Products" pr ON pr.id = oi."ProductId"
+        WHERE o."createdAt" BETWEEN :from AND :to
+        AND o.status IN ('PAID','PROCESSING','SHIPPED','DELIVERED','PARTIALLY_REFUNDED','REFUNDED')
+        GROUP BY pr.id
+        ORDER BY revenue DESC
+        LIMIT 10
+        `,
+        {
+          replacements: { from: fromDate, to: toDate },
+          type: QueryTypes.SELECT
+        }
+      );
+
+      return res.json({
+        totalRevenue,
+        refundAmount,
+        netRevenue,
+        refundRate,
+        orders,
+        customers,
+        avgOrderValue,
+        dailyData,
+        topProducts,
+        comparison: {
+          previousRevenue,
+          previousOrders,
+          revenueGrowth,
+          ordersGrowth
+        }
+      });
+
+    } catch (error) {
+      console.error("ANALYTICS ERROR:", error);
+      return res.status(500).json({
+        message: "Analytics error"
+      });
+    }
+  }
+);
+
+/* =====================================================
+   ================= PAYPAL CONFIG =====================
+===================================================== */
 
 const PAYPAL_BASE =
   process.env.PAYPAL_MODE === "live"
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
 
-/* =========================
-   PAYPAL ACCESS TOKEN
-========================= */
 const getAccessToken = async () => {
   const response = await axios({
     url: `${PAYPAL_BASE}/v1/oauth2/token`,
@@ -43,9 +222,10 @@ const getAccessToken = async () => {
   return response.data.access_token;
 };
 
-/* =========================
-   PRODUCTS
-========================= */
+/* =====================================================
+   ================= PRODUCTS ==========================
+===================================================== */
+
 router.get("/products", authenticateToken, isAdmin, async (req, res) => {
   const products = await Product.findAll();
   res.json(products);
@@ -59,7 +239,6 @@ router.post("/products", authenticateToken, isAdmin, async (req, res) => {
 router.put("/products/:id", authenticateToken, isAdmin, async (req, res) => {
   const product = await Product.findByPk(req.params.id);
   if (!product) return res.status(404).json({ message: "Not found" });
-
   await product.update(req.body);
   res.json(product);
 });
@@ -67,14 +246,14 @@ router.put("/products/:id", authenticateToken, isAdmin, async (req, res) => {
 router.delete("/products/:id", authenticateToken, isAdmin, async (req, res) => {
   const product = await Product.findByPk(req.params.id);
   if (!product) return res.status(404).json({ message: "Not found" });
-
   await product.destroy();
   res.json({ message: "Deleted" });
 });
 
-/* =========================
-   ORDERS
-========================= */
+/* =====================================================
+   ================= ORDERS ============================
+===================================================== */
+
 router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
   const orders = await Order.findAll({
     include: [
@@ -101,9 +280,10 @@ router.get("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
   res.json(order);
 });
 
-/* =========================
-   ORDER STATUS
-========================= */
+/* =====================================================
+   ================= STATUS UPDATE =====================
+===================================================== */
+
 router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) => {
   const transaction = await sequelize.transaction();
 
@@ -137,9 +317,10 @@ router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) 
   }
 });
 
-/* =========================
-   USERS
-========================= */
+/* =====================================================
+   ================= USERS =============================
+===================================================== */
+
 router.get("/users", authenticateToken, isAdmin, async (req, res) => {
   const users = await User.findAll({
     attributes: ["id", "username", "email", "role", "createdAt"],
@@ -148,14 +329,10 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
   res.json(users);
 });
 
-/* =========================
-   REFUND
-========================= */
-import crypto from "crypto";
+/* =====================================================
+   ================= REFUND ============================
+===================================================== */
 
-/* =========================
-   REFUND (ENTERPRISE LEVEL)
-========================= */
 router.post(
   "/orders/:id/refund",
   authenticateToken,
@@ -166,7 +343,6 @@ router.post(
     try {
       const { amount, reason } = req.body;
 
-      // 🔒 1. Lock Order
       const order = await Order.findByPk(req.params.id, {
         transaction,
         lock: transaction.LOCK.UPDATE,
@@ -184,7 +360,6 @@ router.post(
         });
       }
 
-      // 🔒 2. Lock correct Payment
       const payment = await Payment.findOne({
         where: {
           OrderId: order.id,
@@ -200,7 +375,6 @@ router.post(
         return res.status(400).json({ message: "Capture not found" });
       }
 
-      // 🔥 3. Fresh recalculation AFTER LOCK
       await payment.reload({
         transaction,
         lock: transaction.LOCK.UPDATE,
@@ -212,27 +386,16 @@ router.post(
 
       if (remaining <= 0) {
         await transaction.rollback();
-        return res.status(400).json({
-          message: "Nothing left to refund",
-        });
+        return res.status(400).json({ message: "Nothing left to refund" });
       }
 
-      const refundAmount = amount
-        ? parseFloat(amount)
-        : remaining;
+      const refundAmount = amount ? parseFloat(amount) : remaining;
 
-      if (
-        isNaN(refundAmount) ||
-        refundAmount <= 0 ||
-        refundAmount > remaining
-      ) {
+      if (isNaN(refundAmount) || refundAmount <= 0 || refundAmount > remaining) {
         await transaction.rollback();
-        return res.status(400).json({
-          message: "Invalid refund amount",
-        });
+        return res.status(400).json({ message: "Invalid refund amount" });
       }
 
-      // 🔥 4. Reserve money BEFORE PayPal call
       payment.refundedAmount = currentRefunded + refundAmount;
 
       if (payment.refundedAmount >= totalAmount) {
@@ -246,7 +409,6 @@ router.post(
       await payment.save({ transaction });
       await order.save({ transaction });
 
-      // 🔐 Stable idempotency key (NO Date.now)
       const idempotencyKey = crypto
         .createHash("sha256")
         .update(`${payment.id}-${refundAmount}-${currentRefunded}`)
@@ -277,7 +439,6 @@ router.post(
         throw new Error("PayPal refund not completed");
       }
 
-      // 🔥 5. Save refund record
       await Refund.create(
         {
           PaymentId: payment.id,
@@ -302,16 +463,10 @@ router.post(
 
     } catch (error) {
       await transaction.rollback();
-
-      console.error(
-        "REFUND ERROR:",
-        error.response?.data || error.message
-      );
-
-      return res.status(500).json({
-        message: "Refund failed",
-      });
+      console.error("REFUND ERROR:", error.response?.data || error.message);
+      return res.status(500).json({ message: "Refund failed" });
     }
   }
 );
+
 export default router;
