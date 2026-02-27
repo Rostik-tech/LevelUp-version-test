@@ -1,14 +1,9 @@
 // ========================================
-// Admin Analytics (PRODUCTION VERSION)
+// Admin Analytics (PRODUCTION STABLE VERSION)
 // ========================================
 
 let revenueChart = null;
 let selectedStatus = "ALL";
-
-let currentDateRange = {
-    from: null,
-    to: null
-};
 
 // ========================================
 // INIT
@@ -53,6 +48,8 @@ function setupEventListeners() {
         .forEach(btn => {
             btn.addEventListener('click', function () {
                 const days = parseInt(this.dataset.days);
+                if (!days) return;
+
                 setDateRange(days);
 
                 document.querySelectorAll('.btn-quick')
@@ -107,35 +104,31 @@ function setDateRange(days) {
     const from = new Date();
     from.setDate(today.getDate() - days);
 
-    currentDateRange.from = from;
-    currentDateRange.to = today;
-
     const fromInput = document.getElementById('dateFrom');
     const toInput = document.getElementById('dateTo');
 
-    if (fromInput) fromInput.valueAsDate = from;
-    if (toInput) toInput.valueAsDate = today;
+    if (fromInput) {
+        fromInput.value = from.toISOString().slice(0, 10);
+    }
+
+    if (toInput) {
+        toInput.value = today.toISOString().slice(0, 10);
+    }
 }
 
 function applyCustomFilter() {
-    const fromInput = document.getElementById('dateFrom')?.value;
-    const toInput = document.getElementById('dateTo')?.value;
+    const fromInput = document.getElementById('dateFrom');
+    const toInput = document.getElementById('dateTo');
 
-    if (!fromInput || !toInput) {
-        alert("Select both dates");
+    if (!fromInput?.value || !toInput?.value) {
+        alert("Please select both dates");
         return;
     }
 
-    const fromDate = new Date(fromInput);
-    const toDate = new Date(toInput);
-
-    if (fromDate > toDate) {
+    if (new Date(fromInput.value) > new Date(toInput.value)) {
         alert("From date cannot be greater than To date");
         return;
     }
-
-    currentDateRange.from = fromDate;
-    currentDateRange.to = toDate;
 
     document.querySelectorAll('.btn-quick')
         .forEach(b => b.classList.remove('active'));
@@ -153,17 +146,28 @@ async function loadAnalytics() {
 
         const token = localStorage.getItem("token");
 
-        const from = currentDateRange.from.toISOString();
-        const to = currentDateRange.to.toISOString();
+        const fromInput = document.getElementById('dateFrom');
+        const toInput = document.getElementById('dateTo');
 
-        const response = await fetch(
-            `http://localhost:5000/api/admin/analytics?from=${from}&to=${to}&status=${selectedStatus}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        if (!fromInput?.value || !toInput?.value) {
+            showError();
+            return;
+        }
+
+        const fromISO = new Date(fromInput.value).toISOString();
+        const toISO = new Date(toInput.value).toISOString();
+
+        let url = `http://localhost:5000/api/admin/analytics?from=${fromISO}&to=${toISO}`;
+
+        if (selectedStatus !== "ALL") {
+            url += `&status=${selectedStatus}`;
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+        });
 
         if (response.status === 401 || response.status === 403) {
             localStorage.removeItem("token");
@@ -175,7 +179,7 @@ async function loadAnalytics() {
 
         const data = await response.json();
 
-        if (!data || !data.dailyData) {
+        if (!data?.dailyData) {
             showError();
             return;
         }
@@ -259,7 +263,7 @@ function renderGrowth(elementId, growthValue) {
 }
 
 // ========================================
-// CHART (Dual Axis)
+// CHART
 // ========================================
 
 function displayChart(dailyData) {
@@ -269,7 +273,6 @@ function displayChart(dailyData) {
     if (revenueChart) revenueChart.destroy();
 
     const currency = localStorage.getItem("currency") || "usd";
-    const symbol = currency === "usd" ? "$" : "€";
     const rate = currency === "eur" ? 0.92 : 1;
 
     revenueChart = new Chart(ctx, {
@@ -314,7 +317,7 @@ function displayChart(dailyData) {
 }
 
 // ========================================
-// TABLE
+// TABLE + EXPORT + UI
 // ========================================
 
 function displayTopProducts(products) {
@@ -323,9 +326,7 @@ function displayTopProducts(products) {
 
     if (!products.length) {
         tbody.innerHTML =
-            `<tr><td colspan="5" style="text-align:center;padding:30px;">
-                No data
-             </td></tr>`;
+            `<tr><td colspan="5" style="text-align:center;padding:30px;">No data</td></tr>`;
         return;
     }
 
@@ -349,10 +350,6 @@ function viewProduct(productId) {
     window.location.href = `shop.html?product=${productId}`;
 }
 
-// ========================================
-// EXPORT CSV
-// ========================================
-
 function exportData() {
     if (!revenueChart) {
         alert("No data to export");
@@ -368,7 +365,6 @@ function exportData() {
     });
 
     const csvContent = rows.map(r => r.join(",")).join("\n");
-
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
 
@@ -377,10 +373,6 @@ function exportData() {
     link.download = "analytics_export.csv";
     link.click();
 }
-
-// ========================================
-// UI
-// ========================================
 
 function showLoader() {
     document.getElementById('loader').style.display = 'block';

@@ -559,3 +559,54 @@
 }
 
 
+/* ========================================
+   Status Dropdown
+======================================== */
+
+.status-filter {
+    position: relative;
+}
+
+.status-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    min-width: 200px;
+    background: linear-gradient(135deg, rgba(26, 0, 46, 0.98) 0%, rgba(10, 1, 24, 1) 100%);
+    border: 2px solid rgba(255, 0, 255, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(255, 0, 255, 0.25);
+    display: none;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.status-menu.show {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.status-option {
+    padding: 12px 16px;
+    font-family: var(--font-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-option:hover {
+    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-purple) 100%);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -96,7 +96,21 @@
                             <span data-en="Last 90 Days" data-ru="Последние 90 Дней">Последние 90 Дней</span>
                         </button>
                     <!-- STATUS FILTER -->
-            
+                        <div class="status-filter">
+    <button class="btn-quick status-btn" id="statusBtn">
+        <i class="fas fa-layer-group"></i>
+        <span id="selectedStatusText">All</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+
+    <div class="status-menu" id="statusMenu">
+        <div class="status-option" data-status="ALL">All</div>
+        <div class="status-option" data-status="PAID">Paid</div>
+        <div class="status-option" data-status="DELIVERED">Delivered</div>
+        <div class="status-option" data-status="REFUNDED">Refunded</div>
+        <div class="status-option" data-status="PARTIALLY_REFUNDED">Partially Refunded</div>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
