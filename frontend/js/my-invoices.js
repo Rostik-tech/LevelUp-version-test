@@ -1,355 +1,187 @@
 // ========================================
-// My Invoices Page - API Integration
+// My Invoices - Production Version
 // ========================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    checkAuth();
-    
-    // Load invoices
-    loadInvoices();
-    
-    // Setup retry button
-    setupRetryButton();
-    
-    // Setup language change listener
-    setupLanguageListener();
+const API_BASE = "http://localhost:5000/api";
+
+document.addEventListener("DOMContentLoaded", () => {
+  init();
 });
 
-// Check if user is authenticated
-function checkAuth() {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
-    if (!user || !user.username) {
-        // Redirect to login if not authenticated
-        window.location.href = 'login.html';
-        return false;
-    }
-    
-    return true;
+function init() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  setupRetryButton();
+  loadInvoices();
 }
 
-// Get JWT token from localStorage
-function getJWTToken() {
-    // In a real implementation, this would be stored securely
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return user.token || 'demo-jwt-token'; // Placeholder for demo
-}
+// ========================================
+// LOAD INVOICES
+// ========================================
 
-// Load invoices from API
 async function loadInvoices() {
-    showLoadingState();
-    
-    try {
-        // Get JWT token
-        const token = getJWTToken();
-        
-        // Make API request
-        // In production, this would be: const response = await fetch('/api/invoices', {
-        // For now, we'll simulate the API call with localStorage data
-        
-        const invoices = await fetchInvoicesAPI(token);
-        
-        if (invoices && invoices.length > 0) {
-            displayInvoices(invoices);
-        } else {
-            showEmptyState();
-        }
-        
-    } catch (error) {
-        console.error('Error loading invoices:', error);
-        showErrorState(error.message);
+  showLoadingState();
+
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch(`${API_BASE}/invoices`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+      return;
     }
-}
 
-// Fetch invoices from API (Production implementation)
-async function fetchInvoicesAPI(token) {
-    // PRODUCTION CODE:
-    // const response = await fetch('/api/invoices', {
-    //     method: 'GET',
-    //     headers: {
-    //         'Authorization': `Bearer ${token}`,
-    //         'Content-Type': 'application/json'
-    //     }
-    // });
-    //
-    // if (!response.ok) {
-    //     if (response.status === 401) {
-    //         // Unauthorized - redirect to login
-    //         window.location.href = 'login.html';
-    //         throw new Error('Unauthorized');
-    //     }
-    //     throw new Error(`HTTP error! status: ${response.status}`);
-    // }
-    //
-    // const data = await response.json();
-    // return data.invoices;
-    
-    // DEMO: Simulate API call with localStorage data
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            try {
-                const invoices = generateDemoInvoices();
-                resolve(invoices);
-            } catch (err) {
-                reject(err);
-            }
-        }, 1000); // Simulate network delay
-    });
-}
-
-// Generate demo invoices from localStorage orders
-function generateDemoInvoices() {
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    
-    if (!orders || orders.length === 0) {
-        return [];
+    if (!response.ok) {
+      throw new Error("Failed to fetch invoices");
     }
-    
-    // Convert orders to invoices
-    const invoices = orders.map(order => {
-        return {
-            invoiceId: `INV-${String(order.id).padStart(8, '0')}`,
-            orderId: `#ORD-${String(order.id).slice(0, 8).toUpperCase()}`,
-            date: order.date || new Date().toISOString(),
-            total: order.total || 0,
-            status: order.status === 'refunded' ? 'refunded' : 'paid',
-            currency: order.currency || 'usd'
-        };
-    });
-    
-    return invoices;
+
+    const invoices = await response.json();
+
+    if (!invoices.length) {
+      showEmptyState();
+      return;
+    }
+
+    renderInvoices(invoices);
+
+  } catch (error) {
+    console.error("Load invoices error:", error);
+    showErrorState("Failed to load invoices");
+  }
 }
 
-// Display invoices in table
-function displayInvoices(invoices) {
-    const tableBody = document.getElementById('invoicesTableBody');
-    const invoicesTable = document.getElementById('invoicesTable');
-    
-    // Clear existing rows
-    tableBody.innerHTML = '';
-    
-    // Get current language and currency
-    const lang = localStorage.getItem('language') || 'ru';
-    const currency = localStorage.getItem('currency') || 'usd';
-    
-    // Add rows
-    invoices.forEach(invoice => {
-        const row = createInvoiceRow(invoice, lang, currency);
-        tableBody.appendChild(row);
-    });
-    
-    // Show table, hide loading/error/empty states
-    hideAllStates();
-    invoicesTable.style.display = 'block';
-}
+// ========================================
+// RENDER TABLE
+// ========================================
 
-// Create invoice table row
-function createInvoiceRow(invoice, lang, currency) {
-    const row = document.createElement('tr');
-    
-    // Invoice Number
-    const invoiceNumberCell = document.createElement('td');
-    invoiceNumberCell.setAttribute('data-label', lang === 'en' ? 'Invoice #' : 'Счет №');
-    invoiceNumberCell.innerHTML = `<span class="invoice-number">${invoice.invoiceId}</span>`;
-    
-    // Order Number
-    const orderNumberCell = document.createElement('td');
-    orderNumberCell.setAttribute('data-label', lang === 'en' ? 'Order #' : 'Заказ №');
-    orderNumberCell.innerHTML = `<span class="order-number">${invoice.orderId}</span>`;
-    
-    // Date
-    const dateCell = document.createElement('td');
-    dateCell.setAttribute('data-label', lang === 'en' ? 'Date' : 'Дата');
-    dateCell.innerHTML = `<span class="invoice-date">${formatDate(invoice.date, lang)}</span>`;
-    
-    // Total
-    const totalCell = document.createElement('td');
-    totalCell.setAttribute('data-label', lang === 'en' ? 'Total' : 'Сумма');
-    totalCell.innerHTML = `<span class="invoice-total">${formatCurrency(invoice.total, currency)}</span>`;
-    
-    // Status
-    const statusCell = document.createElement('td');
-    statusCell.setAttribute('data-label', lang === 'en' ? 'Status' : 'Статус');
-    statusCell.innerHTML = `<span class="status-badge ${invoice.status}">${getStatusText(invoice.status, lang)}</span>`;
-    
-    // Action
-    const actionCell = document.createElement('td');
-    actionCell.setAttribute('data-label', lang === 'en' ? 'Action' : 'Действие');
-    const downloadBtn = document.createElement('button');
-    downloadBtn.className = 'download-btn';
-    downloadBtn.innerHTML = `
-        <i class="fas fa-download"></i>
-        <span>${lang === 'en' ? 'Download PDF' : 'Скачать PDF'}</span>
+function renderInvoices(invoices) {
+  const tableBody = document.getElementById("invoicesTableBody");
+  tableBody.innerHTML = "";
+
+  invoices.forEach((invoice) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${invoice.invoiceNumber}</td>
+      <td>#${invoice.orderId}</td>
+      <td>${new Date(invoice.createdAt).toLocaleDateString()}</td>
+      <td>$${Number(invoice.totalAmount).toFixed(2)} ${invoice.currency}</td>
+      <td>
+        <span class="status-badge status-${invoice.status.toLowerCase()}">
+          ${invoice.status}
+        </span>
+      </td>
+      <td>
+        <button class="download-btn" data-invoice="${invoice.invoiceNumber}">
+          <i class="fas fa-download"></i> PDF
+        </button>
+      </td>
     `;
-    downloadBtn.addEventListener('click', () => downloadInvoice(invoice));
-    actionCell.appendChild(downloadBtn);
-    
-    // Append cells to row
-    row.appendChild(invoiceNumberCell);
-    row.appendChild(orderNumberCell);
-    row.appendChild(dateCell);
-    row.appendChild(totalCell);
-    row.appendChild(statusCell);
-    row.appendChild(actionCell);
-    
-    return row;
+
+    tableBody.appendChild(row);
+  });
+
+  attachDownloadEvents();
+
+  hideAllStates();
+  document.getElementById("invoicesTable").style.display = "block";
 }
 
-// Format date
-function formatDate(dateString, lang) {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    
-    if (lang === 'ru') {
-        return date.toLocaleDateString('ru-RU', options);
-    } else {
-        return date.toLocaleDateString('en-US', options);
+// ========================================
+// DOWNLOAD PDF
+// ========================================
+
+function attachDownloadEvents() {
+  document.querySelectorAll(".download-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const invoiceNumber = btn.dataset.invoice;
+      await downloadInvoice(invoiceNumber);
+    });
+  });
+}
+
+async function downloadInvoice(invoiceNumber) {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/invoices/${invoiceNumber}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Download failed");
     }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${invoiceNumber}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("Download error:", error);
+    alert("Failed to download invoice");
+  }
 }
 
-// Format currency
-function formatCurrency(amount, currency) {
-    const exchangeRate = 0.92; // 1 USD = 0.92 EUR
-    
-    if (currency === 'eur') {
-        const eurAmount = (amount * exchangeRate).toFixed(2);
-        return `€${eurAmount}`;
-    } else {
-        return `$${amount.toFixed(2)}`;
-    }
-}
+// ========================================
+// STATES
+// ========================================
 
-// Get status text
-function getStatusText(status, lang) {
-    const statusTexts = {
-        'paid': { en: 'PAID', ru: 'ОПЛАЧЕНО' },
-        'refunded': { en: 'REFUNDED', ru: 'ВОЗВРАТ' },
-        'pending': { en: 'PENDING', ru: 'В ОЖИДАНИИ' }
-    };
-    
-    return statusTexts[status]?.[lang] || status.toUpperCase();
-}
-
-// Download invoice PDF
-async function downloadInvoice(invoice) {
-    try {
-        // Get JWT token
-        const token = getJWTToken();
-        
-        // PRODUCTION CODE:
-        // const response = await fetch(`/api/invoices/${invoice.invoiceId}/download`, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Authorization': `Bearer ${token}`
-        //     }
-        // });
-        //
-        // if (!response.ok) {
-        //     throw new Error('Failed to download invoice');
-        // }
-        //
-        // const blob = await response.blob();
-        // const url = window.URL.createObjectURL(blob);
-        // const a = document.createElement('a');
-        // a.href = url;
-        // a.download = `${invoice.invoiceId}.pdf`;
-        // document.body.appendChild(a);
-        // a.click();
-        // window.URL.revokeObjectURL(url);
-        // document.body.removeChild(a);
-        
-        // DEMO: Show notification
-        const lang = localStorage.getItem('language') || 'ru';
-        const message = lang === 'en' 
-            ? `Invoice ${invoice.invoiceId} download started...` 
-            : `Загрузка счета ${invoice.invoiceId} начата...`;
-        
-        showNotification(message, 'success');
-        
-        // In production, the actual PDF download would happen here
-        console.log('Download invoice:', invoice.invoiceId);
-        
-    } catch (error) {
-        console.error('Error downloading invoice:', error);
-        const lang = localStorage.getItem('language') || 'ru';
-        const message = lang === 'en' 
-            ? 'Failed to download invoice. Please try again.' 
-            : 'Не удалось загрузить счет. Пожалуйста, попробуйте снова.';
-        
-        showNotification(message, 'error');
-    }
-}
-
-// Show notification
-function showNotification(message, type = 'info') {
-    // Use main.js notification system if available
-    if (typeof window.showNotification === 'function') {
-        window.showNotification(message);
-    } else {
-        alert(message);
-    }
-}
-
-// State management functions
 function showLoadingState() {
-    hideAllStates();
-    document.getElementById('loadingState').style.display = 'block';
+  hideAllStates();
+  document.getElementById("loadingState").style.display = "block";
 }
 
-function showErrorState(message = null) {
-    hideAllStates();
-    const errorState = document.getElementById('errorState');
-    errorState.style.display = 'block';
-    
-    if (message) {
-        const errorMessage = document.getElementById('errorMessage');
-        const lang = localStorage.getItem('language') || 'ru';
-        errorMessage.textContent = message;
-    }
+function showErrorState(message) {
+  hideAllStates();
+  document.getElementById("errorState").style.display = "block";
+  document.getElementById("errorMessage").textContent = message;
 }
 
 function showEmptyState() {
-    hideAllStates();
-    document.getElementById('emptyState').style.display = 'block';
+  hideAllStates();
+  document.getElementById("emptyState").style.display = "block";
 }
 
 function hideAllStates() {
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('errorState').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'none';
-    document.getElementById('invoicesTable').style.display = 'none';
+  document.getElementById("loadingState").style.display = "none";
+  document.getElementById("errorState").style.display = "none";
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("invoicesTable").style.display = "none";
 }
 
-// Setup retry button
+// ========================================
+// RETRY BUTTON
+// ========================================
+
 function setupRetryButton() {
-    const retryBtn = document.getElementById('retryBtn');
-    if (retryBtn) {
-        retryBtn.addEventListener('click', loadInvoices);
-    }
-}
-
-// Setup language change listener
-function setupLanguageListener() {
-    // Listen for custom language change event
-    window.addEventListener('languageChanged', function() {
-        // Reload invoices to update text
-        const invoicesTable = document.getElementById('invoicesTable');
-        if (invoicesTable.style.display !== 'none') {
-            loadInvoices();
-        }
-    });
-}
-
-// Export functions for testing (optional)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        loadInvoices,
-        fetchInvoicesAPI,
-        generateDemoInvoices,
-        formatDate,
-        formatCurrency,
-        getStatusText,
-        downloadInvoice
-    };
+  const retryBtn = document.getElementById("retryBtn");
+  if (retryBtn) {
+    retryBtn.addEventListener("click", loadInvoices);
+  }
 }
