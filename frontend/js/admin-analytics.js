@@ -1,33 +1,33 @@
 // ========================================
-// Admin Analytics (PRODUCTION STABLE VERSION)
+// Admin Analytics (PRODUCTION API LAYERED)
 // ========================================
 
+import { apiRequest } from "./admin-api.js";
+
 let revenueChart = null;
-let selectedStatus = "ALL";
+let autoRefreshInterval = null;
+
+const state = {
+    status: "ALL",
+    from: null,
+    to: null,
+    currency: localStorage.getItem("currency") || "usd",
+    isLoading: false
+};
 
 // ========================================
 // INIT
 // ========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAdminAccess();
+document.addEventListener("DOMContentLoaded", init);
+
+function init() {
+    cacheDates();
     setDateRange(30);
     setupEventListeners();
     initStatusDropdown();
     loadAnalytics();
-    setInterval(loadAnalytics, 60000);
-});
-
-// ========================================
-// ADMIN CHECK (JWT)
-// ========================================
-
-function checkAdminAccess() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        alert("Access denied");
-        window.location.href = "login.html";
-    }
+    startAutoRefresh();
 }
 
 // ========================================
@@ -35,30 +35,46 @@ function checkAdminAccess() {
 // ========================================
 
 function setupEventListeners() {
-    document.getElementById('applyFilter')
-        ?.addEventListener('click', applyCustomFilter);
+    document.getElementById("applyFilter")
+        ?.addEventListener("click", applyCustomFilter);
 
-    document.getElementById('refreshBtn')
-        ?.addEventListener('click', loadAnalytics);
+    document.getElementById("refreshBtn")
+        ?.addEventListener("click", loadAnalytics);
 
-    document.getElementById('exportBtn')
-        ?.addEventListener('click', exportData);
+    document.getElementById("exportBtn")
+        ?.addEventListener("click", exportData);
 
-    document.querySelectorAll('.btn-quick')
+    document.querySelectorAll(".btn-quick")
         .forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener("click", function () {
                 const days = parseInt(this.dataset.days);
                 if (!days) return;
 
                 setDateRange(days);
 
-                document.querySelectorAll('.btn-quick')
-                    .forEach(b => b.classList.remove('active'));
+                document.querySelectorAll(".btn-quick")
+                    .forEach(b => b.classList.remove("active"));
 
-                this.classList.add('active');
+                this.classList.add("active");
                 loadAnalytics();
             });
         });
+}
+
+// ========================================
+// AUTO REFRESH
+// ========================================
+
+function startAutoRefresh() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+
+    autoRefreshInterval = setInterval(() => {
+        if (!state.isLoading) {
+            loadAnalytics();
+        }
+    }, 60000);
 }
 
 // ========================================
@@ -80,7 +96,7 @@ function initStatusDropdown() {
 
     statusOptions.forEach(option => {
         option.addEventListener("click", () => {
-            selectedStatus = option.dataset.status;
+            state.status = option.dataset.status || "ALL";
             selectedText.textContent = option.textContent;
             statusMenu.classList.remove("show");
             loadAnalytics();
@@ -99,85 +115,68 @@ function initStatusDropdown() {
 // DATE RANGE
 // ========================================
 
+function cacheDates() {
+    state.from = document.getElementById("dateFrom");
+    state.to = document.getElementById("dateTo");
+}
+
 function setDateRange(days) {
     const today = new Date();
     const from = new Date();
     from.setDate(today.getDate() - days);
 
-    const fromInput = document.getElementById('dateFrom');
-    const toInput = document.getElementById('dateTo');
-
-    if (fromInput) {
-        fromInput.value = from.toISOString().slice(0, 10);
+    if (state.from) {
+        state.from.value = from.toISOString().slice(0, 10);
     }
 
-    if (toInput) {
-        toInput.value = today.toISOString().slice(0, 10);
+    if (state.to) {
+        state.to.value = today.toISOString().slice(0, 10);
     }
 }
 
 function applyCustomFilter() {
-    const fromInput = document.getElementById('dateFrom');
-    const toInput = document.getElementById('dateTo');
-
-    if (!fromInput?.value || !toInput?.value) {
+    if (!state.from?.value || !state.to?.value) {
         alert("Please select both dates");
         return;
     }
 
-    if (new Date(fromInput.value) > new Date(toInput.value)) {
+    if (new Date(state.from.value) > new Date(state.to.value)) {
         alert("From date cannot be greater than To date");
         return;
     }
 
-    document.querySelectorAll('.btn-quick')
-        .forEach(b => b.classList.remove('active'));
+    document.querySelectorAll(".btn-quick")
+        .forEach(b => b.classList.remove("active"));
 
     loadAnalytics();
 }
 
 // ========================================
-// LOAD FROM BACKEND
+// LOAD ANALYTICS (USING API LAYER)
 // ========================================
 
 async function loadAnalytics() {
+    if (state.isLoading) return;
+
     try {
+        state.isLoading = true;
         showLoader();
 
-        const token = localStorage.getItem("token");
-
-        const fromInput = document.getElementById('dateFrom');
-        const toInput = document.getElementById('dateTo');
-
-        if (!fromInput?.value || !toInput?.value) {
+        if (!state.from?.value || !state.to?.value) {
             showError();
             return;
         }
 
-        const fromISO = new Date(fromInput.value).toISOString();
-        const toISO = new Date(toInput.value).toISOString();
+        const fromISO = new Date(state.from.value).toISOString();
+        const toISO = new Date(state.to.value).toISOString();
 
-        let url = `http://localhost:5000/api/admin/analytics?from=${fromISO}&to=${toISO}`;
-
-        if (selectedStatus !== "ALL") {
-            url += `&status=${selectedStatus}`;
-        }
-
-        const response = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+        const query = new URLSearchParams({
+            from: fromISO,
+            to: toISO,
+            ...(state.status !== "ALL" && { status: state.status })
         });
 
-        if (response.status === 401 || response.status === 403) {
-            localStorage.removeItem("token");
-            window.location.href = "login.html";
-            return;
-        }
-
-        if (!response.ok) throw new Error("Failed to load analytics");
-
-        const data = await response.json();
+        const data = await apiRequest(`/admin/analytics?${query.toString()}`);
 
         if (!data?.dailyData) {
             showError();
@@ -193,6 +192,8 @@ async function loadAnalytics() {
     } catch (error) {
         console.error("Analytics error:", error);
         showError();
+    } finally {
+        state.isLoading = false;
     }
 }
 
@@ -201,27 +202,16 @@ async function loadAnalytics() {
 // ========================================
 
 function displayKPIs(data) {
-    const currency = localStorage.getItem("currency") || "usd";
+    const currency = state.currency;
     const symbol = currency === "usd" ? "$" : "€";
     const rate = currency === "eur" ? 0.92 : 1;
 
-    document.getElementById('totalRevenue').textContent =
-        `${symbol}${(data.totalRevenue * rate).toFixed(2)}`;
-
-    document.getElementById('netRevenue').textContent =
-        `${symbol}${(data.netRevenue * rate).toFixed(2)}`;
-
-    document.getElementById('totalOrders').textContent =
-        data.orders;
-
-    document.getElementById('refundRate').textContent =
-        `${Number(data.refundRate || 0).toFixed(2)}%`;
-
-    document.getElementById('avgOrderValue').textContent =
-        `${symbol}${(data.avgOrderValue * rate).toFixed(2)}`;
-
-    document.getElementById('totalCustomers').textContent =
-        data.customers;
+    setText("totalRevenue", `${symbol}${(data.totalRevenue * rate).toFixed(2)}`);
+    setText("netRevenue", `${symbol}${(data.netRevenue * rate).toFixed(2)}`);
+    setText("totalOrders", data.orders);
+    setText("refundRate", `${Number(data.refundRate || 0).toFixed(2)}%`);
+    setText("avgOrderValue", `${symbol}${(data.avgOrderValue * rate).toFixed(2)}`);
+    setText("totalCustomers", data.customers);
 
     if (data.comparison) {
         renderGrowth("totalRevenue", data.comparison.revenueGrowth);
@@ -229,8 +219,13 @@ function displayKPIs(data) {
     }
 }
 
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+}
+
 // ========================================
-// GROWTH DISPLAY
+// GROWTH
 // ========================================
 
 function renderGrowth(elementId, growthValue) {
@@ -267,38 +262,43 @@ function renderGrowth(elementId, growthValue) {
 // ========================================
 
 function displayChart(dailyData) {
-    const ctx = document.getElementById('revenueChart')?.getContext('2d');
-    if (!ctx) return;
+    const canvas = document.getElementById("revenueChart");
+    if (!canvas) return;
 
-    if (revenueChart) revenueChart.destroy();
+    const ctx = canvas.getContext("2d");
 
-    const currency = localStorage.getItem("currency") || "usd";
+    if (revenueChart) {
+        revenueChart.destroy();
+        revenueChart = null;
+    }
+
+    const currency = state.currency;
     const rate = currency === "eur" ? 0.92 : 1;
 
     revenueChart = new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
             labels: dailyData.map(d =>
                 new Date(d.date).toLocaleDateString()
             ),
             datasets: [
                 {
-                    label: 'Revenue',
+                    label: "Revenue",
                     data: dailyData.map(d => Number(d.revenue) * rate),
-                    borderColor: '#00f0ff',
-                    backgroundColor: 'rgba(0,240,255,0.1)',
+                    borderColor: "#00f0ff",
+                    backgroundColor: "rgba(0,240,255,0.1)",
                     tension: 0.4,
                     fill: true,
-                    yAxisID: 'y'
+                    yAxisID: "y"
                 },
                 {
-                    label: 'Orders',
+                    label: "Orders",
                     data: dailyData.map(d => d.orders),
-                    borderColor: '#ff00ff',
-                    backgroundColor: 'rgba(255,0,255,0.1)',
+                    borderColor: "#ff00ff",
+                    backgroundColor: "rgba(255,0,255,0.1)",
                     tension: 0.4,
                     fill: false,
-                    yAxisID: 'y1'
+                    yAxisID: "y1"
                 }
             ]
         },
@@ -306,9 +306,9 @@ function displayChart(dailyData) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { position: 'left' },
+                y: { position: "left" },
                 y1: {
-                    position: 'right',
+                    position: "right",
                     grid: { drawOnChartArea: false }
                 }
             }
@@ -317,11 +317,11 @@ function displayChart(dailyData) {
 }
 
 // ========================================
-// TABLE + EXPORT + UI
+// TABLE
 // ========================================
 
 function displayTopProducts(products) {
-    const tbody = document.getElementById('productsTableBody');
+    const tbody = document.getElementById("productsTableBody");
     if (!tbody) return;
 
     if (!products.length) {
@@ -343,12 +343,16 @@ function displayTopProducts(products) {
                 </button>
             </td>
         </tr>
-    `).join('');
+    `).join("");
 }
 
 function viewProduct(productId) {
     window.location.href = `shop.html?product=${productId}`;
 }
+
+// ========================================
+// EXPORT
+// ========================================
 
 function exportData() {
     if (!revenueChart) {
@@ -372,21 +376,34 @@ function exportData() {
     link.href = url;
     link.download = "analytics_export.csv";
     link.click();
+
+    URL.revokeObjectURL(url);
 }
 
+// ========================================
+// UI
+// ========================================
+
 function showLoader() {
-    document.getElementById('loader').style.display = 'block';
-    document.getElementById('analyticsContent').style.display = 'none';
-    document.getElementById('errorMessage').style.display = 'none';
+    toggleDisplay("loader", true);
+    toggleDisplay("analyticsContent", false);
+    toggleDisplay("errorMessage", false);
 }
 
 function hideLoader() {
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('analyticsContent').style.display = 'block';
+    toggleDisplay("loader", false);
+    toggleDisplay("analyticsContent", true);
 }
 
 function showError() {
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('analyticsContent').style.display = 'none';
-    document.getElementById('errorMessage').style.display = 'block';
+    toggleDisplay("loader", false);
+    toggleDisplay("analyticsContent", false);
+    toggleDisplay("errorMessage", true);
+}
+
+function toggleDisplay(id, show) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.style.display = show ? "block" : "none";
+    }
 }

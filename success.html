@@ -158,15 +158,28 @@
 
                 <!-- Action Buttons -->
                 <div class="success-actions">
-                    <a href="orders.html" class="btn-primary btn-large">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span data-en="View My Orders" data-ru="Мои Заказы">Мои Заказы</span>
-                    </a>
-                    <a href="shop.html" class="btn-secondary btn-large">
-                        <i class="fas fa-store"></i>
-                        <span data-en="Continue Shopping" data-ru="Продолжить Покупки">Продолжить Покупки</span>
-                    </a>
-                </div>
+    <a href="orders.html" class="btn-primary btn-large">
+        <i class="fas fa-shopping-bag"></i>
+        <span data-en="View My Orders" data-ru="Мои Заказы">Мои Заказы</span>
+    </a>
+
+    <a href="shop.html" class="btn-secondary btn-large">
+        <i class="fas fa-store"></i>
+        <span data-en="Continue Shopping" data-ru="Продолжить Покупки">
+            Продолжить Покупки
+        </span>
+    </a>
+
+    <!-- 👇 ВАЖНО: это button, а не ссылка -->
+    <button id="downloadInvoiceBtn"
+            class="btn-secondary btn-large"
+            style="display:none;">
+        <i class="fas fa-file-invoice"></i>
+        <span data-en="Download Invoice" data-ru="Скачать Счет">
+            Скачать Счет
+        </span>
+    </button>
+</div>
 
                 <!-- Additional Info -->
                 <div class="additional-info">

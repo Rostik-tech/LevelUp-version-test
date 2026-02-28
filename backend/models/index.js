@@ -21,7 +21,7 @@ export const sequelize = new Sequelize(
 );
 
 /* ======================
-   IMPORT MODELS
+   IMPORT MODEL FACTORIES
 ====================== */
 
 import UserModel from "./user.js";
@@ -30,7 +30,8 @@ import OrderModel from "./order.js";
 import OrderItemModel from "./orderItem.js";
 import PaymentModel from "./payment.js";
 import RefundModel from "./refund.js";
-import ReviewModel from "./review.js"; // ✅ NEW
+import ReviewModel from "./review.js";
+import InvoiceModel from "./Invoice.js";
 
 /* ======================
    INIT MODELS
@@ -42,103 +43,46 @@ export const Order = OrderModel(sequelize);
 export const OrderItem = OrderItemModel(sequelize);
 export const Payment = PaymentModel(sequelize);
 export const Refund = RefundModel(sequelize);
-export const Review = ReviewModel(sequelize); // ✅ NEW
+export const Review = ReviewModel(sequelize);
+export const Invoice = InvoiceModel(sequelize);
 
 /* ======================
    RELATIONS
 ====================== */
 
-// ======================
-// User → Orders
-// ======================
+/* -------- User -------- */
 
-User.hasMany(Order, {
-  foreignKey: "UserId",
-  onDelete: "CASCADE",
-});
-Order.belongsTo(User, {
-  foreignKey: "UserId",
-});
+User.hasMany(Order, { foreignKey: "UserId", onDelete: "CASCADE" });
+Order.belongsTo(User, { foreignKey: "UserId" });
 
-// ======================
-// Order → OrderItems
-// ======================
+User.hasMany(Payment, { foreignKey: "UserId", onDelete: "CASCADE" });
+Payment.belongsTo(User, { foreignKey: "UserId" });
 
-Order.hasMany(OrderItem, {
-  foreignKey: "OrderId",
-  onDelete: "CASCADE",
-});
-OrderItem.belongsTo(Order, {
-  foreignKey: "OrderId",
-});
+User.hasMany(Review, { foreignKey: "UserId", onDelete: "CASCADE" });
+Review.belongsTo(User, { foreignKey: "UserId" });
 
-// ======================
-// Product → OrderItems
-// ======================
+/* -------- Orders -------- */
 
-Product.hasMany(OrderItem, {
-  foreignKey: "ProductId",
-});
-OrderItem.belongsTo(Product, {
-  foreignKey: "ProductId",
-});
+Order.hasMany(OrderItem, { foreignKey: "OrderId", onDelete: "CASCADE" });
+OrderItem.belongsTo(Order, { foreignKey: "OrderId" });
 
-// ======================
-// User → Payments
-// ======================
+Order.hasOne(Payment, { foreignKey: "OrderId", onDelete: "CASCADE" });
+Payment.belongsTo(Order, { foreignKey: "OrderId" });
 
-User.hasMany(Payment, {
-  foreignKey: "UserId",
-  onDelete: "CASCADE",
-});
-Payment.belongsTo(User, {
-  foreignKey: "UserId",
-});
+Order.hasOne(Invoice, { foreignKey: "orderId", onDelete: "CASCADE" });
+Invoice.belongsTo(Order, { foreignKey: "orderId" });
 
-// ======================
-// Order → Payment (1:1)
-// ======================
+/* -------- Products -------- */
 
-Order.hasOne(Payment, {
-  foreignKey: "OrderId",
-  onDelete: "CASCADE",
-});
-Payment.belongsTo(Order, {
-  foreignKey: "OrderId",
-});
+Product.hasMany(OrderItem, { foreignKey: "ProductId" });
+OrderItem.belongsTo(Product, { foreignKey: "ProductId" });
 
-// ======================
-// Payment → Refunds (1:N)
-// ======================
+Product.hasMany(Review, { foreignKey: "ProductId", onDelete: "CASCADE" });
+Review.belongsTo(Product, { foreignKey: "ProductId" });
 
-Payment.hasMany(Refund, {
-  foreignKey: "PaymentId",
-  onDelete: "CASCADE",
-});
-Refund.belongsTo(Payment, {
-  foreignKey: "PaymentId",
-});
+/* -------- Payments -------- */
 
-// ======================
-// REVIEWS SYSTEM (NEW)
-// ======================
-
-// User → Reviews
-User.hasMany(Review, {
-  foreignKey: "UserId",
-  onDelete: "CASCADE",
-});
-Review.belongsTo(User, {
-  foreignKey: "UserId",
-});
-
-// Product → Reviews
-Product.hasMany(Review, {
-  foreignKey: "ProductId",
-  onDelete: "CASCADE",
-});
-Review.belongsTo(Product, {
-  foreignKey: "ProductId",
-});
+Payment.hasMany(Refund, { foreignKey: "PaymentId", onDelete: "CASCADE" });
+Refund.belongsTo(Payment, { foreignKey: "PaymentId" });
 
 export default sequelize;

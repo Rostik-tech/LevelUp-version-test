@@ -4,77 +4,112 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: Number(process.env.EMAIL_PORT),
-  secure: false, // true если 465
+  secure: Number(process.env.EMAIL_PORT) === 465,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
+// Проверка соединения при старте
+transporter.verify()
+  .then(() => console.log("📧 Email transporter ready"))
+  .catch(err => console.error("❌ Email transporter error:", err.message));
+
 /**
- * Отправка уведомления о новом оплаченном заказе
+ * Отправка уведомления админу
  */
 export const sendOrderNotification = async (order, payment, items) => {
-  try {
-    if (!process.env.NOTIFY_EMAIL) {
-      console.warn("⚠ NOTIFY_EMAIL не указан");
-      return;
-    }
+  if (!process.env.NOTIFY_EMAIL) return;
 
-    const itemsHtml = items
-      .map((item) => {
-        const productName = item.Product?.name || "Товар";
-        const quantity = item.quantity || 0;
-        const price = Number(item.price || 0).toFixed(2);
+  const itemsHtml = items.map(item => `
+      <li>${item.Product?.name || "Товар"} — ${item.quantity} шт — $${Number(item.price).toFixed(2)}</li>
+  `).join("");
 
-        return `
-          <li>
-            ${productName} — ${quantity} шт. — $${price}
-          </li>
-        `;
-      })
-      .join("");
+  const html = `
+    <h2>Новый оплаченный заказ</h2>
+    <p><strong>Order ID:</strong> ${order.id}</p>
+    <p><strong>Total:</strong> $${Number(order.totalPrice).toFixed(2)}</p>
+    <ul>${itemsHtml}</ul>
+  `;
 
-    const html = `
-      <h2>Новый оплаченный заказ</h2>
+  await transporter.sendMail({
+    from: `"Level Up Gaming" <${process.env.EMAIL_USER}>`,
+    to: process.env.NOTIFY_EMAIL,
+    subject: `Новый заказ #${order.id}`,
+    html,
+  });
+};
 
-      <p><strong>Order ID:</strong> ${order.id}</p>
-      <p><strong>Сумма:</strong> $${Number(order.totalPrice).toFixed(2)}</p>
-      <p><strong>Статус:</strong> ${order.status}</p>
+/**
+ * Отправка инвойса клиенту
+ */
+export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
+  const itemsHtml = items.map(item => `
+      <tr>
+        <td style="padding:8px;border:1px solid #ddd;">
+          ${item.Product?.name || "Product"}
+        </td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">
+          ${item.quantity}
+        </td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:right;">
+          $${Number(item.price).toFixed(2)}
+        </td>
+      </tr>
+  `).join("");
 
-      <hr>
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;">
+      <h2 style="color:#6a00ff;">Level Up Gaming</h2>
+      <p><strong>Invoice #:</strong> ${invoice.invoice_number}</p>
+      <p><strong>Date:</strong> ${new Date(invoice.issued_at).toLocaleDateString()}</p>
 
-      <h3>Данные клиента:</h3>
-      <p><strong>Имя:</strong> ${order.shippingFullName}</p>
-      <p><strong>Телефон:</strong> ${order.shippingPhone}</p>
-      <p><strong>Страна:</strong> ${order.shippingCountry}</p>
-      <p><strong>Город:</strong> ${order.shippingCity}</p>
-      <p><strong>Адрес:</strong> ${order.shippingAddress}</p>
-      <p><strong>Индекс:</strong> ${order.shippingPostalCode}</p>
-      <p><strong>Квартира:</strong> ${order.shippingApartment || "-"}</p>
+      <hr/>
 
-      <hr>
+      <h3>Billing Information</h3>
+      <p>${order.shippingFullName}</p>
+      <p>${order.shippingAddress}</p>
+      <p>${order.shippingCity}, ${order.shippingCountry}</p>
+      <p>${invoice.customer_email}</p>
 
-      <h3>Товары:</h3>
-      <ul>
-        ${itemsHtml}
-      </ul>
+      <hr/>
 
-      <hr>
+      <h3>Order Summary</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="border:1px solid #ddd;padding:8px;">Product</th>
+            <th style="border:1px solid #ddd;padding:8px;">Qty</th>
+            <th style="border:1px solid #ddd;padding:8px;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
 
-      <p><strong>Метод оплаты:</strong> ${payment.method}</p>
-      <p><strong>Payment status:</strong> ${payment.status}</p>
-    `;
+      <h3 style="text-align:right;margin-top:20px;">
+        Total: $${Number(invoice.total_amount).toFixed(2)}
+      </h3>
 
-    await transporter.sendMail({
-      from: `"Shop System" <${process.env.EMAIL_USER}>`,
-      to: process.env.NOTIFY_EMAIL,
-      subject: `Новый заказ #${order.id}`,
-      html,
-    });
+      <hr/>
+      <p style="font-size:12px;color:#666;">
+        Thank you for your purchase.
+      </p>
+    </div>
+  `;
 
-    console.log("📧 Email отправлен успешно");
-  } catch (error) {
-    console.error("❌ Ошибка отправки email:", error.message);
-  }
+  await transporter.sendMail({
+  from: `"Level Up Gaming" <${process.env.EMAIL_USER}>`,
+  to: invoice.customerEmail,
+  subject: `Your Invoice #${invoice.invoiceNumber}`,
+  html,
+  attachments: [
+    {
+      filename: `${invoice.invoiceNumber}.pdf`,
+      path: invoice.pdfPath,
+    },
+  ],
+});
 };

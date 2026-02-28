@@ -1,28 +1,85 @@
 const API_URL = "http://localhost:5000/api";
 
+// ========================================
+// CORE API REQUEST
+// ========================================
+
 export async function apiRequest(path, options = {}) {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-      ...options.headers
-    }
-  });
-
-  if (res.status === 401) {
-    localStorage.removeItem("token");
-    window.location.href = "login.html";
+  if (!token) {
+    redirectToLogin();
     return;
   }
 
-  const data = await res.json();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
 
-  if (!res.ok) {
-    throw new Error(data.message || "API Error");
+  try {
+    const isFormData = options.body instanceof FormData;
+
+    const response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
+        "Authorization": `Bearer ${token}`,
+        ...options.headers
+      }
+    });
+
+    clearTimeout(timeout);
+
+    // ========================================
+    // AUTH HANDLING
+    // ========================================
+
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem("token");
+      redirectToLogin();
+      return;
+    }
+
+    // ========================================
+    // SAFE JSON PARSE
+    // ========================================
+
+    let data = null;
+
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    }
+
+    if (!response.ok) {
+      const message =
+        data?.message ||
+        `Request failed with status ${response.status}`;
+      throw new Error(message);
+    }
+
+    return data;
+
+  } catch (error) {
+    clearTimeout(timeout);
+
+    if (error.name === "AbortError") {
+      throw new Error("Request timeout. Please try again.");
+    }
+
+    if (!navigator.onLine) {
+      throw new Error("No internet connection.");
+    }
+
+    throw error;
   }
+}
 
-  return data;
+// ========================================
+// REDIRECT
+// ========================================
+
+function redirectToLogin() {
+  window.location.href = "login.html";
 }

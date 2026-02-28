@@ -1,5 +1,9 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import { Invoice } from "../models/index.js";
+import { generateInvoiceNumber } from "../utils/invoiceNumber.js";
+import { sendCustomerInvoiceEmail } from "../utils/emailService.js";
+import { generateInvoicePDF } from "../utils/pdfGenerator.js";
 import {
   sequelize,
   Order,
@@ -166,14 +170,22 @@ export const captureOrder = async (req, res) => {
     }
 
     // ✅ Idempotency
-    if (payment.status === "COMPLETED") {
-      const existingOrder = await Order.findByPk(payment.OrderId);
-      await transaction.commit();
-      return res.status(200).json({
-        message: "Уже оплачено",
-        order: existingOrder,
-      });
-    }
+if (payment.status === "COMPLETED") {
+
+  const existingOrder = await Order.findByPk(payment.OrderId);
+
+  const existingInvoice = await Invoice.findOne({
+    where: { orderId: existingOrder.id },
+  });
+
+  await transaction.commit();
+
+  return res.status(200).json({
+    message: "Уже оплачено",
+    order: existingOrder,
+    invoiceNumber: existingInvoice?.invoiceNumber || null,
+  });
+}
 
     // 🔒 3. Блокируем Order
     const dbOrder = await Order.findByPk(payment.OrderId, {
@@ -269,6 +281,50 @@ payment.paypalCaptureId = captureId;
     await payment.save({ transaction });
 
     await transaction.commit();
+
+    // 🧾 8. Создание инвойса
+   try {
+  const existingInvoice = await Invoice.findOne({
+    where: { orderId: dbOrder.id },
+  });
+
+  if (!existingInvoice) {
+
+    const user = await dbOrder.getUser();
+
+    const invoice = await Invoice.create({
+      orderId: dbOrder.id,
+      invoiceNumber: generateInvoiceNumber(dbOrder.id),
+      customerEmail: user.email,
+      totalAmount: dbOrder.totalPrice,
+      currency: "USD",
+    });
+
+    const fullItems = await OrderItem.findAll({
+      where: { OrderId: dbOrder.id },
+      include: [Product],
+    });
+
+    const pdfPath = await generateInvoicePDF(
+      invoice,
+      dbOrder,
+      fullItems
+    );
+
+    invoice.pdfPath = pdfPath;
+    await invoice.save();
+
+    await sendCustomerInvoiceEmail(invoice, dbOrder, fullItems);
+  }
+
+} catch (err) {
+  console.error("Invoice generation failed:", err.message);
+}
+res.json({
+  message: "Оплата подтверждена",
+  order: dbOrder,
+  invoiceNumber: invoice?.invoiceNumber || null,
+});
 
     // 📧 Email
     try {

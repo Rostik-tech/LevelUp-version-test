@@ -12,6 +12,7 @@ import productRouter from "./routes/products.js";
 import paymentRouter from "./routes/payments.js";
 import adminRouter from "./routes/admin.js";
 import usersRoutes from "./routes/users.js";
+import invoiceRoutes from "./routes/invoiceRoutes.js";
 
 import { sequelize } from "./models/index.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
@@ -85,6 +86,7 @@ app.use("/api/products", productRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/admin", authenticateToken, isAdmin, adminLimiter, adminRouter);
 app.use("/api/users", usersRoutes);
+app.use("/api/invoices", invoiceRoutes);
 
 /* =====================
    Auth Test Endpoints
