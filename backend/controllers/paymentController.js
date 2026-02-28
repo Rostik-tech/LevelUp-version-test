@@ -1,9 +1,8 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import { createInvoiceForOrder } from "./invoiceController.js";
 import { Invoice } from "../models/index.js";
-import { generateInvoiceNumber } from "../utils/invoiceNumber.js";
-import { sendCustomerInvoiceEmail } from "../utils/emailService.js";
-import { generateInvoicePDF } from "../utils/pdfGenerator.js";
+import { sendBusinessInvoiceCopy } from "../services/emailService.js";
 import {
   sequelize,
   Order,
@@ -11,7 +10,7 @@ import {
   OrderItem,
   Product,
 } from "../models/index.js";
-import { sendOrderNotification } from "../utils/emailService.js";
+import { sendOrderNotification } from "../services/emailService.js";
 
 dotenv.config();
 
@@ -283,48 +282,14 @@ payment.paypalCaptureId = captureId;
     await transaction.commit();
 
     // 🧾 8. Создание инвойса
-   try {
-  const existingInvoice = await Invoice.findOne({
-    where: { orderId: dbOrder.id },
-  });
+   const invoice = await createInvoiceForOrder(dbOrder);
 
-  if (!existingInvoice) {
-
-    const user = await dbOrder.getUser();
-
-    const invoice = await Invoice.create({
-      orderId: dbOrder.id,
-      invoiceNumber: generateInvoiceNumber(dbOrder.id),
-      customerEmail: user.email,
-      totalAmount: dbOrder.totalPrice,
-      currency: "USD",
-    });
-
-    const fullItems = await OrderItem.findAll({
-      where: { OrderId: dbOrder.id },
-      include: [Product],
-    });
-
-    const pdfPath = await generateInvoicePDF(
-      invoice,
-      dbOrder,
-      fullItems
-    );
-
-    invoice.pdfPath = pdfPath;
-    await invoice.save();
-
-    await sendCustomerInvoiceEmail(invoice, dbOrder, fullItems);
-  }
-
-} catch (err) {
-  console.error("Invoice generation failed:", err.message);
-}
-res.json({
-  message: "Оплата подтверждена",
-  order: dbOrder,
-  invoiceNumber: invoice?.invoiceNumber || null,
+   const fullItems = await OrderItem.findAll({
+  where: { OrderId: dbOrder.id },
+  include: [Product],
 });
+
+await sendBusinessInvoiceCopy(invoice, dbOrder, fullItems);
 
     // 📧 Email
     try {
@@ -338,10 +303,11 @@ res.json({
       console.error("Email failed:", err.message);
     }
 
-    res.json({
-      message: "Оплата подтверждена",
-      order: dbOrder,
-    });
+   res.json({
+  message: "Оплата подтверждена",
+  order: dbOrder,
+  invoiceNumber: invoice?.invoiceNumber || null,
+});
 
   } catch (error) {
     await transaction.rollback();

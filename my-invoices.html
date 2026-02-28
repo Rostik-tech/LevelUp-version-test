@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up - Premium Gaming Accessories</title>
+    <title data-en="My Invoices - Level Up Gaming" data-ru="Мои счета - Level Up Gaming">Мои счета - Level Up Gaming</title>
     <link rel="stylesheet" href="frontend/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="frontend/css/my-invoices.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Animated Background -->
-    <div class="stars-background" id="starsBackground"></div>
+    <div class="stars-background"></div>
 
-    <!-- Header Navigation -->
+    <!-- Header -->
     <header class="header">
         <div class="container">
             <nav class="navbar">
@@ -53,10 +52,6 @@
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
                                 <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
-                            </a>
-                            <a href="my-invoices.html" class="dropdown-item">
-                                <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета">Мои счета</span>
                             </a>
                             <a href="profile.html#settings" class="dropdown-item">
                                 <i class="fas fa-cog"></i>
@@ -111,74 +106,83 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Main Content -->
+    <main class="invoices-section">
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="gradient-text" data-en="Level Up Your Gaming" data-ru="Подними Свой Гейминг">Подними Свой Гейминг</span>
-                </h1>
-                <p class="hero-subtitle" data-en="Premium gaming accessories for champions" data-ru="Премиальные игровые аксессуары для чемпионов">
-                    Премиальные игровые аксессуары для чемпионов
-                </p>
-                <div class="hero-buttons">
-                    <a href="shop.html" class="btn btn-large btn-primary" data-en="SHOP NOW" data-ru="КУПИТЬ СЕЙЧАС">КУПИТЬ СЕЙЧАС</a>
-                    <a href="about.html" class="btn btn-large btn-outline" data-en="LEARN MORE" data-ru="УЗНАТЬ БОЛЬШЕ">УЗНАТЬ БОЛЬШЕ</a>
-                </div>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title" data-en="My Invoices" data-ru="Мои счета">Мои счета</h1>
+                <p class="page-subtitle" data-en="View and download all your invoices" data-ru="Просмотр и загрузка всех ваших счетов">Просмотр и загрузка всех ваших счетов</p>
             </div>
-        </div>
-    </section>
 
-    <!-- Featured Products Section -->
-    <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title" data-en="Featured Products" data-ru="Популярные товары">
-                <span class="gradient-text">Популярные товары</span>
-            </h2>
-            <div class="products-grid" id="featuredProducts">
-                <!-- Products will be loaded dynamically -->
+            <!-- Filters (Optional - можно добавить позже) -->
+            <div class="filters-section" style="display: none;">
+                <div class="filter-group">
+                    <label data-en="Date Range" data-ru="Период">Период</label>
+                    <select id="dateRangeFilter">
+                        <option value="all" data-en="All Time" data-ru="Все время">Все время</option>
+                        <option value="30" data-en="Last 30 Days" data-ru="Последние 30 дней">Последние 30 дней</option>
+                        <option value="90" data-en="Last 90 Days" data-ru="Последние 90 дней">Последние 90 дней</option>
+                        <option value="365" data-en="Last Year" data-ru="Последний год">Последний год</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label data-en="Status" data-ru="Статус">Статус</label>
+                    <select id="statusFilter">
+                        <option value="all" data-en="All Statuses" data-ru="Все статусы">Все статусы</option>
+                        <option value="paid" data-en="Paid" data-ru="Оплачено">Оплачено</option>
+                        <option value="refunded" data-en="Refunded" data-ru="Возвращено">Возвращено</option>
+                    </select>
+                </div>
             </div>
-            <div class="section-footer">
-                <a href="shop.html" class="btn btn-outline" data-en="View All Products" data-ru="Посмотреть все товары">Посмотреть все товары</a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="Fast Shipping" data-ru="Быстрая доставка">Быстрая доставка</h3>
-                    <p class="feature-text" data-en="Free shipping on orders over $50" data-ru="Бесплатная доставка при заказе от $50">Бесплатная доставка при заказе от $50</p>
+            <!-- Invoices Table Container -->
+            <div class="invoices-container">
+                <!-- Loading State -->
+                <div id="loadingState" class="state-container">
+                    <div class="loader"></div>
+                    <p data-en="Loading invoices..." data-ru="Загрузка счетов...">Загрузка счетов...</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="Secure Payment" data-ru="Безопасная оплата">Безопасная оплата</h3>
-                    <p class="feature-text" data-en="100% secure payment via PayPal" data-ru="100% безопасная оплата через PayPal">100% безопасная оплата через PayPal</p>
+
+                <!-- Error State -->
+                <div id="errorState" class="state-container" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3 data-en="Error Loading Invoices" data-ru="Ошибка загрузки счетов">Ошибка загрузки счетов</h3>
+                    <p id="errorMessage" data-en="Something went wrong. Please try again." data-ru="Что-то пошло не так. Пожалуйста, попробуйте снова.">Что-то пошло не так. Пожалуйста, попробуйте снова.</p>
+                    <button class="btn-primary" id="retryBtn" data-en="Retry" data-ru="Повторить">Повторить</button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="24/7 Support" data-ru="Поддержка 24/7">Поддержка 24/7</h3>
-                    <p class="feature-text" data-en="Contact us anytime, anywhere" data-ru="Связывайтесь с нами в любое время">Связывайтесь с нами в любое время</p>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="state-container" style="display: none;">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3 data-en="No Invoices Yet" data-ru="Пока нет счетов">Пока нет счетов</h3>
+                    <p data-en="You haven't made any purchases yet." data-ru="Вы еще не совершили ни одной покупки.">Вы еще не совершили ни одной покупки.</p>
+                    <a href="shop.html" class="btn-primary" data-en="Start Shopping" data-ru="Начать покупки">Начать покупки</a>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-undo"></i>
+
+                <!-- Invoices Table -->
+                <div id="invoicesTable" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="invoices-table">
+                            <thead>
+                                <tr>
+                                    <th data-en="Invoice #" data-ru="Счет №">Счет №</th>
+                                    <th data-en="Order #" data-ru="Заказ №">Заказ №</th>
+                                    <th data-en="Date" data-ru="Дата">Дата</th>
+                                    <th data-en="Total" data-ru="Сумма">Сумма</th>
+                                    <th data-en="Status" data-ru="Статус">Статус</th>
+                                    <th data-en="Action" data-ru="Действие">Действие</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody">
+                                <!-- Rows will be inserted here by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
-                    <h3 class="feature-title" data-en="Easy Returns" data-ru="Простой возврат">Простой возврат</h3>
-                    <p class="feature-text" data-en="30-day money back guarantee" data-ru="30-дневная гарантия возврата денег">30-дневная гарантия возврата денег</p>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -228,7 +232,6 @@
     </footer>
 
     <script src="frontend/js/main.js"></script>
-    <script src="frontend/js/products.js"></script>
-   
+    <script src="js/my-invoices.js"></script>
 </body>
 </html>
