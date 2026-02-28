@@ -17,6 +17,7 @@ import invoiceRoutes from "./routes/invoiceRoutes.js";
 import { sequelize } from "./models/index.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import { isAdmin } from "./middleware/adminMiddleware.js";
+import errorHandler from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
@@ -88,6 +89,7 @@ app.use("/api/admin", authenticateToken, isAdmin, adminLimiter, adminRouter);
 app.use("/api/users", usersRoutes);
 app.use("/api/invoices", invoiceRoutes);
 
+
 /* =====================
    Auth Test Endpoints
 ===================== */
@@ -100,25 +102,14 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 });
 
 /* =====================
-   Centralized Error Handler
+   404 Handler
 ===================== */
-import logger from "./utils/logger.js";
-
-app.use((err, req, res, next) => {
-  logger.error({
-    message: err.message,
-    stack: err.stack,
-    path: req.originalUrl,
-    method: req.method,
-  });
-
-  res.status(500).json({
-    message:
-      process.env.NODE_ENV === "development"
-        ? err.message
-        : "Internal Server Error",
-  });
+app.use((req, res, next) => {
+  const error = new Error("Route not found");
+  error.statusCode = 404;
+  next(error);
 });
+app.use(errorHandler);
 
 /* =====================
    Database & Server Start
