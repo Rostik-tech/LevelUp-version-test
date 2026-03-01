@@ -1,4 +1,3 @@
-// models/product.js
 import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
@@ -10,14 +9,56 @@ export default (sequelize) => {
         allowNull: false,
       },
 
-      description: {
+      slug: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+
+      brand: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      category: {
         type: DataTypes.STRING,
         allowNull: true,
       },
 
       price: {
-        type: DataTypes.DOUBLE,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
+      },
+
+      currency: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "USD",
+      },
+
+      shortDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+
+      longDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+
+      specs: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+      },
+
+      images: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+      },
+
+      sizes: {
+        type: DataTypes.JSONB,
+        allowNull: true,
       },
 
       stock: {
@@ -26,9 +67,9 @@ export default (sequelize) => {
         defaultValue: 0,
       },
 
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {
@@ -38,4 +79,3 @@ export default (sequelize) => {
     }
   );
 };
-

@@ -228,3 +228,22 @@
         grid-template-columns: 1fr;
     }
 }
+
+.admin-analytics-btn {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: transparent;
+    border: 1px solid #ff00ff;
+    color: #ff00ff;
+
+    transition: all 0.3s ease;
+}
+
+.admin-analytics-btn:hover {
+    background: #ff00ff;
+    color: #000;
+    box-shadow: 0 0 10px #ff00ff;
+}

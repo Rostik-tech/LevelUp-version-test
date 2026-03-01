@@ -1,7 +1,6 @@
 // ========================================
 // Admin Analytics (PRODUCTION API LAYERED)
 // ========================================
-
 import { apiRequest } from "./admin-api.js";
 
 let revenueChart = null;
@@ -321,6 +320,10 @@ function displayChart(dailyData) {
 // ========================================
 
 function displayTopProducts(products) {
+
+    const currency = state.currency;
+    const rate = currency === "eur" ? 0.92 : 1;
+    const symbol = currency === "usd" ? "$" : "€";
     const tbody = document.getElementById("productsTableBody");
     if (!tbody) return;
 
@@ -335,7 +338,7 @@ function displayTopProducts(products) {
             <td>${i + 1}</td>
             <td>${p.name}</td>
             <td>${p.units}</td>
-            <td>$${Number(p.revenue).toFixed(2)}</td>
+            <td>${symbol}${(Number(p.revenue) * rate).toFixed(2)}</td>
             <td>
                 <button class="btn btn-outline btn-sm"
                     onclick="viewProduct('${p.id}')">

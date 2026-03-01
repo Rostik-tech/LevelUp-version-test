@@ -145,6 +145,14 @@ function initAuth() {
     if (token) {
         if (authButtons) authButtons.style.display = 'none';
         if (profileDropdown) profileDropdown.style.display = 'block';
+
+        // Получаем payload из JWT
+        const payload = getTokenPayload();
+
+        if (payload) {
+            injectAdminButton(payload);
+        }
+
     } else {
         if (authButtons) authButtons.style.display = 'flex';
         if (profileDropdown) profileDropdown.style.display = 'none';
@@ -315,3 +323,33 @@ window.requireGuest = requireGuest;
 window.requireUser = requireUser;
 window.requireAdmin = requireAdmin;
 window.updatePageLanguage = updatePageLanguage;
+
+// ========================================
+// Inject Admin Button (Role Based UI)
+// ========================================
+
+function injectAdminButton(user) {
+  if (!user || user.role !== "ADMIN") return;
+
+  const dropdownMenu = document.getElementById("dropdownMenu");
+  if (!dropdownMenu) return;
+
+  // Чтобы не вставлять дважды
+  if (document.getElementById("adminPanelBtn")) return;
+
+  const divider = document.createElement("div");
+  divider.className = "dropdown-divider";
+
+  const adminLink = document.createElement("a");
+  adminLink.href = "admin.html";
+  adminLink.className = "dropdown-item";
+  adminLink.id = "adminPanelBtn";
+  adminLink.innerHTML = `
+    <i class="fas fa-shield-alt"></i>
+    <span>Admin Panel</span>
+  `;
+
+  // Вставляем сверху dropdown
+  dropdownMenu.insertBefore(divider, dropdownMenu.firstChild);
+  dropdownMenu.insertBefore(adminLink, divider);
+}
