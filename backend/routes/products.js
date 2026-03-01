@@ -1,12 +1,19 @@
+// routes/products.js
 import express from "express";
 import { Product } from "../models/index.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
+import { isAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
 /* ============================
    CREATE PRODUCT
 ============================ */
-router.post("/", async (req, res) => {
+router.post(
+  "/",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
   try {
     const data = { ...req.body };
 
@@ -97,7 +104,11 @@ router.get("/slug/:slug", async (req, res) => {
 /* ============================
    UPDATE PRODUCT
 ============================ */
-router.patch("/:id", async (req, res) => {
+router.patch(
+  "/:id",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
   try {
     const { id } = req.params;
     const data = { ...req.body };
@@ -145,7 +156,11 @@ router.patch("/:id", async (req, res) => {
 /* ============================
    TOGGLE ACTIVE STATUS
 ============================ */
-router.patch("/:id/toggle", async (req, res) => {
+router.patch(
+  "/:id/toggle",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
   try {
     const { id } = req.params;
 

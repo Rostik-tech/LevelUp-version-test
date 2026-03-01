@@ -1,3 +1,4 @@
+// utils/invoiceNumber.js
 export const generateInvoiceNumber = (orderId) => {
   const date = new Date();
   const year = date.getFullYear();

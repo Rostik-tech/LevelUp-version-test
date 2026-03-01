@@ -1,3 +1,4 @@
+// controllers/invoiceController.js
 import { Invoice, OrderItem, Product } from "../models/index.js";
 import { generateInvoiceNumber } from "../utils/invoiceNumber.js";
 import { generateInvoicePDF } from "../utils/pdfGenerator.js";

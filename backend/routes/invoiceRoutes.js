@@ -1,3 +1,4 @@
+//  routes/invoiceRoutes.js
 import express from "express";
 import { Invoice, Order } from "../models/index.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
