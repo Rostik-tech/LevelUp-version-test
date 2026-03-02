@@ -287,3 +287,25 @@
 .nav-btn {
   padding: 8px 12px;
 }
+
+.orders-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.orders-filters input,
+.orders-filters select {
+  background: #0d0d1a;
+  border: 1px solid #ff00ff;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.orders-filters input:focus,
+.orders-filters select:focus {
+  outline: none;
+  box-shadow: 0 0 10px #ff00ff;
+}

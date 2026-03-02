@@ -1,5 +1,9 @@
 import { apiRequest } from "./admin-api.js";
 let currentPage = 1;
+let filters = {
+  search: "",
+  status: ""
+};
 /* =========================
    VERIFY ADMIN
 ========================= */
@@ -15,12 +19,18 @@ async function verifyAdmin() {
    LOAD ORDERS
 ========================= */
 async function loadOrders(page = 1) {
-  currentPage = page; // <--- ВАЖНО
+  currentPage = page;
 
   const container = document.querySelector(".admin-main");
 
+  const query = new URLSearchParams({
+    page: page,
+    ...(filters.search && { search: filters.search }),
+    ...(filters.status && { status: filters.status })
+  }).toString();
+
   try {
-    const response = await apiRequest(`/admin/orders?page=${page}`);
+    const response = await apiRequest(`/admin/orders?${query}`);
     renderOrders(container, response);
   } catch (err) {
     container.innerHTML = `<p>Error: ${err.message}</p>`;
@@ -35,6 +45,25 @@ function renderOrders(container, response) {
   const meta = response.meta;
 
   container.innerHTML = `
+  <h2>Orders</h2>
+
+<div class="orders-filters">
+  <input type="text" id="searchInput" 
+         placeholder="Search by ID or email"
+         value="${filters.search}" />
+
+  <select id="statusFilter">
+    <option value="">All Statuses</option>
+    <option value="PENDING" ${filters.status === "PENDING" ? "selected" : ""}>PENDING</option>
+    <option value="PAID" ${filters.status === "PAID" ? "selected" : ""}>PAID</option>
+    <option value="PARTIALLY_REFUNDED" ${filters.status === "PARTIALLY_REFUNDED" ? "selected" : ""}>PARTIALLY_REFUNDED</option>
+    <option value="REFUNDED" ${filters.status === "REFUNDED" ? "selected" : ""}>REFUNDED</option>
+  </select>
+
+  <button class="btn btn-primary" id="applyFiltersBtn">
+    Apply
+  </button>
+</div>
     <h2>Orders</h2>
 
     <table class="admin-table">
@@ -89,6 +118,20 @@ function renderOrders(container, response) {
 
   attachRefundListeners();
   attachPaginationListeners();
+  attachFilterListeners();
+}
+
+function attachFilterListeners() {
+  const searchInput = document.getElementById("searchInput");
+  const statusFilter = document.getElementById("statusFilter");
+  const applyBtn = document.getElementById("applyFiltersBtn");
+
+  applyBtn.addEventListener("click", async () => {
+    filters.search = searchInput.value.trim();
+    filters.status = statusFilter.value;
+
+    await loadOrders(1); // всегда начинаем с 1 страницы
+  });
 }
 
 function attachPaginationListeners() {
