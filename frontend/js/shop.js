@@ -1,5 +1,5 @@
 // ========================================
-// Shop Page - Backend Connected
+// Shop Page - Backend Connected (Slug Version)
 // ========================================
 
 const API_BASE = "http://localhost:5000/api";
@@ -36,52 +36,46 @@ async function loadProducts() {
 }
 
 function renderProducts(container, products) {
-    container.innerHTML = products.map(product => `
-        <div class="product-card">
-            <img src="${product.image || 'images/placeholder.jpg'}"
+    container.innerHTML = products.map(product => {
+
+        const image = (product.images && product.images.length > 0)
+            ? product.images[0]
+            : "images/placeholder.jpg";
+
+        return `
+        <div class="product-card"
+             onclick="goToProduct('${product.slug}')">
+
+            <img src="${image}"
                  alt="${product.name}"
                  class="product-image">
 
             <h3 class="product-name">${product.name}</h3>
-            <p class="product-description">${product.description || ""}</p>
+            <p class="product-description">
+                ${product.shortDescription || ""}
+            </p>
 
             <div class="product-footer">
-                <span class="product-price">$${Number(product.price).toFixed(2)}</span>
-                <button onclick="addToCart(${product.id}, '${product.name}', ${product.price}, '${product.image}')"
-                        class="btn btn-primary"
-                        data-en="Add to Cart"
-                        data-ru="В корзину">
-                    В корзину
+                <span class="product-price">
+                    $${Number(product.price).toFixed(2)}
+                </span>
+
+                <button class="btn btn-primary"
+                        onclick="event.stopPropagation(); goToProduct('${product.slug}')"
+                        data-en="View Details"
+                        data-ru="Подробнее">
+                    Подробнее
                 </button>
             </div>
         </div>
-    `).join("");
+        `;
+    }).join("");
 
     triggerLanguageUpdate();
 }
 
-function addToCart(id, name, price, image) {
-    const cart = window.cart;
-    if (!cart) return;
-
-    const existing = cart.items.find(i => i.id === id);
-
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.items.push({
-            id,
-            name: { ru: name, en: name },
-            price,
-            quantity: 1,
-            image
-        });
-    }
-
-    cart.saveCart();
-    cart.updateCartCount();
-
-    alert("Товар добавлен в корзину");
+function goToProduct(slug) {
+    window.location.href = `product.html?slug=${slug}`;
 }
 
 function triggerLanguageUpdate() {
@@ -90,4 +84,4 @@ function triggerLanguageUpdate() {
     }
 }
 
-window.addToCart = addToCart;
+window.goToProduct = goToProduct;
