@@ -1,6 +1,14 @@
 // routes/products.js
+
 import express from "express";
 import { Product } from "../models/index.js";
+import {
+  createProduct,
+  getProducts,
+  getProductById,
+  validateProductSize
+} from "../controllers/productController.js";
+
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/adminMiddleware.js";
 
@@ -13,70 +21,13 @@ router.post(
   "/",
   authenticateToken,
   isAdmin,
-  async (req, res) => {
-  try {
-    const data = { ...req.body };
-
-    // Автоматический пересчёт stock из sizes
-    if (data.sizes && Array.isArray(data.sizes)) {
-      data.stock = data.sizes.reduce(
-        (total, item) => total + (item.stock || 0),
-        0
-      );
-    }
-
-    const product = await Product.create(data);
-
-    res.status(201).json({
-      message: "Product created successfully",
-      product
-    });
-
-  } catch (err) {
-
-    if (err.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({
-        message: "Slug already exists"
-      });
-    }
-
-    if (err.name === "SequelizeValidationError") {
-      return res.status(400).json({
-        message: err.errors.map(e => e.message)
-      });
-    }
-
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
+  createProduct
+);
 
 /* ============================
    GET ALL ACTIVE PRODUCTS
 ============================ */
-router.get("/", async (req, res) => {
-  try {
-    const products = await Product.findAll({
-      where: { isActive: true },
-      attributes: [
-        "id",
-        "name",
-        "slug",
-        "price",
-        "currency",
-        "shortDescription",
-        "images"
-      ],
-      order: [["createdAt", "DESC"]]
-    });
-
-    res.json(products);
-
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
+router.get("/", getProducts);
 
 /* ============================
    GET PRODUCT BY SLUG
@@ -93,13 +44,22 @@ router.get("/slug/:slug", async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.json(product);
+    return res.json(product);
 
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
+/* ============================
+   GET PRODUCT BY ID
+============================ */
+router.get("/:id", getProductById);
+
+/* ============================
+   VALIDATE PRODUCT SIZE
+============================ */
+router.post("/:id/validate", validateProductSize);
 
 /* ============================
    UPDATE PRODUCT
@@ -109,49 +69,48 @@ router.patch(
   authenticateToken,
   isAdmin,
   async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = { ...req.body };
+    try {
+      const { id } = req.params;
+      const data = { ...req.body };
 
-    const product = await Product.findByPk(id);
+      const product = await Product.findByPk(id);
 
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
 
-    // Если обновляются sizes — пересчитываем stock
-    if (data.sizes && Array.isArray(data.sizes)) {
-      data.stock = data.sizes.reduce(
-        (total, item) => total + (item.stock || 0),
-        0
-      );
-    }
+      if (data.sizes && Array.isArray(data.sizes)) {
+        data.stock = data.sizes.reduce(
+          (total, item) => total + (item.stock || 0),
+          0
+        );
+      }
 
-    await product.update(data);
+      await product.update(data);
 
-    res.json({
-      message: "Product updated successfully",
-      product
-    });
-
-  } catch (err) {
-
-    if (err.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({
-        message: "Slug already exists"
+      return res.json({
+        message: "Product updated successfully",
+        product
       });
-    }
 
-    if (err.name === "SequelizeValidationError") {
-      return res.status(400).json({
-        message: err.errors.map(e => e.message)
-      });
-    }
+    } catch (err) {
 
-    res.status(500).json({ message: "Server error" });
+      if (err.name === "SequelizeUniqueConstraintError") {
+        return res.status(400).json({
+          message: "Slug already exists"
+        });
+      }
+
+      if (err.name === "SequelizeValidationError") {
+        return res.status(400).json({
+          message: err.errors.map(e => e.message)
+        });
+      }
+
+      return res.status(500).json({ message: "Server error" });
+    }
   }
-});
-
+);
 
 /* ============================
    TOGGLE ACTIVE STATUS
@@ -161,27 +120,27 @@ router.patch(
   authenticateToken,
   isAdmin,
   async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const product = await Product.findByPk(id);
+      const product = await Product.findByPk(id);
 
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      product.isActive = !product.isActive;
+      await product.save();
+
+      return res.json({
+        message: "Product status updated",
+        isActive: product.isActive
+      });
+
+    } catch (err) {
+      return res.status(500).json({ message: "Server error" });
     }
-
-    product.isActive = !product.isActive;
-    await product.save();
-
-    res.json({
-      message: "Product status updated",
-      isActive: product.isActive
-    });
-
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
   }
-});
-
+);
 
 export default router;

@@ -1,21 +1,265 @@
 // controllers/productController.js
-const Product = require('../models/product');
 
-exports.createProduct = async (req, res) => {
-    const { name, description, price, stock } = req.body;
-    try {
-        const product = await Product.create({ name, description, price, stock });
-        res.json({ message: 'Товар создан', product });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+import { Product } from "../models/index.js";
+
+/* ============================
+   CREATE PRODUCT
+============================ */
+export const createProduct = async (req, res) => {
+  try {
+    const data = { ...req.body };
+
+    // Автоматический пересчёт stock из sizes
+    if (data.sizes && Array.isArray(data.sizes)) {
+      data.stock = data.sizes.reduce(
+        (total, item) => total + (item.stock || 0),
+        0
+      );
     }
+
+    const product = await Product.create(data);
+
+    return res.status(201).json({
+      message: "Product created successfully",
+      product
+    });
+
+  } catch (err) {
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        message: "Slug already exists"
+      });
+    }
+
+    if (err.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        message: err.errors.map(e => e.message)
+      });
+    }
+
+    console.error("CREATE PRODUCT ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
 };
 
-exports.getProducts = async (req, res) => {
-    try {
-        const products = await Product.findAll();
-        res.json(products);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+
+/* ============================
+   GET ALL ACTIVE PRODUCTS
+============================ */
+export const getProducts = async (req, res) => {
+  try {
+    const products = await Product.findAll({
+      where: { isActive: true },
+      attributes: [
+        "id",
+        "name",
+        "slug",
+        "price",
+        "currency",
+        "shortDescription",
+        "images"
+      ],
+      order: [["createdAt", "DESC"]]
+    });
+
+    return res.json(products);
+
+  } catch (err) {
+    console.error("GET PRODUCTS ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ============================
+   GET PRODUCT BY ID
+============================ */
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findOne({
+      where: { id, isActive: true }
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found"
+      });
     }
+
+    return res.json(product);
+
+  } catch (err) {
+    console.error("GET PRODUCT ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ============================
+   GET PRODUCT BY SLUG
+============================ */
+export const getProductBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const product = await Product.findOne({
+      where: { slug, isActive: true }
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.json(product);
+
+  } catch (err) {
+    console.error("GET PRODUCT BY SLUG ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ============================
+   UPDATE PRODUCT
+============================ */
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = { ...req.body };
+
+    const product = await Product.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Если обновляются sizes — пересчитываем stock
+    if (data.sizes && Array.isArray(data.sizes)) {
+      data.stock = data.sizes.reduce(
+        (total, item) => total + (item.stock || 0),
+        0
+      );
+    }
+
+    await product.update(data);
+
+    return res.json({
+      message: "Product updated successfully",
+      product
+    });
+
+  } catch (err) {
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        message: "Slug already exists"
+      });
+    }
+
+    if (err.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        message: err.errors.map(e => e.message)
+      });
+    }
+
+    console.error("UPDATE PRODUCT ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ============================
+   TOGGLE ACTIVE STATUS
+============================ */
+export const toggleProductStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.isActive = !product.isActive;
+    await product.save();
+
+    return res.json({
+      message: "Product status updated",
+      isActive: product.isActive
+    });
+
+  } catch (err) {
+    console.error("TOGGLE PRODUCT ERROR:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ============================
+   VALIDATE PRODUCT SIZE
+============================ */
+export const validateProductSize = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { size, quantity } = req.body;
+
+    if (!size || !quantity || quantity <= 0) {
+      return res.status(400).json({
+        valid: false,
+        message: "Size and quantity are required"
+      });
+    }
+
+    const product = await Product.findOne({
+      where: { id, isActive: true }
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        valid: false,
+        message: "Product not available"
+      });
+    }
+
+    if (product.sizes && product.sizes.length > 0) {
+
+      const sizeObj = product.sizes.find(s => s.size === size);
+
+      if (!sizeObj) {
+        return res.status(400).json({
+          valid: false,
+          message: "Selected size does not exist"
+        });
+      }
+
+      if (sizeObj.stock < quantity) {
+        return res.status(400).json({
+          valid: false,
+          message: "Not enough stock for selected size"
+        });
+      }
+
+    } else {
+
+      if (product.stock < quantity) {
+        return res.status(400).json({
+          valid: false,
+          message: "Not enough stock"
+        });
+      }
+    }
+
+    return res.json({ valid: true });
+
+  } catch (err) {
+    console.error("VALIDATE PRODUCT ERROR:", err.message);
+    return res.status(500).json({
+      valid: false,
+      message: "Server error"
+    });
+  }
 };
