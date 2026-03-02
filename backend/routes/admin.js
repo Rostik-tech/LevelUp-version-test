@@ -228,27 +228,126 @@ const getAccessToken = async () => {
 ===================================================== */
 
 router.get("/products", authenticateToken, isAdmin, async (req, res) => {
-  const products = await Product.findAll();
-  res.json(products);
+  try {
+    const { page = 1, limit = 10, search, isActive } = req.query;
+
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const where = {};
+
+    // Search по name / slug / brand
+    if (search) {
+      where[Op.or] = [
+        { name: { [Op.iLike]: `%${search}%` } },
+        { slug: { [Op.iLike]: `%${search}%` } },
+        { brand: { [Op.iLike]: `%${search}%` } }
+      ];
+    }
+
+    // Фильтр по активности
+    if (isActive !== undefined) {
+      where.isActive = isActive === "true";
+    }
+
+    const { rows, count } = await Product.findAndCountAll({
+      where,
+      limit: limitNumber,
+      offset,
+      order: [["createdAt", "DESC"]]
+    });
+
+    return res.json({
+      success: true,
+      data: rows,
+      meta: {
+        total: count,
+        page: pageNumber,
+        pages: Math.ceil(count / limitNumber)
+      }
+    });
+
+  } catch (err) {
+    console.error("ADMIN PRODUCTS ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 router.post("/products", authenticateToken, isAdmin, async (req, res) => {
-  const product = await Product.create(req.body);
-  res.json(product);
+  try {
+    const data = { ...req.body };
+
+    // пересчёт stock
+    if (data.sizes && Array.isArray(data.sizes)) {
+      data.stock = data.sizes.reduce(
+        (total, item) => total + (item.stock || 0),
+        0
+      );
+    }
+
+    const product = await Product.create(data);
+
+    return res.status(201).json({
+      success: true,
+      data: product
+    });
+
+  } catch (err) {
+    console.error("CREATE PRODUCT ERROR:", err);
+    return res.status(500).json({ message: "Error creating product" });
+  }
 });
+
 
 router.put("/products/:id", authenticateToken, isAdmin, async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  if (!product) return res.status(404).json({ message: "Not found" });
-  await product.update(req.body);
-  res.json(product);
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (!product) return res.status(404).json({ message: "Not found" });
+
+    const data = { ...req.body };
+
+    if (data.sizes && Array.isArray(data.sizes)) {
+      data.stock = data.sizes.reduce(
+        (total, item) => total + (item.stock || 0),
+        0
+      );
+    }
+
+    await product.update(data);
+
+    return res.json({
+      success: true,
+      data: product
+    });
+
+  } catch (err) {
+    console.error("UPDATE PRODUCT ERROR:", err);
+    return res.status(500).json({ message: "Error updating product" });
+  }
 });
 
+
 router.delete("/products/:id", authenticateToken, isAdmin, async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  if (!product) return res.status(404).json({ message: "Not found" });
-  await product.destroy();
-  res.json({ message: "Deleted" });
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (!product) return res.status(404).json({ message: "Not found" });
+
+    product.isActive = false;
+    product.stock = 0;
+
+    await product.save();
+
+    return res.json({
+      success: true,
+      message: "Product archived"
+    });
+
+  } catch (err) {
+    console.error("DELETE PRODUCT ERROR:", err);
+    return res.status(500).json({ message: "Error archiving product" });
+  }
 });
 
 /* =====================================================
@@ -323,11 +422,50 @@ router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) 
 ===================================================== */
 
 router.get("/users", authenticateToken, isAdmin, async (req, res) => {
-  const users = await User.findAll({
-    attributes: ["id", "username", "email", "role", "createdAt"],
-  });
+  try {
+    const { page = 1, limit = 10, search, role } = req.query;
 
-  res.json(users);
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const where = {};
+
+    // Поиск по username или email
+    if (search) {
+      where[Op.or] = [
+        { username: { [Op.iLike]: `%${search}%` } },
+        { email: { [Op.iLike]: `%${search}%` } }
+      ];
+    }
+
+    // Фильтр по роли
+    if (role) {
+      where.role = role.toUpperCase();
+    }
+
+    const { rows, count } = await User.findAndCountAll({
+      where,
+      attributes: ["id", "username", "email", "role", "createdAt"],
+      limit: limitNumber,
+      offset,
+      order: [["createdAt", "DESC"]]
+    });
+
+    return res.json({
+      success: true,
+      data: rows,
+      meta: {
+        total: count,
+        page: pageNumber,
+        pages: Math.ceil(count / limitNumber)
+      }
+    });
+
+  } catch (err) {
+    console.error("ADMIN USERS ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
 
 /* =====================================================
