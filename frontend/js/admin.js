@@ -45,7 +45,7 @@ function renderOrders(container, response) {
   const meta = response.meta;
 
   container.innerHTML = `
-  <h2>Orders</h2>
+  
 
 <div class="orders-filters">
   <input type="text" id="searchInput" 
@@ -80,16 +80,17 @@ function renderOrders(container, response) {
       </thead>
       <tbody>
         ${orders.map(order => {
-          const remaining =
-            parseFloat(order.totalPrice) -
-            parseFloat(order.refundedAmount || 0);
+          const remaining = (
+  Number(order.totalPrice) -
+  Number(order.refundedAmount || 0)
+).toFixed(2);
 
           return `
             <tr>
               <td>${order.id}</td>
               <td>${order.User?.email || "-"}</td>
-              <td>$${order.totalPrice}</td>
-              <td>$${order.refundedAmount || 0}</td>
+              <td>$${Number(order.totalPrice).toFixed(2)}</td>
+              <td>$${Number(order.refundedAmount || 0).toFixed(2)}</td>
               <td>${order.status}</td>
               <td>${new Date(order.createdAt).toLocaleDateString()}</td>
               <td>
@@ -184,36 +185,83 @@ function generatePagination(currentPage, totalPages) {
 function attachRefundListeners() {
   document.querySelectorAll(".refund-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const orderId = btn.dataset.id;
-      const remaining = parseFloat(btn.dataset.remaining);
+  const orderId = btn.dataset.id;
+  const remaining = parseFloat(btn.dataset.remaining);
 
-      const amount = prompt(
-        `Enter refund amount (max ${remaining}):`
-      );
-
-      if (!amount) return;
-
-      if (parseFloat(amount) > remaining) {
-        alert("Refund exceeds remaining amount");
-        return;
-      }
-
-      try {
-        await apiRequest(`/admin/orders/${orderId}/refund`, {
-          method: "POST",
-          body: JSON.stringify({
-            amount: parseFloat(amount)
-          }),
-        });
-
-        alert("Refund successful");
-        await loadOrders(currentPage);
-
-      } catch (err) {
-        alert("Refund failed: " + err.message);
-      }
-    });
+  openRefundModal(orderId, remaining);
+});
   });
+}
+
+function openRefundModal(orderId, remaining) {
+  const modal = document.createElement("div");
+  modal.className = "refund-modal";
+
+  modal.innerHTML = `
+    <div class="refund-modal-content">
+      <h3>Refund Order #${orderId}</h3>
+
+      <p>Remaining amount: $${remaining}</p>
+
+      <input type="number" 
+             id="refundAmount"
+             placeholder="Enter amount"
+             max="${remaining}"
+             min="0.01"
+             step="0.01" />
+
+      <textarea id="refundReason"
+                placeholder="Reason (optional)"></textarea>
+
+      <div class="refund-actions">
+        <button class="btn btn-outline" id="cancelRefund">
+          Cancel
+        </button>
+        <button class="btn btn-primary" id="confirmRefund">
+          Confirm Refund
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cancelRefund").onclick = () => {
+    modal.remove();
+  };
+
+  document.getElementById("confirmRefund").onclick = async () => {
+    const amountInput = document.getElementById("refundAmount");
+    const reasonInput = document.getElementById("refundReason");
+
+    const amount = parseFloat(amountInput.value);
+
+    if (!amount || amount <= 0) {
+      alert("Invalid amount");
+      return;
+    }
+
+    if (amount > remaining) {
+      alert("Amount exceeds remaining balance");
+      return;
+    }
+
+    try {
+      await apiRequest(`/admin/orders/${orderId}/refund`, {
+        method: "POST",
+        body: JSON.stringify({
+          amount,
+          reason: reasonInput.value || undefined
+        }),
+      });
+
+      modal.remove();
+      await loadOrders(currentPage);
+
+    } catch (err) {
+      alert("Refund failed: " + err.message);
+    }
+  };
 }
 
 /* =========================
