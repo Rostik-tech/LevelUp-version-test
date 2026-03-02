@@ -31,6 +31,7 @@ router.get("/", getProducts);
 
 /* ============================
    GET PRODUCT BY SLUG
+   ⚠ ДОЛЖЕН БЫТЬ ВЫШЕ /:id
 ============================ */
 router.get("/slug/:slug", async (req, res) => {
   try {
@@ -41,13 +42,18 @@ router.get("/slug/:slug", async (req, res) => {
     });
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({
+        message: "Product not found"
+      });
     }
 
     return res.json(product);
 
   } catch (err) {
-    return res.status(500).json({ message: "Server error" });
+    console.error("GET PRODUCT BY SLUG ERROR:", err.message);
+    return res.status(500).json({
+      message: "Server error"
+    });
   }
 });
 
@@ -76,9 +82,12 @@ router.patch(
       const product = await Product.findByPk(id);
 
       if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+        return res.status(404).json({
+          message: "Product not found"
+        });
       }
 
+      // Пересчёт общего stock если обновляются sizes
       if (data.sizes && Array.isArray(data.sizes)) {
         data.stock = data.sizes.reduce(
           (total, item) => total + (item.stock || 0),
@@ -107,7 +116,11 @@ router.patch(
         });
       }
 
-      return res.status(500).json({ message: "Server error" });
+      console.error("UPDATE PRODUCT ERROR:", err.message);
+
+      return res.status(500).json({
+        message: "Server error"
+      });
     }
   }
 );
@@ -126,7 +139,9 @@ router.patch(
       const product = await Product.findByPk(id);
 
       if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+        return res.status(404).json({
+          message: "Product not found"
+        });
       }
 
       product.isActive = !product.isActive;
@@ -138,7 +153,10 @@ router.patch(
       });
 
     } catch (err) {
-      return res.status(500).json({ message: "Server error" });
+      console.error("TOGGLE PRODUCT ERROR:", err.message);
+      return res.status(500).json({
+        message: "Server error"
+      });
     }
   }
 );

@@ -1,5 +1,5 @@
 // ========================================
-// Cart Page - Clean UI + JWT + i18n
+// Cart Page - Clean UI + JWT + i18n (FIXED CURRENCY)
 // ========================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -47,13 +47,14 @@ function displayCart() {
 
         const name = item.name?.[lang] || item.name?.ru || "Product";
 
-        const price = window.formatPrice
-            ? window.formatPrice(item.price)
-            : `$${item.price.toFixed(2)}`;
+        // 🔥 КОНВЕРТАЦИЯ + ФОРМАТ
+        const convertedPrice = window.convertPrice(Number(item.price));
+        const formattedPrice = window.formatPrice(convertedPrice);
 
-        const total = window.formatPrice
-            ? window.formatPrice(item.price * item.quantity)
-            : `$${(item.price * item.quantity).toFixed(2)}`;
+        const convertedTotal = window.convertPrice(
+            Number(item.price) * Number(item.quantity)
+        );
+        const formattedTotal = window.formatPrice(convertedTotal);
 
         return `
             <div class="cart-item">
@@ -65,7 +66,7 @@ function displayCart() {
 
                 <div class="cart-item-details">
                     <h3 class="cart-item-name">${name}</h3>
-                    <p class="cart-item-price">${price}</p>
+                    <p class="cart-item-price">${formattedPrice}</p>
 
                     <div class="quantity-control">
 
@@ -99,7 +100,7 @@ function displayCart() {
                 </div>
 
                 <div class="cart-item-total">
-                    ${total}
+                    ${formattedTotal}
                 </div>
 
             </div>
@@ -113,21 +114,20 @@ function updateCartSummary() {
     const cart = window.cart;
     if (!cart) return;
 
-    const subtotal = cart.getTotal();
-    const tax = subtotal * 0.1;
-    const total = subtotal + tax;
+    const subtotalUSD = cart.getTotal();
 
-    const formatPrice =
-        window.formatPrice || ((p) => `$${p.toFixed(2)}`);
+    const subtotal = window.convertPrice(subtotalUSD);
+    const tax = window.convertPrice(subtotalUSD * 0.1);
+    const total = window.convertPrice(subtotalUSD * 1.1);
 
     document.getElementById("subtotal").textContent =
-        formatPrice(subtotal);
+        window.formatPrice(subtotal);
 
     document.getElementById("tax").textContent =
-        formatPrice(tax);
+        window.formatPrice(tax);
 
     document.getElementById("total").textContent =
-        formatPrice(total);
+        window.formatPrice(total);
 }
 
 function changeQuantity(productId, change) {

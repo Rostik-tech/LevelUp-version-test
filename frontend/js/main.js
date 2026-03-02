@@ -91,23 +91,36 @@ function initCurrency() {
     }
 
     currencyOptions.forEach(function (option) {
-        option.addEventListener('click', function () {
-            const currency = option.dataset.currency;
-            if (currency !== currentCurrency) {
-                currentCurrency = currency;
-                localStorage.setItem('currency', currency);
-                if (currentCurrencyEl) {
-                    currentCurrencyEl.textContent = currency.toUpperCase();
-                }
-                updatePagePrices();
+    option.addEventListener('click', function () {
+        const currency = option.dataset.currency;
+
+        if (currency !== currentCurrency) {
+            currentCurrency = currency;
+            localStorage.setItem('currency', currency);
+
+            if (currentCurrencyEl) {
+                currentCurrencyEl.textContent = currency.toUpperCase();
             }
-            if (currencyMenu) currencyMenu.classList.remove('active');
-        });
+
+            updatePagePrices();
+
+            // 🔥 ДОБАВЬ ВОТ ЭТО
+            if (window.displayCart) {
+                window.displayCart();
+            }
+
+            if (window.updateCartSummary) {
+                window.updateCartSummary();
+            }
+        }
+
+        if (currencyMenu) currencyMenu.classList.remove('active');
     });
+});
 }
 
 function updatePagePrices() {
-    const priceElements = document.querySelectorAll('.product-price, .price, [data-price]');
+    const priceElements = document.querySelectorAll('[data-base-price]');
     priceElements.forEach(function (element) {
         let basePrice = parseFloat(
             element.dataset.basePrice ||
