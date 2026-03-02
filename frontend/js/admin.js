@@ -1,5 +1,5 @@
 import { apiRequest } from "./admin-api.js";
-
+let currentPage = 1;
 /* =========================
    VERIFY ADMIN
 ========================= */
@@ -14,11 +14,13 @@ async function verifyAdmin() {
 /* =========================
    LOAD ORDERS
 ========================= */
-async function loadOrders() {
+async function loadOrders(page = 1) {
+  currentPage = page; // <--- ВАЖНО
+
   const container = document.querySelector(".admin-main");
 
   try {
-    const response = await apiRequest("/admin/orders");
+    const response = await apiRequest(`/admin/orders?page=${page}`);
     renderOrders(container, response);
   } catch (err) {
     container.innerHTML = `<p>Error: ${err.message}</p>`;
@@ -80,11 +82,57 @@ function renderOrders(container, response) {
     </table>
 
     <div class="pagination">
-      Page ${meta.page} of ${meta.pages}
-    </div>
+  ${generatePagination(meta.page, meta.pages)}
+</div>
   `;
 
+
   attachRefundListeners();
+  attachPaginationListeners();
+}
+
+function attachPaginationListeners() {
+  document.querySelectorAll(".page-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const page = btn.dataset.page;
+      await loadOrders(page);
+    });
+  });
+}
+
+function generatePagination(currentPage, totalPages) {
+  if (totalPages <= 1) return "";
+
+  let buttons = `<div class="pagination-wrapper">`;
+
+  if (currentPage > 1) {
+    buttons += `
+      <button class="page-btn nav-btn" data-page="${currentPage - 1}">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+    `;
+  }
+
+  for (let i = 1; i <= totalPages; i++) {
+    buttons += `
+      <button class="page-btn ${i === currentPage ? "active" : ""}" 
+              data-page="${i}">
+        ${i}
+      </button>
+    `;
+  }
+
+  if (currentPage < totalPages) {
+    buttons += `
+      <button class="page-btn nav-btn" data-page="${currentPage + 1}">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    `;
+  }
+
+  buttons += `</div>`;
+
+  return buttons;
 }
 
 /* =========================
@@ -116,7 +164,7 @@ function attachRefundListeners() {
         });
 
         alert("Refund successful");
-        await loadOrders();
+        await loadOrders(currentPage);
 
       } catch (err) {
         alert("Refund failed: " + err.message);
@@ -130,5 +178,5 @@ function attachRefundListeners() {
 ========================= */
 (async function init() {
   await verifyAdmin();
-  await loadOrders();
+  await loadOrders(currentPage);
 })();
