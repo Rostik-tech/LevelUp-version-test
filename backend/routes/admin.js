@@ -355,30 +355,173 @@ router.delete("/products/:id", authenticateToken, isAdmin, async (req, res) => {
 ===================================================== */
 
 router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
-  const orders = await Order.findAll({
-    include: [
-      { model: User, attributes: ["id", "username", "email"] },
-      { model: OrderItem, include: [Product] },
-      { model: Payment }
-    ],
-    order: [["createdAt", "DESC"]],
-  });
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      search,
+      from,
+      to,
+      country,
+      minTotal,
+      maxTotal,
+      sort
+    } = req.query;
 
-  res.json(orders);
+    const pageNumber = Math.max(parseInt(page) || 1, 1);
+    const limitNumber = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const where = {};
+    let userWhere = null;
+
+    /* ================= STATUS FILTER ================= */
+
+    if (status) {
+      where.status = status.toUpperCase();
+    }
+
+    /* ================= DATE FILTER ================= */
+
+    if (from || to) {
+      where.createdAt = {};
+
+      if (from) {
+        where.createdAt[Op.gte] = new Date(from);
+      }
+
+      if (to) {
+        const toDate = new Date(to);
+        toDate.setHours(23, 59, 59, 999);
+        where.createdAt[Op.lte] = toDate;
+      }
+    }
+
+    /* ================= COUNTRY FILTER ================= */
+
+    if (country) {
+      where.shippingCountry = country;
+    }
+
+    /* ================= TOTAL FILTER ================= */
+
+    if (minTotal || maxTotal) {
+      where.totalPrice = {};
+
+      if (minTotal) {
+        where.totalPrice[Op.gte] = parseFloat(minTotal);
+      }
+
+      if (maxTotal) {
+        where.totalPrice[Op.lte] = parseFloat(maxTotal);
+      }
+    }
+
+    /* ================= SEARCH ================= */
+
+    if (search) {
+      if (!isNaN(search)) {
+        where.id = parseInt(search);
+      } else {
+        userWhere = {
+          [Op.or]: [
+            { email: { [Op.iLike]: `%${search}%` } },
+            { username: { [Op.iLike]: `%${search}%` } }
+          ]
+        };
+      }
+    }
+
+    /* ================= SORTING ================= */
+
+    let order = [["createdAt", "DESC"]];
+
+    switch (sort) {
+      case "price_asc":
+        order = [["totalPrice", "ASC"]];
+        break;
+      case "price_desc":
+        order = [["totalPrice", "DESC"]];
+        break;
+      case "date_asc":
+        order = [["createdAt", "ASC"]];
+        break;
+      case "date_desc":
+        order = [["createdAt", "DESC"]];
+        break;
+    }
+
+    /* ================= QUERY ================= */
+
+    const { rows, count } = await Order.findAndCountAll({
+      where,
+      include: [
+        {
+          model: User,
+          attributes: ["id", "username", "email"],
+          where: userWhere || undefined,
+          required: !!userWhere
+        },
+        {
+          model: OrderItem,
+          include: [Product]
+        },
+        {
+          model: Payment
+        }
+      ],
+      limit: limitNumber,
+      offset,
+      order,
+      distinct: true
+    });
+
+    return res.json({
+      success: true,
+      data: rows,
+      meta: {
+        total: count,
+        page: pageNumber,
+        pages: count === 0 ? 0 : Math.ceil(count / limitNumber)
+      }
+    });
+
+  } catch (err) {
+    console.error("ADMIN ORDERS ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 router.get("/orders/:id", authenticateToken, isAdmin, async (req, res) => {
-  const order = await Order.findByPk(req.params.id, {
-    include: [
-      { model: User },
-      { model: OrderItem, include: [Product] },
-      { model: Payment }
-    ],
-  });
+  try {
+    const order = await Order.findByPk(req.params.id, {
+      include: [
+        { model: User },
+        { model: OrderItem, include: [Product] },
+        { model: Payment }
+      ]
+    });
 
-  if (!order) return res.status(404).json({ message: "Not found" });
-  res.json(order);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found"
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: order
+    });
+
+  } catch (err) {
+    console.error("GET ORDER ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 /* =====================================================
    ================= STATUS UPDATE =====================
@@ -390,6 +533,11 @@ router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) 
   try {
     const { status } = req.body;
 
+    if (!status) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Status is required" });
+    }
+
     const order = await Order.findByPk(req.params.id, {
       transaction,
       lock: transaction.LOCK.UPDATE,
@@ -397,25 +545,34 @@ router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) 
 
     if (!order) {
       await transaction.rollback();
-      return res.status(404).json({ message: "Not found" });
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    if (!canTransition(order.status, status)) {
+    const normalizedStatus = status.toUpperCase();
+
+    if (!canTransition(order.status, normalizedStatus)) {
       await transaction.rollback();
       return res.status(400).json({ message: "Invalid status transition" });
     }
 
-    order.status = status.toUpperCase();
+    order.status = normalizedStatus;
     await order.save({ transaction });
 
     await transaction.commit();
-    res.json(order);
+
+    return res.json({
+      success: true,
+      message: "Status updated",
+      data: order
+    });
 
   } catch (err) {
     await transaction.rollback();
-    res.status(500).json({ message: "Error updating status" });
+    console.error("STATUS UPDATE ERROR:", err);
+    return res.status(500).json({ message: "Error updating status" });
   }
 });
+
 
 /* =====================================================
    ================= USERS =============================
@@ -425,13 +582,12 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 10, search, role } = req.query;
 
-    const pageNumber = parseInt(page);
-    const limitNumber = parseInt(limit);
+    const pageNumber = Math.max(parseInt(page) || 1, 1);
+    const limitNumber = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
     const offset = (pageNumber - 1) * limitNumber;
 
     const where = {};
 
-    // Поиск по username или email
     if (search) {
       where[Op.or] = [
         { username: { [Op.iLike]: `%${search}%` } },
@@ -439,7 +595,6 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
       ];
     }
 
-    // Фильтр по роли
     if (role) {
       where.role = role.toUpperCase();
     }
@@ -458,7 +613,7 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
       meta: {
         total: count,
         page: pageNumber,
-        pages: Math.ceil(count / limitNumber)
+        pages: count === 0 ? 0 : Math.ceil(count / limitNumber)
       }
     });
 
@@ -467,145 +622,4 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
-
-/* =====================================================
-   ================= REFUND ============================
-===================================================== */
-
-router.post(
-  "/orders/:id/refund",
-  authenticateToken,
-  isAdmin,
-  async (req, res) => {
-    const transaction = await sequelize.transaction();
-
-    try {
-      const { amount, reason } = req.body;
-
-      const order = await Order.findByPk(req.params.id, {
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      if (!order) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Order not found" });
-      }
-
-      if (!["PAID", "PARTIALLY_REFUNDED"].includes(order.status)) {
-        await transaction.rollback();
-        return res.status(400).json({
-          message: "Refund allowed only for paid orders",
-        });
-      }
-
-      const payment = await Payment.findOne({
-        where: {
-          OrderId: order.id,
-          paypalCaptureId: { [Op.ne]: null },
-        },
-        order: [["createdAt", "DESC"]],
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      if (!payment) {
-        await transaction.rollback();
-        return res.status(400).json({ message: "Capture not found" });
-      }
-
-      await payment.reload({
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      const currentRefunded = parseFloat(payment.refundedAmount);
-      const totalAmount = parseFloat(payment.amount);
-      const remaining = totalAmount - currentRefunded;
-
-      if (remaining <= 0) {
-        await transaction.rollback();
-        return res.status(400).json({ message: "Nothing left to refund" });
-      }
-
-      const refundAmount = amount ? parseFloat(amount) : remaining;
-
-      if (isNaN(refundAmount) || refundAmount <= 0 || refundAmount > remaining) {
-        await transaction.rollback();
-        return res.status(400).json({ message: "Invalid refund amount" });
-      }
-
-      payment.refundedAmount = currentRefunded + refundAmount;
-
-      if (payment.refundedAmount >= totalAmount) {
-        payment.status = "REFUNDED";
-        order.status = "REFUNDED";
-      } else {
-        payment.status = "PARTIALLY_REFUNDED";
-        order.status = "PARTIALLY_REFUNDED";
-      }
-
-      await payment.save({ transaction });
-      await order.save({ transaction });
-
-      const idempotencyKey = crypto
-        .createHash("sha256")
-        .update(`${payment.id}-${refundAmount}-${currentRefunded}`)
-        .digest("hex");
-
-      const accessToken = await getAccessToken();
-
-      const paypalResponse = await axios.post(
-        `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
-        {
-          amount: {
-            value: refundAmount.toFixed(2),
-            currency_code: "USD",
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-            "PayPal-Request-Id": idempotencyKey,
-          },
-        }
-      );
-
-      const paypalData = paypalResponse.data;
-
-      if (!paypalData || paypalData.status !== "COMPLETED") {
-        throw new Error("PayPal refund not completed");
-      }
-
-      await Refund.create(
-        {
-          PaymentId: payment.id,
-          amount: refundAmount,
-          currency: "USD",
-          paypalRefundId: paypalData.id,
-          idempotencyKey,
-          rawResponse: paypalData,
-          status: paypalData.status,
-          adminId: req.user.id,
-          reason: reason || null,
-        },
-        { transaction }
-      );
-
-      await transaction.commit();
-
-      return res.json({
-        message: "Refund successful",
-        refundedAmount: refundAmount,
-      });
-
-    } catch (error) {
-      await transaction.rollback();
-      console.error("REFUND ERROR:", error.response?.data || error.message);
-      return res.status(500).json({ message: "Refund failed" });
-    }
-  }
-);
-
 export default router;
