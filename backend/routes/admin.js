@@ -351,6 +351,84 @@ router.delete("/products/:id", authenticateToken, isAdmin, async (req, res) => {
 });
 
 /* =====================================================
+   ================= ORDER STATS =======================
+===================================================== */
+
+router.get("/orders/stats", authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const now = new Date();
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const totalOrders = await Order.count();
+
+    const pendingOrders = await Order.count({
+      where: { status: "PENDING" }
+    });
+
+    const paidOrders = await Order.findAll({
+      where: { status: "PAID" },
+      attributes: ["totalPrice", "refundedAmount"]
+    });
+
+    const totalRevenue = paidOrders.reduce(
+      (sum, order) => sum + parseFloat(order.totalPrice),
+      0
+    );
+
+    const totalRefunded = paidOrders.reduce(
+      (sum, order) => sum + parseFloat(order.refundedAmount || 0),
+      0
+    );
+
+    const revenueTodayOrders = await Order.findAll({
+      where: {
+        status: "PAID",
+        createdAt: { [Op.gte]: startOfToday }
+      },
+      attributes: ["totalPrice"]
+    });
+
+    const revenueToday = revenueTodayOrders.reduce(
+      (sum, order) => sum + parseFloat(order.totalPrice),
+      0
+    );
+
+    const revenueMonthOrders = await Order.findAll({
+      where: {
+        status: "PAID",
+        createdAt: { [Op.gte]: startOfMonth }
+      },
+      attributes: ["totalPrice"]
+    });
+
+    const revenueThisMonth = revenueMonthOrders.reduce(
+      (sum, order) => sum + parseFloat(order.totalPrice),
+      0
+    );
+
+    return res.json({
+      success: true,
+      data: {
+        totalOrders,
+        pendingOrders,
+        totalRevenue: Number(totalRevenue.toFixed(2)),
+        totalRefunded: Number(totalRefunded.toFixed(2)),
+        revenueToday: Number(revenueToday.toFixed(2)),
+        revenueThisMonth: Number(revenueThisMonth.toFixed(2))
+      }
+    });
+
+  } catch (err) {
+    console.error("ORDER STATS ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* =====================================================
    ================= ORDERS ============================
 ===================================================== */
 
@@ -620,6 +698,124 @@ router.get("/users", authenticateToken, isAdmin, async (req, res) => {
   } catch (err) {
     console.error("ADMIN USERS ERROR:", err);
     return res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* =====================================================
+   ================= REFUND =========================
+===================================================== */
+
+router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const orderId = req.params.id;
+    const { amount, reason } = req.body || {};
+
+    const refundAmount = parseFloat(amount);
+
+    if (!refundAmount || refundAmount <= 0) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Invalid refund amount" });
+    }
+
+    // 🔒 1. Lock Order
+    const order = await Order.findByPk(orderId, {
+      transaction,
+      lock: transaction.LOCK.UPDATE
+    });
+
+    if (!order) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // 🔒 2. Lock Payment отдельно (без include!)
+    const payment = await Payment.findOne({
+      where: { OrderId: order.id },
+      transaction,
+      lock: transaction.LOCK.UPDATE
+    });
+
+    if (!payment || !payment.paypalCaptureId) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Payment not refundable" });
+    }
+
+    const paymentAmount = parseFloat(payment.amount);
+    const alreadyRefunded = parseFloat(payment.refundedAmount || 0);
+
+    const remaining = paymentAmount - alreadyRefunded;
+
+    if (refundAmount > remaining) {
+      await transaction.rollback();
+      return res.status(400).json({ message: "Refund exceeds remaining amount" });
+    }
+
+    // 🔑 3. PayPal refund call
+    const accessToken = await getAccessToken();
+
+    const paypalResponse = await axios.post(
+      `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
+      {
+        amount: {
+          currency_code: payment.currency || "USD",
+          value: refundAmount.toFixed(2),
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const refundData = paypalResponse.data;
+    const idempotencyKey = crypto.randomUUID();
+
+    // 🧾 4. Create Refund record
+    await Refund.create(
+      {
+        amount: refundAmount,
+        currency: payment.currency || "USD",
+        idempotencyKey,
+        paypalRefundId: refundData.id,
+        rawResponse: refundData,
+        status: "COMPLETED",
+        adminId: req.user.id,
+        PaymentId: payment.id,
+        reason: reason || null
+      },
+      { transaction }
+    );
+
+    // 🔄 5. Update Payment
+    payment.refundedAmount = alreadyRefunded + refundAmount;
+    order.refundedAmount = parseFloat(order.refundedAmount || 0) + refundAmount;
+
+    if (payment.refundedAmount >= paymentAmount) {
+      payment.status = "REFUNDED";
+      order.status = "REFUNDED";
+    } else {
+      payment.status = "PARTIALLY_REFUNDED";
+      order.status = "PARTIALLY_REFUNDED";
+    }
+
+    await payment.save({ transaction });
+    await order.save({ transaction });
+
+    await transaction.commit();
+
+    return res.json({
+      success: true,
+      message: "Refund processed",
+    });
+
+  } catch (err) {
+    await transaction.rollback();
+    console.error("ADMIN REFUND ERROR:", err.response?.data || err.message);
+    return res.status(500).json({ message: "Refund failed" });
   }
 });
 export default router;
