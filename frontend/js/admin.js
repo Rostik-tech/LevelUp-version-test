@@ -1,5 +1,15 @@
 import { apiRequest } from "./admin-api.js";
 let currentPage = 1;
+const allowedTransitions = {
+  PENDING: ["PAID", "CANCELLED"],
+  PAID: ["PROCESSING", "CANCELLED"],
+  PROCESSING: ["SHIPPED", "CANCELLED"],
+  SHIPPED: ["DELIVERED"],
+  DELIVERED: [],
+  CANCELLED: [],
+  PARTIALLY_REFUNDED: [],
+  REFUNDED: []
+};
 let filters = {
   search: "",
   status: "",
@@ -25,6 +35,8 @@ async function verifyAdmin() {
 ========================= */
 async function loadOrders(page = 1) {
   currentPage = page;
+
+  
 
   const container = document.querySelector(".admin-main");
 
@@ -133,7 +145,9 @@ function renderOrders(container, response) {
               <td>${order.User?.email || "-"}</td>
               <td>$${Number(order.totalPrice).toFixed(2)}</td>
               <td>$${Number(order.refundedAmount || 0).toFixed(2)}</td>
-              <td>${order.status}</td>
+              <td>
+              ${renderStatusDropdown(order)}
+              </td>
               <td>${new Date(order.createdAt).toLocaleDateString()}</td>
               <td>
                 ${
@@ -162,6 +176,29 @@ function renderOrders(container, response) {
   attachRefundListeners();
   attachPaginationListeners();
   attachFilterListeners();
+  attachStatusListeners();
+}
+
+function attachStatusListeners() {
+  document.querySelectorAll(".status-dropdown").forEach(select => {
+    select.addEventListener("change", async () => {
+      const orderId = select.dataset.id;
+      const newStatus = select.value;
+
+      try {
+        await apiRequest(`/admin/orders/${orderId}/status`, {
+          method: "PATCH",
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        await loadOrders(currentPage);
+
+      } catch (err) {
+        alert("Status update failed: " + err.message);
+        await loadOrders(currentPage);
+      }
+    });
+  });
 }
 
 function attachFilterListeners() {
@@ -240,6 +277,33 @@ function generatePagination(currentPage, totalPages) {
   buttons += `</div>`;
 
   return buttons;
+}
+
+function renderStatusDropdown(order) {
+  const current = order.status;
+  const transitions = allowedTransitions[current] || [];
+
+  // Если терминальный статус — просто текст
+  if (transitions.length === 0) {
+    return `<span class="status-badge status-${current.toLowerCase()}">
+              ${current}
+            </span>`;
+  }
+
+  return `
+    <select class="status-dropdown"
+            data-id="${order.id}"
+            data-current="${current}">
+      <option value="${current}" selected disabled>
+        ${current}
+      </option>
+      ${transitions.map(status => `
+        <option value="${status}">
+          ${status}
+        </option>
+      `).join("")}
+    </select>
+  `;
 }
 
 /* =========================

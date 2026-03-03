@@ -363,3 +363,61 @@
 .orders-filters select {
   width: 100%;
 }
+
+.status-dropdown {
+  background: rgba(20, 10, 40, 0.9);
+  color: #fff;
+  border: 1px solid #ff00ff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.status-dropdown:hover {
+  box-shadow: 0 0 8px #ff00ff;
+}
+
+.status-dropdown:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+.status-dropdown option {
+  background: #1a0f2e;
+  color: #fff;
+}
+
+.status-badge {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #ffcc00;
+}
+
+.status-paid,
+.status-processing {
+  color: #00ffff;
+}
+
+.status-shipped {
+  color: #00aaff;
+}
+
+.status-delivered {
+  color: #00ff88;
+}
+
+.status-cancelled {
+  color: #ff4444;
+}
+
+.status-refunded,
+.status-partially_refunded {
+  color: #ff66ff;
+}
