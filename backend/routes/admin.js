@@ -2,6 +2,7 @@
 import express from "express";
 import axios from "axios";
 import { Op, QueryTypes } from "sequelize";
+import { upload } from "../middleware/uploadMiddleware.js";
 import {
   sequelize,
   Product,
@@ -275,9 +276,24 @@ router.get("/products", authenticateToken, isAdmin, async (req, res) => {
 });
 
 
-router.post("/products", authenticateToken, isAdmin, async (req, res) => {
+router.post("/products", upload.array("images", 5), async (req, res) => {
   try {
     const data = { ...req.body };
+
+    // Парсим sizes если приходит строкой
+if (data.sizes && typeof data.sizes === "string") {
+  try {
+    data.sizes = JSON.parse(data.sizes);
+  } catch (err) {
+    return res.status(400).json({ message: "Invalid sizes format" });
+  }
+}
+
+    if (req.files && req.files.length > 0) {
+  data.images = req.files.map(
+    file => `/uploads/products/${file.filename}`
+  );
+}
 
     // пересчёт stock
     if (data.sizes && Array.isArray(data.sizes)) {
@@ -301,12 +317,27 @@ router.post("/products", authenticateToken, isAdmin, async (req, res) => {
 });
 
 
-router.put("/products/:id", authenticateToken, isAdmin, async (req, res) => {
+router.put("/products/:id", upload.array("images", 5), async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) return res.status(404).json({ message: "Not found" });
 
     const data = { ...req.body };
+
+    // Парсим sizes если приходит строкой
+if (data.sizes && typeof data.sizes === "string") {
+  try {
+    data.sizes = JSON.parse(data.sizes);
+  } catch (err) {
+    return res.status(400).json({ message: "Invalid sizes format" });
+  }
+}
+
+    if (req.files && req.files.length > 0) {
+  data.images = req.files.map(
+    file => `/uploads/products/${file.filename}`
+  );
+}
 
     if (data.sizes && Array.isArray(data.sizes)) {
       data.stock = data.sizes.reduce(

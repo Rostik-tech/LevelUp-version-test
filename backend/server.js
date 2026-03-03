@@ -18,10 +18,22 @@ import { sequelize } from "./models/index.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import { isAdmin } from "./middleware/adminMiddleware.js";
 import errorHandler from "./middleware/errorMiddleware.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 
 dotenv.config();
 
 const app = express();
+
+/* =====================
+   Static Files
+===================== */
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* =====================
    Security Middleware
