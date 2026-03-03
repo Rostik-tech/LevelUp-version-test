@@ -2,7 +2,8 @@ import { apiRequest } from "./admin-api.js";
 let currentPage = 1;
 let filters = {
   search: "",
-  status: ""
+  status: "",
+  sort: "date_desc"
 };
 /* =========================
    VERIFY ADMIN
@@ -26,7 +27,8 @@ async function loadOrders(page = 1) {
   const query = new URLSearchParams({
     page: page,
     ...(filters.search && { search: filters.search }),
-    ...(filters.status && { status: filters.status })
+    ...(filters.status && { status: filters.status }),
+    ...(filters.sort && { sort: filters.sort })
   }).toString();
 
   try {
@@ -59,6 +61,20 @@ function renderOrders(container, response) {
     <option value="PARTIALLY_REFUNDED" ${filters.status === "PARTIALLY_REFUNDED" ? "selected" : ""}>PARTIALLY_REFUNDED</option>
     <option value="REFUNDED" ${filters.status === "REFUNDED" ? "selected" : ""}>REFUNDED</option>
   </select>
+  <select id="sortFilter">
+  <option value="date_desc" ${filters.sort === "date_desc" ? "selected" : ""}>
+    Newest First
+  </option>
+  <option value="date_asc" ${filters.sort === "date_asc" ? "selected" : ""}>
+    Oldest First
+  </option>
+  <option value="price_desc" ${filters.sort === "price_desc" ? "selected" : ""}>
+    Highest Price
+  </option>
+  <option value="price_asc" ${filters.sort === "price_asc" ? "selected" : ""}>
+    Lowest Price
+  </option>
+</select>
 
   <button class="btn btn-primary" id="applyFiltersBtn">
     Apply
@@ -126,10 +142,12 @@ function attachFilterListeners() {
   const searchInput = document.getElementById("searchInput");
   const statusFilter = document.getElementById("statusFilter");
   const applyBtn = document.getElementById("applyFiltersBtn");
+  const sortFilter = document.getElementById("sortFilter");
 
   applyBtn.addEventListener("click", async () => {
     filters.search = searchInput.value.trim();
     filters.status = statusFilter.value;
+    filters.sort = sortFilter.value;
 
     await loadOrders(1); // всегда начинаем с 1 страницы
   });
