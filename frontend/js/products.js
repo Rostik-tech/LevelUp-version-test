@@ -94,24 +94,27 @@ function renderSizes(product) {
     sizesContainer.style.display = "block";
 
     sizeOptions.innerHTML = product.sizes.map(size => {
-        const disabled = size.stock <= 0 ? "disabled" : "";
-        const outOfStock = size.stock <= 0 ? " (Out of stock)" : "";
+        const isOut = size.stock <= 0;
 
         return `
-            <button class="size-btn"
-                    data-size="${size.size}"
-                    ${disabled}>
-                ${size.size}${outOfStock}
+            <button 
+                class="size-btn ${isOut ? "out-of-stock" : ""}"
+                data-size="${size.size}"
+                ${isOut ? "disabled" : ""}
+            >
+                <span class="size-label">${size.size}</span>
+                ${isOut ? '<span class="stock-badge">OUT</span>' : ""}
             </button>
         `;
     }).join("");
 
-    document.querySelectorAll(".size-btn").forEach(btn => {
+    const buttons = document.querySelectorAll(".size-btn");
+
+    buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             if (btn.disabled) return;
 
-            document.querySelectorAll(".size-btn")
-                .forEach(b => b.classList.remove("active"));
+            buttons.forEach(b => b.classList.remove("active"));
 
             btn.classList.add("active");
             selectedSize = btn.dataset.size;
