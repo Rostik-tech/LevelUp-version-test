@@ -3,7 +3,9 @@ let currentPage = 1;
 let filters = {
   search: "",
   status: "",
-  sort: "date_desc"
+  sort: "date_desc",
+  from: "",
+  to: ""
 };
 /* =========================
    VERIFY ADMIN
@@ -28,7 +30,9 @@ async function loadOrders(page = 1) {
     page: page,
     ...(filters.search && { search: filters.search }),
     ...(filters.status && { status: filters.status }),
-    ...(filters.sort && { sort: filters.sort })
+    ...(filters.sort && { sort: filters.sort }),
+    ...(filters.from && { from: filters.from }),
+    ...(filters.to && { to: filters.to })
   }).toString();
 
   try {
@@ -75,6 +79,14 @@ function renderOrders(container, response) {
     Lowest Price
   </option>
 </select>
+
+<input type="date" 
+       id="fromDate"
+       value="${filters.from}" />
+
+<input type="date" 
+       id="toDate"
+       value="${filters.to}" />
 
   <button class="btn btn-primary" id="applyFiltersBtn">
     Apply
@@ -143,11 +155,20 @@ function attachFilterListeners() {
   const statusFilter = document.getElementById("statusFilter");
   const applyBtn = document.getElementById("applyFiltersBtn");
   const sortFilter = document.getElementById("sortFilter");
+  const fromDate = document.getElementById("fromDate");
+  const toDate = document.getElementById("toDate");
 
   applyBtn.addEventListener("click", async () => {
     filters.search = searchInput.value.trim();
     filters.status = statusFilter.value;
     filters.sort = sortFilter.value;
+    filters.from = fromDate.value;
+    filters.to = toDate.value;
+
+    if (filters.from && filters.to && filters.from > filters.to) {
+  alert("From date cannot be greater than To date");
+  return;
+}
 
     await loadOrders(1); // всегда начинаем с 1 страницы
   });
