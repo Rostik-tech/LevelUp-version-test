@@ -5,7 +5,9 @@ let filters = {
   status: "",
   sort: "date_desc",
   from: "",
-  to: ""
+  to: "",
+  minTotal: "",
+  maxTotal: ""
 };
 /* =========================
    VERIFY ADMIN
@@ -32,7 +34,9 @@ async function loadOrders(page = 1) {
     ...(filters.status && { status: filters.status }),
     ...(filters.sort && { sort: filters.sort }),
     ...(filters.from && { from: filters.from }),
-    ...(filters.to && { to: filters.to })
+    ...(filters.to && { to: filters.to }),
+    ...(filters.minTotal && { minTotal: filters.minTotal }),
+    ...(filters.maxTotal && { maxTotal: filters.maxTotal })
   }).toString();
 
   try {
@@ -87,7 +91,17 @@ function renderOrders(container, response) {
 <input type="date" 
        id="toDate"
        value="${filters.to}" />
+<input type="number"
+       id="minTotal"
+       placeholder="Min $"
+       step="0.01"
+       value="${filters.minTotal}" />
 
+<input type="number"
+       id="maxTotal"
+       placeholder="Max $"
+       step="0.01"
+       value="${filters.maxTotal}" />
   <button class="btn btn-primary" id="applyFiltersBtn">
     Apply
   </button>
@@ -157,6 +171,8 @@ function attachFilterListeners() {
   const sortFilter = document.getElementById("sortFilter");
   const fromDate = document.getElementById("fromDate");
   const toDate = document.getElementById("toDate");
+  const minTotal = document.getElementById("minTotal");
+  const maxTotal = document.getElementById("maxTotal");
 
   applyBtn.addEventListener("click", async () => {
     filters.search = searchInput.value.trim();
@@ -164,6 +180,14 @@ function attachFilterListeners() {
     filters.sort = sortFilter.value;
     filters.from = fromDate.value;
     filters.to = toDate.value;
+    filters.minTotal = minTotal.value;
+    filters.maxTotal = maxTotal.value;
+
+  if (filters.minTotal && filters.maxTotal &&
+    parseFloat(filters.minTotal) > parseFloat(filters.maxTotal)) {
+  alert("Min total cannot exceed Max total");
+  return;
+}
 
     if (filters.from && filters.to && filters.from > filters.to) {
   alert("From date cannot be greater than To date");
