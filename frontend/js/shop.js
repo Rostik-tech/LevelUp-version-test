@@ -4,6 +4,7 @@
 // ========================================
 
 const API_BASE = "http://localhost:5000/api";
+const BACKEND_BASE = "http://localhost:5000";
 
 document.addEventListener("DOMContentLoaded", async () => {
     await loadProducts();
@@ -36,12 +37,17 @@ async function loadProducts() {
     }
 }
 
+function getImageUrl(path) {
+    if (!path) return "frontend/images/placeholder.jpg";
+    return `${BACKEND_BASE}${path}`;
+}
+
 function renderProducts(container, products) {
     container.innerHTML = products.map(product => {
 
         const image = (product.images && product.images.length > 0)
-            ? product.images[0]
-            : "images/placeholder.jpg";
+    ? getImageUrl(product.images[0])
+    : "frontend/images/placeholder.jpg";
 
         return `
         <div class="product-card"
