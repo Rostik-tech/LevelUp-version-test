@@ -38,7 +38,7 @@ async function loadOrders(page = 1) {
 
   
 
-  const container = document.querySelector(".admin-main");
+  const container = document.getElementById("ordersList");
 
   const query = new URLSearchParams({
     page: page,
@@ -392,9 +392,132 @@ function openRefundModal(orderId, remaining) {
 }
 
 /* =========================
+   LOAD PRODUCTS
+========================= */
+
+async function loadProducts(page = 1) {
+
+  const container = document.getElementById("ordersList");
+
+  try {
+
+    const response = await apiRequest(`/admin/products?page=${page}`);
+
+    const products = response.data || [];
+
+    container.innerHTML = `
+      <h2>Products</h2>
+
+      <button class="btn btn-primary" id="createProductBtn">
+        Add Product
+      </button>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${products.map(product => `
+            <tr>
+              <td>${product.id}</td>
+              <td>${product.name}</td>
+              <td>$${product.price}</td>
+              <td>${product.stock}</td>
+              <td>${product.isActive ? "Active" : "Inactive"}</td>
+
+              <td>
+                <button class="btn btn-outline edit-product"
+                        data-id="${product.id}">
+                  Edit
+                </button>
+
+                <button class="btn btn-danger delete-product"
+                        data-id="${product.id}">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+    attachProductListeners();
+
+  } catch (err) {
+
+    container.innerHTML = `<p>Error: ${err.message}</p>`;
+
+  }
+
+}
+
+/* =========================
+   PRODUCT ACTIONS
+========================= */
+
+function attachProductListeners() {
+
+  document.querySelectorAll(".delete-product").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const id = btn.dataset.id;
+
+      if (!confirm("Archive this product?")) return;
+
+      try {
+
+        await apiRequest(`/admin/products/${id}`, {
+          method: "DELETE"
+        });
+
+        await loadProducts(currentPage);
+
+      } catch (err) {
+
+        alert("Delete failed: " + err.message);
+
+      }
+
+    });
+
+  });
+
+}
+
+/* =========================
    INIT
 ========================= */
 (async function init() {
+
   await verifyAdmin();
+
+  const ordersLink = document.querySelector('a[href="#orders"]');
+  const productsLink = document.querySelector('a[href="#products"]');
+
+  if (ordersLink) {
+    ordersLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      loadOrders(1);
+    });
+  }
+
+  if (productsLink) {
+    productsLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      loadProducts(1);
+    });
+  }
+
   await loadOrders(currentPage);
+
 })();

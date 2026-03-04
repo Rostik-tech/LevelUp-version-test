@@ -276,7 +276,12 @@ router.get("/products", authenticateToken, isAdmin, async (req, res) => {
 });
 
 
-router.post("/products", upload.array("images", 5), async (req, res) => {
+router.post(
+  "/products",
+  authenticateToken,
+  isAdmin,
+  upload.array("images", 5),
+  async (req, res) => {
   try {
     const data = { ...req.body };
 
@@ -317,7 +322,12 @@ if (data.sizes && typeof data.sizes === "string") {
 });
 
 
-router.put("/products/:id", upload.array("images", 5), async (req, res) => {
+router.put(
+  "/products/:id",
+  authenticateToken,
+  isAdmin,
+  upload.array("images", 5),
+  async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) return res.status(404).json({ message: "Not found" });
