@@ -1,8 +1,9 @@
 // ========================================
-// Product Page - Backend Connected (SAFE)
+// Product Page - Backend Connected (SAFE + Gallery)
 // ========================================
 
 const API_BASE = "http://localhost:5000/api";
+const BACKEND_BASE = "http://localhost:5000";
 
 let currentProduct = null;
 let selectedSize = null;
@@ -12,6 +13,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupAddToCart();
 });
 
+// ========================
+// Load Product
+// ========================
 async function loadProduct() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get("slug");
@@ -41,45 +45,86 @@ async function loadProduct() {
     }
 }
 
+// ========================
+// Helper for Image URLs
+// ========================
+function getImageUrl(path) {
+    if (!path) return "frontend/images/placeholder.jpg";
+    return `${BACKEND_BASE}${path}`;
+}
+
+// ========================
+// Render Product
+// ========================
 function renderProduct(product) {
-    const image = (product.images && product.images.length > 0)
-        ? product.images[0]
-        : "images/placeholder.jpg";
 
-    const imageEl = document.getElementById("productImage");
-    if (imageEl) imageEl.src = image;
+    // ===== IMAGES (Gallery) =====
+    const images = (product.images && product.images.length > 0)
+        ? product.images
+        : [null];
 
+    const mainImageEl = document.getElementById("productImage");
+    const thumbnailsContainer = document.getElementById("imageThumbnails");
+
+    if (mainImageEl) {
+        mainImageEl.src = getImageUrl(images[0]);
+    }
+
+    if (thumbnailsContainer) {
+        thumbnailsContainer.innerHTML = images.map((img, index) => `
+            <img src="${getImageUrl(img)}"
+                 class="thumbnail ${index === 0 ? "active" : ""}"
+                 data-index="${index}">
+        `).join("");
+
+        const thumbs = document.querySelectorAll(".thumbnail");
+
+        thumbs.forEach(thumb => {
+            thumb.addEventListener("click", () => {
+                thumbs.forEach(t => t.classList.remove("active"));
+                thumb.classList.add("active");
+                mainImageEl.src = thumb.src;
+            });
+        });
+    }
+
+    // ===== TITLE =====
     const titleEl = document.getElementById("productTitle");
     if (titleEl) titleEl.textContent = product.name;
 
+    // ===== DESCRIPTION =====
     const descEl = document.getElementById("productDescription");
     if (descEl) {
         descEl.textContent =
             product.longDescription || product.shortDescription || "";
     }
 
+    // ===== BREADCRUMB =====
     const breadcrumbEl = document.getElementById("breadcrumbProduct");
     if (breadcrumbEl) breadcrumbEl.textContent = product.name;
 
-    const price = Number(product.price).toFixed(2);
+    // ===== PRICE =====
     const priceEl = document.getElementById("productPrice");
 
-if (priceEl) {
-    const numericPrice = Number(product.price);
+    if (priceEl) {
+        const numericPrice = Number(product.price);
+        priceEl.dataset.basePrice = numericPrice;
 
-    priceEl.dataset.basePrice = numericPrice;
-
-    if (window.convertPrice && window.formatPrice) {
-        const converted = window.convertPrice(numericPrice);
-        priceEl.textContent = window.formatPrice(converted);
-    } else {
-        priceEl.textContent = `$${numericPrice.toFixed(2)}`;
+        if (window.convertPrice && window.formatPrice) {
+            const converted = window.convertPrice(numericPrice);
+            priceEl.textContent = window.formatPrice(converted);
+        } else {
+            priceEl.textContent = `$${numericPrice.toFixed(2)}`;
+        }
     }
-}
 
+    // ===== SIZES =====
     renderSizes(product);
 }
 
+// ========================
+// Render Sizes
+// ========================
 function renderSizes(product) {
     const sizesContainer = document.getElementById("productSizes");
     const sizeOptions = document.getElementById("sizeOptions");
@@ -122,6 +167,9 @@ function renderSizes(product) {
     });
 }
 
+// ========================
+// Add To Cart Setup
+// ========================
 function setupAddToCart() {
     const btn = document.getElementById("addToCartBtn");
     if (!btn) return;
@@ -143,6 +191,9 @@ function setupAddToCart() {
     });
 }
 
+// ========================
+// Validate Product
+// ========================
 async function validateProduct() {
     try {
         const response = await fetch(
@@ -175,6 +226,9 @@ async function validateProduct() {
     }
 }
 
+// ========================
+// Add To Cart
+// ========================
 function addToCart() {
     const cart = window.cart;
     if (!cart) return;
@@ -196,7 +250,9 @@ function addToCart() {
             price: Number(currentProduct.price),
             quantity: 1,
             size: selectedSize,
-            image: currentProduct.images?.[0] || null
+            image: currentProduct.images?.[0]
+    ? `http://localhost:5000${currentProduct.images[0]}`
+    : null
         });
     }
 

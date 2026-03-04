@@ -177,3 +177,46 @@
         padding: 130px 0 40px;
     }
 }
+
+/* ================================= */
+/* FINAL SHOP IMAGE FIX */
+/* ================================= */
+
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* ВСЕ КАРТИНКИ ОДИНАКОВЫЕ */
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 3px;
+    background: linear-gradient(135deg, #00ffff, #ff00ff);
+    transition: transform 0.35s ease;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ОБЯЗАТЕЛЬНО */
+    border-radius: 17px;
+    display: block;
+}
+
+.product-card:hover .product-image-wrapper {
+    transform: scale(1.03);
+}
+
+/* Hover масштабируем ВСЁ вместе */
+.product-card:hover .product-image-wrapper {
+    transform: scale(1.03);
+}
+
+.product-card:hover .product-image-wrapper::after {
+    opacity: 1;
+}
+
+.product-card:hover .product-image-wrapper {
+    transform: scale(1.03);
+}
+
+
+

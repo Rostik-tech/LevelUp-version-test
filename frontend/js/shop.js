@@ -53,9 +53,11 @@ function renderProducts(container, products) {
         <div class="product-card"
              onclick="goToProduct('${product.slug}')">
 
-            <img src="${image}"
-                 alt="${product.name}"
-                 class="product-image">
+            <div class="product-image-wrapper">
+    <img src="${image}"
+         alt="${product.name}"
+         class="product-image">
+</div>
 
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">
