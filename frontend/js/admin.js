@@ -498,6 +498,32 @@ function attachProductListeners() {
 
   });
 
+  document.querySelectorAll(".edit-product").forEach(btn => {
+
+  btn.addEventListener("click", async () => {
+
+    const id = btn.dataset.id;
+
+    try {
+
+      const response = await apiRequest(`/admin/products?page=1`);
+      const product = response.data.find(p => p.id == id);
+
+      if (!product) {
+        alert("Product not found");
+        return;
+      }
+
+      openEditProductModal(product);
+
+    } catch (err) {
+      alert("Failed to load product");
+    }
+
+  });
+
+});
+
 }
 
 /* =========================
@@ -584,6 +610,110 @@ function openCreateProductModal() {
     } catch (err) {
 
       alert("Create product failed: " + err.message);
+
+    }
+
+  };
+
+}
+
+function openEditProductModal(product) {
+
+  const modal = document.createElement("div");
+  modal.className = "refund-modal";
+
+  modal.innerHTML = `
+    <div class="refund-modal-content">
+
+      <h3>Edit Product</h3>
+
+      <input id="ep_name" value="${product.name}" />
+      <input id="ep_slug" value="${product.slug}" />
+      <input id="ep_brand" value="${product.brand}" />
+      <input id="ep_category" value="${product.category}" />
+
+      <input id="ep_price"
+             type="number"
+             step="0.01"
+             value="${product.price}" />
+
+      <textarea id="ep_short">${product.shortDescription || ""}</textarea>
+
+      <textarea id="ep_long">${product.longDescription || ""}</textarea>
+
+      <input id="ep_sizes"
+             value='${JSON.stringify(product.sizes || [])}' />
+
+      <input id="ep_images" type="file" multiple />
+
+      <div class="refund-actions">
+
+        <button class="btn btn-outline" id="cancelEdit">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" id="confirmEdit">
+          Update
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cancelEdit").onclick = () => {
+    modal.remove();
+  };
+
+  document.getElementById("confirmEdit").onclick = async () => {
+
+    try {
+
+      const formData = new FormData();
+
+      formData.append("name", document.getElementById("ep_name").value);
+      formData.append("slug", document.getElementById("ep_slug").value);
+      formData.append("brand", document.getElementById("ep_brand").value);
+      formData.append("category", document.getElementById("ep_category").value);
+      formData.append("price", document.getElementById("ep_price").value);
+
+      formData.append("currency", "USD");
+
+      formData.append(
+        "shortDescription",
+        document.getElementById("ep_short").value
+      );
+
+      formData.append(
+        "longDescription",
+        document.getElementById("ep_long").value
+      );
+
+      formData.append(
+        "sizes",
+        document.getElementById("ep_sizes").value
+      );
+
+      const files = document.getElementById("ep_images").files;
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("images", files[i]);
+      }
+
+      await apiRequest(`/admin/products/${product.id}`, {
+        method: "PUT",
+        body: formData
+      });
+
+      modal.remove();
+
+      await loadProducts(currentPage);
+
+    } catch (err) {
+
+      alert("Update failed: " + err.message);
 
     }
 
