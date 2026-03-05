@@ -14,7 +14,7 @@ export async function apiRequest(path, options = {}) {
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 60000);
 
   try {
     const isFormData = options.body instanceof FormData;

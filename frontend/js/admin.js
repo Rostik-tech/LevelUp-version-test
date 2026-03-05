@@ -452,6 +452,12 @@ async function loadProducts(page = 1) {
 
     attachProductListeners();
 
+    const createBtn = document.getElementById("createProductBtn");
+
+if (createBtn) {
+  createBtn.addEventListener("click", openCreateProductModal);
+}
+
   } catch (err) {
 
     container.innerHTML = `<p>Error: ${err.message}</p>`;
@@ -491,6 +497,97 @@ function attachProductListeners() {
     });
 
   });
+
+}
+
+/* =========================
+   CREATE PRODUCT MODAL
+========================= */
+
+function openCreateProductModal() {
+
+  const modal = document.createElement("div");
+  modal.className = "refund-modal";
+
+  modal.innerHTML = `
+    <div class="refund-modal-content">
+
+      <h3>Create Product</h3>
+
+      <input id="p_name" placeholder="Name" />
+      <input id="p_slug" placeholder="Slug" />
+      <input id="p_brand" placeholder="Brand" />
+      <input id="p_category" placeholder="Category" />
+
+      <input id="p_price" type="number" placeholder="Price" step="0.01" />
+
+      <textarea id="p_short" placeholder="Short description"></textarea>
+
+      <textarea id="p_long" placeholder="Long description"></textarea>
+
+      <input id="p_sizes" placeholder='Sizes JSON [{"size":"XL","stock":5}]' />
+
+      <input id="p_images" type="file" multiple />
+
+      <div class="refund-actions">
+        <button class="btn btn-outline" id="cancelCreate">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" id="confirmCreate">
+          Create
+        </button>
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cancelCreate").onclick = () => {
+    modal.remove();
+  };
+
+  document.getElementById("confirmCreate").onclick = async () => {
+
+    try {
+
+      const formData = new FormData();
+
+      formData.append("name", document.getElementById("p_name").value);
+      formData.append("slug", document.getElementById("p_slug").value);
+      formData.append("brand", document.getElementById("p_brand").value);
+      formData.append("category", document.getElementById("p_category").value);
+      formData.append("price", document.getElementById("p_price").value);
+      formData.append("currency", "USD");
+
+      formData.append("shortDescription", document.getElementById("p_short").value);
+      formData.append("longDescription", document.getElementById("p_long").value);
+
+      formData.append("sizes", document.getElementById("p_sizes").value);
+
+      const files = document.getElementById("p_images").files;
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("images", files[i]);
+      }
+
+      await apiRequest("/admin/products", {
+        method: "POST",
+        body: formData
+      });
+
+      modal.remove();
+
+      await loadProducts(currentPage);
+
+    } catch (err) {
+
+      alert("Create product failed: " + err.message);
+
+    }
+
+  };
 
 }
 
