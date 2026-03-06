@@ -19,6 +19,7 @@ let filters = {
   minTotal: "",
   maxTotal: ""
 };
+const API_URL = "http://localhost:5000";
 /* =========================
    VERIFY ADMIN
 ========================= */
@@ -543,7 +544,14 @@ function openCreateProductModal() {
       <input id="p_name" placeholder="Name" />
       <input id="p_slug" placeholder="Slug" />
       <input id="p_brand" placeholder="Brand" />
-      <input id="p_category" placeholder="Category" />
+      <label class="admin-label">Rarity</label>
+      <select id="p_rarity">
+<option value="CLASSIC">Classic</option>
+<option value="RARE">Rare</option>
+<option value="EPIC">Epic</option>
+<option value="MYTHIC">Mythic</option>
+<option value="LEGENDARY">Legendary</option>
+</select>
 
       <input id="p_price" type="number" placeholder="Price" step="0.01" />
 
@@ -551,9 +559,15 @@ function openCreateProductModal() {
 
       <textarea id="p_long" placeholder="Long description"></textarea>
 
-      <input id="p_sizes" placeholder='Sizes JSON [{"size":"XL","stock":5}]' />
+      <input 
+id="p_sizes"
+placeholder='Sizes (JSON) e.g. [{"size":"XL","stock":5}]'
+/>
 
-      <input id="p_images" type="file" multiple />
+      <label class="file-upload">
+  Upload images
+  <input id="p_images" type="file" multiple hidden>
+</label>
 
       <div class="refund-actions">
         <button class="btn btn-outline" id="cancelCreate">
@@ -570,6 +584,25 @@ function openCreateProductModal() {
 
   document.body.appendChild(modal);
 
+/* RARITY GLOW */
+
+const rarity = document.getElementById("p_rarity");
+
+rarity.addEventListener("change", () => {
+
+  const colors = {
+    CLASSIC:"#9ca3af",
+    RARE:"#3b82f6",
+    EPIC:"#a855f7",
+    MYTHIC:"#ef4444",
+    LEGENDARY:"#f59e0b"
+  };
+
+  rarity.style.borderColor = colors[rarity.value];
+  rarity.style.boxShadow = `0 0 10px ${colors[rarity.value]}`;
+
+});
+
   document.getElementById("cancelCreate").onclick = () => {
     modal.remove();
   };
@@ -583,7 +616,7 @@ function openCreateProductModal() {
       formData.append("name", document.getElementById("p_name").value);
       formData.append("slug", document.getElementById("p_slug").value);
       formData.append("brand", document.getElementById("p_brand").value);
-      formData.append("category", document.getElementById("p_category").value);
+      formData.append("rarity", document.getElementById("p_rarity").value);
       formData.append("price", document.getElementById("p_price").value);
       formData.append("currency", "USD");
 
@@ -612,6 +645,8 @@ function openCreateProductModal() {
       alert("Create product failed: " + err.message);
 
     }
+const raritySelect = document.getElementById("p_rarity");
+
 
   };
 
@@ -623,49 +658,208 @@ function openEditProductModal(product) {
   modal.className = "refund-modal";
 
   modal.innerHTML = `
-    <div class="refund-modal-content">
+  <div class="refund-modal-content">
 
-      <h3>Edit Product</h3>
+    <h3>Edit Product</h3>
 
-      <input id="ep_name" value="${product.name}" />
-      <input id="ep_slug" value="${product.slug}" />
-      <input id="ep_brand" value="${product.brand}" />
-      <input id="ep_category" value="${product.category}" />
+    <div class="product-layout">
 
-      <input id="ep_price"
-             type="number"
-             step="0.01"
-             value="${product.price}" />
+  <div class="product-form">
 
-      <textarea id="ep_short">${product.shortDescription || ""}</textarea>
+    <div class="product-grid">
 
-      <textarea id="ep_long">${product.longDescription || ""}</textarea>
+      <input id="ep_name" value="${product.name || ""}" placeholder="Name"/>
 
-      <input id="ep_sizes"
-             value='${JSON.stringify(product.sizes || [])}' />
+      <input id="ep_slug" value="${product.slug || ""}" placeholder="Slug"/>
 
-      <input id="ep_images" type="file" multiple />
+      <input id="ep_brand" value="${product.brand || ""}" placeholder="Brand"/>
 
-      <div class="refund-actions">
+      <div>
+        <label class="admin-label">Rarity</label>
 
-        <button class="btn btn-outline" id="cancelEdit">
-          Cancel
-        </button>
+        <select id="ep_rarity">
 
-        <button class="btn btn-primary" id="confirmEdit">
-          Update
-        </button>
+          <option value="CLASSIC" ${product.rarity === "CLASSIC" ? "selected" : ""}>Classic</option>
+          <option value="RARE" ${product.rarity === "RARE" ? "selected" : ""}>Rare</option>
+          <option value="EPIC" ${product.rarity === "EPIC" ? "selected" : ""}>Epic</option>
+          <option value="MYTHIC" ${product.rarity === "MYTHIC" ? "selected" : ""}>Mythic</option>
+          <option value="LEGENDARY" ${product.rarity === "LEGENDARY" ? "selected" : ""}>Legendary</option>
+
+        </select>
+      </div>
+
+      <input
+        id="ep_price"
+        type="number"
+        step="0.01"
+        value="${product.price || ""}"
+        placeholder="Price"
+      />
+
+      <input
+        id="ep_sizes"
+        value='${JSON.stringify(product.sizes || [])}'
+        placeholder='Sizes JSON [{"size":"XL","stock":5}]'
+      />
+
+    </div>
+
+
+    <div class="product-descriptions">
+
+      <textarea id="ep_short" placeholder="Short description">
+${product.shortDescription || ""}
+      </textarea>
+
+      <textarea id="ep_long" placeholder="Long description">
+${product.longDescription || ""}
+      </textarea>
+
+    </div>
+
+  </div>
+
+
+  <div class="product-images">
+
+    <div class="current-images">
+
+      <h4>Current Images</h4>
+
+      <div class="image-grid">
+
+        ${(product.images || []).map((img, index) => `
+          <div class="image-item">
+
+            <img src="${API_URL}${img}" />
+
+            <button class="delete-image" data-index="${index}">
+              ✕
+            </button>
+
+          </div>
+        `).join("")}
 
       </div>
 
     </div>
+
+    <label class="file-upload">
+      Upload images
+      <input id="ep_images" type="file" multiple hidden>
+    </label>
+
+  </div>
+
+</div>
+
+    <div class="refund-actions">
+
+      <button class="btn btn-outline" id="cancelEdit">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="confirmEdit">
+        Update
+      </button>
+
+    </div>
+
+  </div>
   `;
 
   document.body.appendChild(modal);
 
+  let images = [...(product.images || [])];
+
+  /* DELETE IMAGE */
+
+  document.querySelectorAll(".delete-image").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+      const index = btn.dataset.index;
+
+      images.splice(index,1);
+
+      btn.parentElement.remove();
+
+    });
+
+  });
+
+  /* AUTO SLUG */
+
+  const nameInput = document.getElementById("ep_name");
+  const slugInput = document.getElementById("ep_slug");
+
+  nameInput.addEventListener("input", () => {
+
+    slugInput.value = nameInput.value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g,"-")
+      .replace(/(^-|-$)/g,"");
+
+  });
+
+  /* IMAGE PREVIEW */
+
+  const imageInput = document.getElementById("ep_images");
+  const imageGrid = document.getElementById("imageGrid");
+
+  imageInput.addEventListener("change", () => {
+
+    const files = imageInput.files;
+
+    for (let i = 0; i < files.length; i++) {
+
+      const reader = new FileReader();
+
+      reader.onload = function(e){
+
+        const div = document.createElement("div");
+        div.className = "image-item";
+
+        div.innerHTML = `
+          <img src="${e.target.result}">
+        `;
+
+        imageGrid.appendChild(div);
+
+      };
+
+      reader.readAsDataURL(files[i]);
+
+    }
+
+  });
+
+  /* RARITY GLOW */
+
+  const rarity = document.getElementById("ep_rarity");
+
+  rarity.addEventListener("change", () => {
+
+    const colors = {
+      CLASSIC:"#9ca3af",
+      RARE:"#3b82f6",
+      EPIC:"#a855f7",
+      MYTHIC:"#ef4444",
+      LEGENDARY:"#f59e0b"
+    };
+
+    rarity.style.borderColor = colors[rarity.value];
+    rarity.style.boxShadow = `0 0 10px ${colors[rarity.value]}`;
+
+  });
+
+  /* CANCEL */
+
   document.getElementById("cancelEdit").onclick = () => {
     modal.remove();
   };
+
+  /* UPDATE */
 
   document.getElementById("confirmEdit").onclick = async () => {
 
@@ -676,7 +870,7 @@ function openEditProductModal(product) {
       formData.append("name", document.getElementById("ep_name").value);
       formData.append("slug", document.getElementById("ep_slug").value);
       formData.append("brand", document.getElementById("ep_brand").value);
-      formData.append("category", document.getElementById("ep_category").value);
+      formData.append("rarity", document.getElementById("ep_rarity").value);
       formData.append("price", document.getElementById("ep_price").value);
 
       formData.append("currency", "USD");
@@ -697,6 +891,8 @@ function openEditProductModal(product) {
       );
 
       const files = document.getElementById("ep_images").files;
+
+      formData.append("existingImages", JSON.stringify(images));
 
       for (let i = 0; i < files.length; i++) {
         formData.append("images", files[i]);
@@ -720,6 +916,8 @@ function openEditProductModal(product) {
   };
 
 }
+
+
 
 /* =========================
    INIT

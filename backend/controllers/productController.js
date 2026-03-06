@@ -49,8 +49,19 @@ export const createProduct = async (req, res) => {
 ============================ */
 export const getProducts = async (req, res) => {
   try {
+
+    const { rarity } = req.query;
+
+    const where = {
+      isActive: true
+    };
+
+    if (rarity && rarity !== "ALL") {
+      where.rarity = rarity;
+    }
+
     const products = await Product.findAll({
-      where: { isActive: true },
+      where,
       attributes: [
         "id",
         "name",
@@ -58,7 +69,8 @@ export const getProducts = async (req, res) => {
         "price",
         "currency",
         "shortDescription",
-        "images"
+        "images",
+        "rarity"
       ],
       order: [["createdAt", "DESC"]]
     });

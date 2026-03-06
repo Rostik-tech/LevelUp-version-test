@@ -51,16 +51,22 @@ export default (sequelize) => {
         }
       },
 
-      category: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: {
-            args: [0, 100],
-            msg: "Category name too long"
-          }
-        }
-      },
+      rarity: {
+  type: DataTypes.ENUM(
+    "CLASSIC",
+    "RARE",
+    "EPIC",
+    "MYTHIC",
+    "LEGENDARY"
+  ),
+  allowNull: false,
+  defaultValue: "CLASSIC",
+  validate: {
+    notEmpty: {
+      msg: "Rarity cannot be empty"
+    }
+  }
+},
 
       price: {
         type: DataTypes.DECIMAL(10, 2),

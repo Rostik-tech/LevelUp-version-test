@@ -343,11 +343,28 @@ if (data.sizes && typeof data.sizes === "string") {
   }
 }
 
-    if (req.files && req.files.length > 0) {
-  data.images = req.files.map(
+    // существующие изображения
+let existingImages = [];
+
+if (req.body.existingImages) {
+  try {
+    existingImages = JSON.parse(req.body.existingImages);
+  } catch {
+    return res.status(400).json({ message: "Invalid existingImages format" });
+  }
+}
+
+// новые изображения
+let newImages = [];
+
+if (req.files && req.files.length > 0) {
+  newImages = req.files.map(
     file => `/uploads/products/${file.filename}`
   );
 }
+
+// объединяем
+data.images = [...existingImages, ...newImages];
 
     if (data.sizes && Array.isArray(data.sizes)) {
       data.stock = data.sizes.reduce(
