@@ -220,3 +220,126 @@
 
 
 
+/* =========================
+   PRODUCT RARITY BADGE
+========================= */
+
+.product-rarity{
+position:absolute;
+top:12px;
+left:12px;
+padding:4px 10px;
+font-size:12px;
+font-weight:700;
+border-radius:6px;
+font-family:'Rajdhani', sans-serif;
+letter-spacing:1px;
+z-index: 5;
+}
+
+/* rarity colors */
+
+.rarity-CLASSIC{
+background:#777;
+color:white;
+}
+
+.rarity-RARE{
+background:#2b7cff;
+color:white;
+}
+
+.rarity-EPIC{
+background:#8a2be2;
+color:white;
+}
+
+.rarity-MYTHIC{
+background:#ff1900;
+color:white;
+}
+
+
+/* =========================
+   PRODUCT CARD FIX
+========================= */
+
+.product-card{
+position:relative;
+}
+
+.rarity-MYTHIC{
+background:#ff3b3b;
+color:white;
+box-shadow:0 0 10px rgba(255,59,59,0.6);
+}
+
+
+/* =========================
+   SHOP CATEGORY FILTER
+========================= */
+
+.shop-filters{
+display:flex;
+gap:18px;
+margin-bottom:45px;
+flex-wrap:wrap;
+align-items:center;
+}
+
+.filter-btn{
+padding:12px 26px;
+font-size:15px;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.2);
+border-radius:10px;
+color:#ffffff;
+font-family:'Rajdhani', sans-serif;
+font-weight:700;
+letter-spacing:0.5px;
+cursor:pointer;
+transition:all 0.25s ease;
+}
+
+.filter-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 0 12px rgba(255,0,255,0.45);
+border-color:#ff00ff;
+}
+
+/* ACTIVE BUTTON */
+
+.filter-btn.active{
+background:#ff00ff;
+color:#000;
+border-color:#ff00ff;
+box-shadow:0 0 14px rgba(255,0,255,0.7);
+}
+
+/* =========================
+   RARITY FILTER COLORS
+========================= */
+
+.filter-btn[data-rarity="CLASSIC"]{
+border-color:#6b6b6b;
+color:#bdbdbd;
+background:rgba(107,107,107,0.08);
+}
+
+.filter-btn[data-rarity="RARE"]{
+border-color:#2f80ff;
+color:#2f80ff;
+background:rgba(47,128,255,0.08);
+}
+
+.filter-btn[data-rarity="EPIC"]{
+border-color:#8b3dff;
+color:#c29cff;
+background:rgba(139,61,255,0.08);
+}
+
+.filter-btn[data-rarity="MYTHIC"]{
+border-color:#ff3b3b;
+color:#ff5a5a;
+background:rgba(255,59,59,0.08);
+}

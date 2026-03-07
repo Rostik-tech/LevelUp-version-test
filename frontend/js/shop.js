@@ -6,8 +6,14 @@
 const API_BASE = "http://localhost:5000/api";
 const BACKEND_BASE = "http://localhost:5000";
 
+let allProducts = [];
+let activeRarity = "ALL";
+
 document.addEventListener("DOMContentLoaded", async () => {
+
+    initFilters();
     await loadProducts();
+
 });
 
 async function loadProducts() {
@@ -17,6 +23,8 @@ async function loadProducts() {
     try {
         const response = await fetch(`${API_BASE}/products`);
         const products = await response.json();
+
+        allProducts = Array.isArray(products) ? products : [];
 
         if (!products || products.length === 0) {
             container.innerHTML = `
@@ -29,12 +37,28 @@ async function loadProducts() {
             return;
         }
 
-        renderProducts(container, products);
+        applyFilter();
 
     } catch (err) {
         console.error("SHOP LOAD ERROR:", err);
         container.innerHTML = "<p>Ошибка загрузки товаров</p>";
     }
+}
+
+function applyFilter() {
+
+    const container = document.getElementById("productsContainer");
+    if (!container) return;
+
+    let filteredProducts = allProducts;
+
+    if (activeRarity !== "ALL") {
+        filteredProducts = allProducts.filter(
+    product => (product.rarity || "").toUpperCase() === activeRarity
+);
+    }
+
+    renderProducts(container, filteredProducts);
 }
 
 function getImageUrl(path) {
@@ -52,8 +76,12 @@ function renderProducts(container, products) {
         return `
         <div class="product-card"
              onclick="goToProduct('${product.slug}')">
+             
 
             <div class="product-image-wrapper">
+            <div class="product-rarity rarity-${product.rarity}">
+${product.rarity}
+</div>
     <img src="${image}"
          alt="${product.name}"
          class="product-image">
@@ -94,3 +122,23 @@ function triggerLanguageUpdate() {
 }
 
 window.goToProduct = goToProduct;
+
+function initFilters(){
+
+    const buttons = document.querySelectorAll(".filter-btn");
+
+    buttons.forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            activeRarity = btn.dataset.rarity;
+
+            applyFilter();
+        });
+
+    });
+
+}
