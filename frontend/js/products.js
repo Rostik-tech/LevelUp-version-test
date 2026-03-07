@@ -7,6 +7,7 @@ const BACKEND_BASE = "http://localhost:5000";
 
 let currentProduct = null;
 let selectedSize = null;
+let currentProductId = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     await loadProduct();
@@ -36,6 +37,10 @@ async function loadProduct() {
 
         const product = await response.json();
         currentProduct = product;
+
+        currentProductId = product.id;
+        loadReviews(product.id);
+        setupReviewForm(product.id);
 
         renderProduct(product);
 
@@ -261,3 +266,163 @@ function addToCart() {
 
     alert("Товар добавлен в корзину");
 }
+
+// ========================
+// LOAD REVIEWS
+// ========================
+
+async function loadReviews(productId){
+
+    try{
+
+        const response = await fetch(`${API_BASE}/reviews/product/${productId}`);
+        const reviews = await response.json();
+
+        renderReviews(reviews);
+
+    }catch(err){
+
+        console.error("REVIEWS LOAD ERROR:", err);
+
+    }
+
+}
+
+// ========================
+// RENDER REVIEWS
+// ========================
+
+function renderReviews(reviews){
+
+    const container = document.getElementById("reviewsList");
+    const noReviews = document.getElementById("noReviews");
+
+    if(!container) return;
+
+    if(!reviews || reviews.length === 0){
+
+        if(noReviews) noReviews.style.display = "block";
+        container.innerHTML = "";
+        return;
+
+    }
+
+    if(noReviews) noReviews.style.display = "none";
+
+    container.innerHTML = reviews.map(r => {
+
+        const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+
+        return `
+
+        <div class="review-card">
+
+            <div class="review-header">
+                <strong>${r.User?.username || "User"}</strong>
+                <span class="review-stars">${stars}</span>
+            </div>
+
+            <p class="review-text">
+                ${r.comment}
+            </p>
+
+            <span class="review-date">
+                ${new Date(r.createdAt).toLocaleDateString()}
+            </span>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+// ========================
+// REVIEW FORM
+// ========================
+
+function setupReviewForm(productId){
+
+    const form = document.getElementById("reviewFormElement");
+    if(!form) return;
+
+    form.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const rating = document.getElementById("ratingInput").value;
+        const comment = document.getElementById("reviewText").value;
+
+        if (rating == 0) {
+    alert("Пожалуйста, выберите рейтинг");
+    return;
+}
+
+        try{
+
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(`${API_BASE}/reviews/product/${productId}`,{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":`Bearer ${token}`
+                },
+
+                body:JSON.stringify({
+                    rating,
+                    comment
+                })
+
+            });
+
+            const data = await response.json();
+
+            if(!response.ok){
+                alert(data.message || "Ошибка отправки отзыва");
+                return;
+            }
+
+            alert("Отзыв отправлен");
+
+            form.reset();
+
+            loadReviews(productId);
+
+        }catch(err){
+
+            console.error("REVIEW ERROR:", err);
+            alert("Ошибка отправки отзыва");
+
+        }
+
+    });
+
+}
+
+// ========================
+// STAR RATING SELECTOR
+// ========================
+
+document.querySelectorAll(".star-rating-selector i").forEach(star => {
+
+    star.addEventListener("click", () => {
+
+        const rating = star.dataset.rating;
+
+        document.getElementById("ratingInput").value = rating;
+
+        document.querySelectorAll(".star-rating-selector i").forEach(s => {
+            s.classList.remove("active");
+        });
+
+        for (let i = 0; i < rating; i++) {
+            document.querySelectorAll(".star-rating-selector i")[i].classList.add("active");
+        }
+
+    });
+
+});
