@@ -132,13 +132,8 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    if (process.env.NODE_ENV === "development") {
-      await sequelize.sync({ alter: true });
-      console.log("DB synced (development mode)");
-    } else {
-      await sequelize.authenticate();
-      console.log("DB connected (production mode)");
-    }
+    await sequelize.authenticate();
+console.log("Database connected");
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
