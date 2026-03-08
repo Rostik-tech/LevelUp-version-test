@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "levelup_admin",
-    "password": "Ybd_levelup_gaming 1709",
+    "password": "bd_levelup_gaming 1709",
     "database": "levelup",
     "host": "localhost",
     "dialect": "postgres"
