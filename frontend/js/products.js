@@ -299,6 +299,87 @@ function renderReviews(reviews){
 
     if(!container) return;
 
+    // ========================
+    // CALCULATE RATING
+    // ========================
+
+    const totalReviews = reviews.length;
+
+    let ratingSum = 0;
+
+    reviews.forEach(r => {
+        ratingSum += r.rating;
+    });
+
+    const averageRating = totalReviews > 0
+        ? (ratingSum / totalReviews).toFixed(1)
+        : 0;
+
+    // update header rating
+
+    const headerRating = document.getElementById("headerRating");
+    const headerReviewsCount = document.getElementById("headerReviewsCount");
+
+    if(headerRating) headerRating.textContent = averageRating;
+    if(headerReviewsCount) headerReviewsCount.textContent = totalReviews;
+
+    // update summary rating
+
+    const avgRating = document.getElementById("avgRating");
+    const totalReviewsEl = document.getElementById("totalReviews");
+
+    if(avgRating) avgRating.textContent = averageRating;
+    if(totalReviewsEl) totalReviewsEl.textContent = totalReviews;
+
+    // update stars display
+
+    const stars = document.getElementById("summaryStars");
+
+    if(stars){
+
+        const fullStars = Math.round(averageRating);
+
+        stars.textContent =
+            "★".repeat(fullStars) +
+            "☆".repeat(5 - fullStars);
+
+    }
+
+    // ========================
+// RATING DISTRIBUTION
+// ========================
+
+const ratingsCount = {
+    5:0,
+    4:0,
+    3:0,
+    2:0,
+    1:0
+};
+
+reviews.forEach(r => {
+    ratingsCount[r.rating]++;
+});
+
+for(let i = 1; i <= 5; i++){
+
+    const count = ratingsCount[i];
+    const percent = totalReviews > 0
+        ? (count / totalReviews) * 100
+        : 0;
+
+    const bar = document.getElementById(`bar${i}`);
+    const countEl = document.getElementById(`count${i}`);
+
+    if(bar) bar.style.width = percent + "%";
+    if(countEl) countEl.textContent = count;
+
+}
+
+    // ========================
+    // NO REVIEWS
+    // ========================
+
     if(!reviews || reviews.length === 0){
 
         if(noReviews) noReviews.style.display = "block";
@@ -309,11 +390,15 @@ function renderReviews(reviews){
 
     if(noReviews) noReviews.style.display = "none";
 
-    container.innerHTML = reviews.map(r => {
+    // ========================
+// RENDER REVIEWS LIST
+// ========================
 
-        const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+container.innerHTML = reviews.map(r => {
 
-        return `
+    const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+
+    return `
 
         <div class="review-card">
 
@@ -332,10 +417,9 @@ function renderReviews(reviews){
 
         </div>
 
-        `;
+    `;
 
-    }).join("");
-
+}).join("");
 }
 
 // ========================
@@ -391,6 +475,12 @@ function setupReviewForm(productId){
             form.reset();
 
             loadReviews(productId);
+
+            document.getElementById("ratingInput").value = 0;
+
+            document.querySelectorAll(".star-rating-selector i").forEach(s => {
+             s.classList.remove("active");
+            });
 
         }catch(err){
 

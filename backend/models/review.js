@@ -14,7 +14,7 @@ export default (sequelize) => {
 
       rating: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         validate: {
           min: 1,
           max: 5,
@@ -23,7 +23,7 @@ export default (sequelize) => {
 
       comment: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
         validate: {
           len: [3, 1000],
         },
@@ -31,7 +31,7 @@ export default (sequelize) => {
 
       isApproved: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: true,
       },
     },
     {

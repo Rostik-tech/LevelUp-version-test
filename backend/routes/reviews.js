@@ -1,3 +1,4 @@
+//backend/routes/reviews.js
 import express from "express";
 
 import {
@@ -21,7 +22,7 @@ router.get("/product/:productId", async (req, res) => {
     const reviews = await Review.findAll({
       where: {
         ProductId: req.params.productId,
-        isApproved: true
+        
       },
       include: [
         {
