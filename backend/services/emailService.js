@@ -207,3 +207,31 @@ export const sendBusinessInvoiceCopy = async (invoice, order, items) => {
     ],
   });
 };
+
+/**
+ * Сообщение из контактной формы
+ */
+export const sendContactEmail = async ({ name, email, subject, message }) => {
+
+  const html = `
+    <h2>New message from LevelUp Contact Form</h2>
+
+    <p><strong>Name:</strong> ${name}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Subject:</strong> ${subject}</p>
+
+    <hr/>
+
+    <p><strong>Message:</strong></p>
+    <p>${message}</p>
+  `;
+
+  await transporter.sendMail({
+    from: `"Level Up Contact Form" <${process.env.EMAIL_USER}>`,
+    to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
+    subject: `Contact Form: ${subject}`,
+    html,
+    replyTo: email
+  });
+
+};

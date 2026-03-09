@@ -1,4 +1,4 @@
-// cart.html
+// contact.html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -133,44 +133,44 @@
                 <!-- Contact Form -->
                 <div class="contact-form-wrapper">
                     <form class="form-card" id="contactForm">
-                        <h2 class="form-title" data-en="Send us a Message" data-ru="Отправьте нам Сообщение">Отправьте нам Сообщение</h2>
-                        
-                        <div class="form-group">
-                            <label class="form-label" data-en="Your Name" data-ru="Ваше Имя">Ваше Имя</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-user input-icon"></i>
-                                <input type="text" class="form-input" placeholder="Иван Иванов" required>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="form-label" data-en="Email Address" data-ru="Email Адрес">Email Адрес</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-envelope input-icon"></i>
-                                <input type="email" class="form-input" placeholder="ivan@example.com" required>
-                            </div>
-                        </div>
+<div class="form-group">
+<label class="form-label">Ваше Имя</label>
+<div class="input-wrapper">
+<i class="fas fa-user input-icon"></i>
+<input type="text" class="form-input" name="name" placeholder="Иван Иванов" required>
+</div>
+</div>
 
-                        <div class="form-group">
-                            <label class="form-label" data-en="Subject" data-ru="Тема">Тема</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-tag input-icon"></i>
-                                <input type="text" class="form-input" placeholder="Тема сообщения" required>
-                            </div>
-                        </div>
+<div class="form-group">
+<label class="form-label">Email Адрес</label>
+<div class="input-wrapper">
+<i class="fas fa-envelope input-icon"></i>
+<input type="email" class="form-input" name="email" placeholder="ivan@example.com" required>
+</div>
+</div>
 
-                        <div class="form-group">
-                            <label class="form-label" data-en="Message" data-ru="Сообщение">Сообщение</label>
-                            <div class="input-wrapper">
-                                <i class="fas fa-comment-dots input-icon"></i>
-                                <textarea class="form-input form-textarea" rows="5" placeholder="Ваше сообщение..." required></textarea>
-                            </div>
-                        </div>
+<div class="form-group">
+<label class="form-label">Тема</label>
+<div class="input-wrapper">
+<i class="fas fa-tag input-icon"></i>
+<input type="text" class="form-input" name="subject" placeholder="Тема сообщения" required>
+</div>
+</div>
 
-                        <button type="submit" class="btn btn-primary btn-large btn-block">
-                            <span data-en="Send Message" data-ru="Отправить Сообщение">Отправить Сообщение</span>
-                        </button>
-                    </form>
+<div class="form-group">
+<label class="form-label">Сообщение</label>
+<div class="input-wrapper">
+<i class="fas fa-comment-dots input-icon"></i>
+<textarea class="form-input form-textarea" name="message" rows="5" placeholder="Ваше сообщение..." required></textarea>
+</div>
+</div>
+
+<button type="submit" class="btn btn-primary btn-large btn-block">
+Отправить сообщение
+</button>
+
+</form>
                 </div>
             </div>
         </div>
@@ -223,12 +223,44 @@
     </footer>
 
     <script src="frontend/js/main.js"></script>
-
 <script>
-document.getElementById('contactForm').addEventListener('submit', function(e) {
+document.getElementById("contactForm").addEventListener("submit", async function(e) {
+
     e.preventDefault();
-    alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.');
-    this.reset();
+
+    const form = e.target;
+
+    const data = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value
+    };
+
+    try {
+
+        const res = await fetch("http://localhost:5000/api/contact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            alert("Сообщение успешно отправлено!");
+            form.reset();
+        } else {
+            alert(result.message || "Ошибка отправки сообщения");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Ошибка соединения с сервером");
+    }
+
 });
 </script>
 </body>
