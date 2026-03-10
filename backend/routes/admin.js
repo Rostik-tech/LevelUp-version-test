@@ -692,7 +692,13 @@ router.patch("/orders/:id/status", authenticateToken, isAdmin, async (req, res) 
     }
 
     order.status = normalizedStatus;
-    await order.save({ transaction });
+
+// фиксируем дату доставки
+if (normalizedStatus === "DELIVERED") {
+  order.deliveredAt = new Date();
+}
+
+await order.save({ transaction });
 
     await transaction.commit();
 
@@ -788,6 +794,53 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // ===============================
+// REFUND BUSINESS RULES
+// ===============================
+
+const status = order.status;
+
+// нельзя вернуть если отправлено
+if (status === "SHIPPED") {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Refund not allowed after shipment"
+  });
+}
+
+// нельзя вернуть если отменён
+if (status === "CANCELLED") {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Order already cancelled"
+  });
+}
+
+// если доставлен — действует правило 14 дней
+if (status === "DELIVERED") {
+
+  if (!order.deliveredAt) {
+    await transaction.rollback();
+    return res.status(400).json({
+      message: "Delivery date missing"
+    });
+  }
+
+  const deliveredDate = new Date(order.deliveredAt);
+  const now = new Date();
+
+  const diffDays =
+    (now.getTime() - deliveredDate.getTime()) /
+    (1000 * 60 * 60 * 24);
+
+  if (diffDays > 14) {
+    await transaction.rollback();
+    return res.status(400).json({
+      message: "Refund period (14 days) expired"
+    });
+  }
+}
+
     // 🔒 2. Lock Payment отдельно (без include!)
     const payment = await Payment.findOne({
       where: { OrderId: order.id },
@@ -853,12 +906,10 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
     order.refundedAmount = parseFloat(order.refundedAmount || 0) + refundAmount;
 
     if (payment.refundedAmount >= paymentAmount) {
-      payment.status = "REFUNDED";
-      order.status = "REFUNDED";
-    } else {
-      payment.status = "PARTIALLY_REFUNDED";
-      order.status = "PARTIALLY_REFUNDED";
-    }
+  payment.status = "REFUNDED";
+} else {
+  payment.status = "PARTIALLY_REFUNDED";
+}
 
     await payment.save({ transaction });
     await order.save({ transaction });

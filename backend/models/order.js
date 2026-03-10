@@ -58,6 +58,17 @@ export default (sequelize) => {
       },
 
       /* ======================
+      📅 DELIVERY TRACKING
+       ====================== */
+
+      deliveredAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      },
+
+      
+
+      /* ======================
          🚚 SHIPPING INFO
       ====================== */
 
