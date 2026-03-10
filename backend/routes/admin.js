@@ -833,12 +833,15 @@ if (status === "DELIVERED") {
     (now.getTime() - deliveredDate.getTime()) /
     (1000 * 60 * 60 * 24);
 
-  if (diffDays > 14) {
-    await transaction.rollback();
-    return res.status(400).json({
-      message: "Refund period (14 days) expired"
-    });
-  }
+  const CLIENT_REFUND_DAYS = 14;
+const ADMIN_REFUND_DAYS = 21;
+
+if (diffDays > ADMIN_REFUND_DAYS) {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Refund period expired"
+  });
+}
 }
 
     // 🔒 2. Lock Payment отдельно (без include!)

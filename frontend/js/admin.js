@@ -151,16 +151,7 @@ function renderOrders(container, response) {
               </td>
               <td>${new Date(order.createdAt).toLocaleDateString()}</td>
               <td>
-                ${
-                  order.status === "PAID" ||
-                  order.status === "PARTIALLY_REFUNDED"
-                    ? `<button class="btn btn-outline refund-btn"
-                         data-id="${order.id}"
-                         data-remaining="${remaining}">
-                         Refund
-                       </button>`
-                    : "-"
-                }
+                ${renderRefundButton(order, remaining)}
               </td>
             </tr>
           `;
@@ -304,6 +295,57 @@ function renderStatusDropdown(order) {
         </option>
       `).join("")}
     </select>
+  `;
+}
+
+
+function renderRefundButton(order, remaining) {
+
+  const allowedStatuses = ["PAID", "PROCESSING", "DELIVERED", "PARTIALLY_REFUNDED"];
+
+  if (!allowedStatuses.includes(order.status)) {
+    return "-";
+  }
+
+  let warning = "";
+  let disabled = "";
+
+  if (order.status === "DELIVERED" && order.deliveredAt) {
+
+    const delivered = new Date(order.deliveredAt);
+    const now = new Date();
+
+    const diffDays =
+      (now - delivered) / (1000 * 60 * 60 * 24);
+
+    if (diffDays > 21) {
+      disabled = "disabled";
+      warning = `<div class="refund-warning expired">
+                   Refund period expired
+                 </div>`;
+    }
+
+    else if (diffDays > 14) {
+      warning = `<div class="refund-warning support">
+                   Customer window expired (support review)
+                 </div>`;
+    }
+
+  }
+
+  return `
+    <div class="refund-wrapper">
+
+      <button class="btn btn-outline refund-btn"
+              data-id="${order.id}"
+              data-remaining="${remaining}"
+              ${disabled}>
+        Refund
+      </button>
+
+      ${warning}
+
+    </div>
   `;
 }
 

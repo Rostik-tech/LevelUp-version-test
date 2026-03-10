@@ -718,3 +718,16 @@ align-items:center;
 margin-top:20px;
 gap:20px;
 }
+
+.refund-warning {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.refund-warning.support {
+  color: orange;
+}
+
+.refund-warning.expired {
+  color: red;
+}
