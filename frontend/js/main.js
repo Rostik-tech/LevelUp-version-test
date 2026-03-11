@@ -61,10 +61,14 @@ function initLanguage() {
 }
 
 function updatePageLanguage() {
-    const elements = document.querySelectorAll('[data-en][data-ru]');
+    const elements = document.querySelectorAll('[data-en]');
+
     elements.forEach(function (element) {
         const text = element.getAttribute('data-' + currentLanguage);
-        if (text) element.textContent = text;
+
+        if (text) {
+            element.textContent = text;
+        }
     });
 }
 
