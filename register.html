@@ -1,6 +1,6 @@
 // register.html
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Register - Level Up Gaming</title>
@@ -18,58 +18,106 @@
     <div class="auth-container">
 
         <form class="form-card" id="registerForm">
-            <h1 class="form-title">Создать Аккаунт</h1>
+            <h1 class="form-title"
+            data-en="Create Account"
+            data-ru="Создать аккаунт"
+            data-bg="Създаване на акаунт">
+            Create Account
+            </h1>
 
             <div id="formMessage"></div>
 
             <div class="form-group">
-                <label>Полное Имя</label>
+                <label
+                data-en="Full Name"
+                data-ru="Полное имя"
+                data-bg="Пълно име">
+                Full Name
+                </label>
                 <div class="input-wrapper">
                     <i class="fas fa-user input-icon"></i>
-                    <input type="text" id="fullName" class="form-input" required>
+                    <input type="text" id="fullName" name="fullName" class="form-input" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Email</label>
+                <label
+                data-en="Email"
+                data-ru="Email"
+                data-bg="Имейл">
+                Email
+                </label>
                 <div class="input-wrapper">
                     <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="email" class="form-input" required>
+                    <input type="email" id="email" name="email" class="form-input" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Имя Пользователя</label>
+                <label
+                data-en="Username"
+                data-ru="Имя пользователя"
+                data-bg="Потребителско име">
+                Username
+                </label>
                 <div class="input-wrapper">
                     <i class="fas fa-at input-icon"></i>
-                    <input type="text" id="username" class="form-input" required>
+                    <input type="text" id="username" name="username" class="form-input" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Пароль</label>
+                <label
+                data-en="Password"
+                data-ru="Пароль"
+                data-bg="Парола">
+                Password
+                </label>
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="password" class="form-input" required>
+                    <input type="password" id="password" name="password" class="form-input" required>
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('password')"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Подтвердите Пароль</label>
+                <label
+                data-en="Confirm Password"
+                data-ru="Подтвердите пароль"
+                data-bg="Потвърдете паролата">
+                Confirm Password
+                </label>      
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="confirmPassword" class="form-input" required>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-large btn-block">
-                Создать Аккаунт
-            </button>
+                <button
+                type="submit"
+                class="btn btn-primary btn-large btn-block"
+                data-en="Create Account"
+                data-ru="Создать аккаунт"
+                data-bg="Създаване на акаунт">
+                Create Account
+                </button>
 
             <div class="form-footer">
-                Уже есть аккаунт? <a href="frontend/login.html">Войти</a>
+            <span
+            data-en="Already have an account?"
+            data-ru="Уже есть аккаунт?"
+            data-bg="Вече имате акаунт?">
+            Already have an account?
+            </span>
+
+            <a
+            href="login.html"
+            data-en="Login"
+            data-ru="Войти"
+            data-bg="Вход">
+            Login
+            </a>
             </div>
         </form>
 
@@ -92,19 +140,28 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     const formMessage = document.getElementById("formMessage");
 
     const username = document.getElementById("username").value.trim();
+    const fullName = document.getElementById("fullName").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
 
     if (password !== confirmPassword) {
-        formMessage.className = "form-message error";
-        formMessage.textContent = "Пароли не совпадают";
+            formMessage.className = "form-message error";
+            formMessage.setAttribute("data-en", "Passwords do not match");
+            formMessage.setAttribute("data-ru", "Пароли не совпадают");
+            formMessage.setAttribute("data-bg", "Паролите не съвпадат");
+            formMessage.textContent = "Пароли не совпадают";
+            updatePageLanguage();
         return;
     }
 
     if (password.length < 8) {
         formMessage.className = "form-message error";
+        formMessage.setAttribute("data-en", "Password must be at least 8 characters");
+        formMessage.setAttribute("data-ru", "Пароль должен быть минимум 8 символов");
+        formMessage.setAttribute("data-bg", "Паролата трябва да бъде поне 8 символа");
         formMessage.textContent = "Пароль должен быть минимум 8 символов";
+        updatePageLanguage();
         return;
     }
 
@@ -112,19 +169,27 @@ document.getElementById("registerForm").addEventListener("submit", async functio
         const response = await fetch("http://localhost:5000/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password })
+            body: JSON.stringify({ fullName, username, email, password })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
             formMessage.className = "form-message error";
+            formMessage.setAttribute("data-en", data.message || "Registration error");
+            formMessage.setAttribute("data-ru", data.message || "Ошибка регистрации");
+            formMessage.setAttribute("data-bg", data.message || "Грешка при регистрация");
             formMessage.textContent = data.message || "Ошибка регистрации";
+            updatePageLanguage();    
             return;
         }
 
         formMessage.className = "form-message success";
+        formMessage.setAttribute("data-en", "Registration successful!");
+        formMessage.setAttribute("data-ru", "Регистрация успешна!");
+        formMessage.setAttribute("data-bg", "Регистрацията е успешна!");
         formMessage.textContent = "Регистрация успешна!";
+        updatePageLanguage();
 
         setTimeout(() => {
             window.location.href = "login.html";
@@ -132,7 +197,11 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 
     } catch {
         formMessage.className = "form-message error";
+        formMessage.setAttribute("data-en", "Server connection error");
+        formMessage.setAttribute("data-ru", "Ошибка соединения с сервером");
+        formMessage.setAttribute("data-bg", "Грешка при връзка със сървъра");
         formMessage.textContent = "Ошибка соединения с сервером";
+        updatePageLanguage();   
     }
 });
 </script>
