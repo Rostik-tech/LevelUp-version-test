@@ -1,6 +1,6 @@
 // contact.html
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,10 +24,10 @@
                     <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
                 </a>
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
                     <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
                     <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link active" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
                 </ul>
                 <div class="nav-actions">
                     <div class="auth-buttons" id="authButtons">
@@ -91,10 +91,13 @@
     <section class="page-header">
         <div class="container">
             <h1 class="page-title">
-                <span class="gradient-text" data-en="Contact Us" data-ru="Свяжитесь с Нами">Свяжитесь с Нами</span>
+                <span class="gradient-text" data-en="Contact Us" data-ru="Свяжитесь с Нами" data-bg="Свържете се с нас">Contact Us</span>
             </h1>
-            <p class="page-subtitle" data-en="We're here to help you level up" data-ru="Мы здесь, чтобы помочь вам подняться на новый уровень">
-                Мы здесь, чтобы помочь вам подняться на новый уровень
+            <p class="page-subtitle"
+            data-en="We're here to help you level up"
+            data-ru="Мы здесь, чтобы помочь вам подняться на новый уровень"
+            data-bg="Тук сме, за да ви помогнем да повишите нивото си">
+            We're here to help you level up
             </p>
         </div>
     </section>
@@ -105,14 +108,14 @@
             <div class="contact-grid">
                 <!-- Contact Info -->
                 <div class="contact-info">
-                    <h2 class="section-title" data-en="Get in Touch" data-ru="Свяжитесь с Нами">Свяжитесь с Нами</h2>
+                    <h2 class="section-title" data-en="Get in Touch" data-ru="Свяжитесь с Нами" data-bg="Свържете се с нас">Get in Touch</h2>
                     
                     <div class="info-item">
                         <div class="info-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <div class="info-content">
-                            <h3 data-en="Email" data-ru="Email">Email</h3>
+                            <h3 data-en="Email" data-ru="Email" data-bg="Email">Email</h3>
                             <p>levelupshopgaming@gmail.com</p>
                         </div>
                     </div>
@@ -124,8 +127,13 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div class="info-content">
-                            <h3 data-en="Address" data-ru="Адрес">Адрес</h3>
-                            <p data-en="123 Gaming Street, Tech City, TC 12345" data-ru="ул. Игровая 123, Тех Сити, ТС 12345">ул. Игровая 123, Тех Сити, ТС 12345</p>
+                            <h3
+                            data-en="Address"
+                            data-ru="Адрес"
+                            data-bg="Адрес">
+                            Address
+                            </h3>
+                            <p data-en="123 Gaming Street, Tech City, TC 12345" data-ru="ул. Игровая 123, Тех Сити, ТС 12345" data-bg="123 Gaming Street, Tech City, TC 12345">123 Gaming Street, Tech City, TC 12345</p>
                         </div>
                     </div>
 
@@ -134,8 +142,8 @@
                             <i class="fas fa-clock"></i>
                         </div>
                         <div class="info-content">
-                            <h3 data-en="Working Hours" data-ru="Часы Работы">Часы Работы</h3>
-                            <p data-en="24/7 Support Available" data-ru="Поддержка 24/7">Поддержка 24/7</p>
+                            <h3 data-en="Working Hours" data-ru="Часы Работы" data-bg="Работно време">Working Hours</h3>
+                            <p data-en="24/7 Support Available" data-ru="Поддержка 24/7" data-bg="Поддръжка 24/7">24/7 Support Available</p>
                         </div>
                     </div>
                 </div>
@@ -145,39 +153,76 @@
                     <form class="form-card" id="contactForm">
 
 <div class="form-group">
-<label class="form-label">Ваше Имя</label>
+<label class="form-label"
+data-en="Your Name"
+data-ru="Ваше имя"
+data-bg="Вашето име">
+Your Name
+</label>
 <div class="input-wrapper">
 <i class="fas fa-user input-icon"></i>
-<input type="text" class="form-input" name="name" placeholder="Иван Иванов" required>
+<input type="text" class="form-input" name="name" placeholder="John Smith"
+data-en-placeholder="John Smith"
+data-ru-placeholder="Иван Иванов"
+data-bg-placeholder="Иван Иванов" required>
 </div>
 </div>
 
 <div class="form-group">
-<label class="form-label">Email Адрес</label>
+<label class="form-label"
+data-en="Email Address"
+data-ru="Email Адрес"
+data-bg="Email Адрес">
+Email Address
+</label>
 <div class="input-wrapper">
 <i class="fas fa-envelope input-icon"></i>
-<input type="email" class="form-input" name="email" placeholder="ivan@example.com" required>
+<input type="email" class="form-input" name="email" placeholder="john@example.com"
+data-en-placeholder="john@example.com"
+data-ru-placeholder="ivan@example.com"
+data-bg-placeholder="ivan@example.com" required>
 </div>
 </div>
 
 <div class="form-group">
-<label class="form-label">Тема</label>
+<label class="form-label"
+data-en="Subject"
+data-ru="Тема"
+data-bg="Тема">
+Subject
+</label>
 <div class="input-wrapper">
 <i class="fas fa-tag input-icon"></i>
-<input type="text" class="form-input" name="subject" placeholder="Тема сообщения" required>
+<input type="text" class="form-input" name="subject" placeholder="Message subject"
+data-en-placeholder="Message subject"
+data-ru-placeholder="Тема сообщения"
+data-bg-placeholder="Тема на съобщението" required>
 </div>
 </div>
 
 <div class="form-group">
-<label class="form-label">Сообщение</label>
+<label class="form-label"
+data-en="Message"
+data-ru="Сообщение"
+data-bg="Съобщение">
+Message
+</label>
 <div class="input-wrapper">
 <i class="fas fa-comment-dots input-icon"></i>
-<textarea class="form-input form-textarea" name="message" rows="5" placeholder="Ваше сообщение..." required></textarea>
+<textarea class="form-input form-textarea" name="message" rows="5" placeholder="Your message..."
+data-en-placeholder="Your message..."
+data-ru-placeholder="Ваше сообщение..."
+data-bg-placeholder="Вашето съобщение..." required></textarea>
 </div>
 </div>
 
-<button type="submit" class="btn btn-primary btn-large btn-block">
-Отправить сообщение
+<button
+type="submit"
+class="btn btn-primary btn-large btn-block"
+data-en="Send Message"
+data-ru="Отправить сообщение"
+data-bg="Изпрати съобщение">
+Send Message
 </button>
 
 </form>
@@ -258,18 +303,31 @@ document.getElementById("contactForm").addEventListener("submit", async function
         const result = await res.json();
 
         if (res.ok) {
-            alert("Сообщение успешно отправлено!");
+            alert(getTranslation({
+            en: "Message sent successfully!",
+            ru: "Сообщение успешно отправлено!",
+            bg: "Съобщението е изпратено успешно!"
+            }));
             form.reset();
         } else {
-            alert(result.message || "Ошибка отправки сообщения");
+            alert(result.message || getTranslation({
+            en: "Error sending message",
+            ru: "Ошибка отправки сообщения",
+            bg: "Грешка при изпращане на съобщението"
+        }));
         }
 
     } catch (err) {
         console.error(err);
-        alert("Ошибка соединения с сервером");
+        alert(getTranslation({
+        en: "Server connection error",
+        ru: "Ошибка соединения с сервером",
+        bg: "Грешка при връзка със сървъра"
+        }));
     }
 
 });
 </script>
 </body>
 </html>
+
