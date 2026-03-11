@@ -24,45 +24,42 @@
             </a>
 
             <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
                 </ul>
 
             <div class="nav-actions">
 
                 <div class="auth-buttons" id="authButtons">
-                    <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация">Регистрация</a>
-                    <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
-                </div>
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                    </div>
 
-                <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета">Мои счета</span>
-                            </a>
-                            <a href="profile.html#settings" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
                             </a>
                         </div>
                     </div>
@@ -75,6 +72,7 @@
                     <div class="switcher-menu" id="langMenu">
                         <button class="switcher-option" data-lang="ru">RU</button>
                         <button class="switcher-option" data-lang="en">EN</button>
+                        <button class="switcher-option" data-lang="bg">BG</button>
                     </div>
                 </div>
 
@@ -144,15 +142,50 @@
     </div>
 </section>
 
-<footer class="footer">
-    <div class="container">
-        <p>&copy; 2026 Level Up Gaming Accessories.
-            <span data-en="All rights reserved." data-ru="Все права защищены.">
-                Все права защищены.
-            </span>
-        </p>
-    </div>
-</footer>
+<!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">О Level Up</h4>
+                    <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень." data-bg="Премиални игрови аксесоари за шампиони, които искат да повишат нивото на своята игра.">
+                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Быстрые ссылки</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Главная</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">О нас</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Контакты</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Обслуживание клиентов</h4>
+                    <ul class="footer-links">
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Условия использования</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Поддержка</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Возвраты</a></li>
+                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Следите за нами</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">Все права защищены.</span></p>
+            </div>
+        </div>
+    </footer>
 
 <script src="frontend/js/main.js"></script>
 <script src="frontend/js/shop.js"></script>

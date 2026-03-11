@@ -23,46 +23,43 @@
                 <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
             </a>
 
-            <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link active" data-en="CONTACT" data-ru="КОНТАКТЫ">КОНТАКТЫ</a></li>
+           <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
                 </ul>
 
             <div class="nav-actions">
 
-                <div id="authButtons">
-                    <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация">Регистрация</a>
-                    <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход">Вход</a>
-                </div>
+                <div class="auth-buttons" id="authButtons">
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                    </div>
 
-                <div class="profile-dropdown" id="profileDropdown" style="display: none;">
+                <!-- Profile Button (shown when logged in) -->
+                    <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета">Мои счета</span>
-                            </a>
-                            <a href="profile.html#settings" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span data-en="Settings" data-ru="Настройки">Настройки</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
                             </a>
                         </div>
                     </div>
@@ -75,6 +72,7 @@
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
                             <button class="switcher-option" data-lang="en">EN</button>
+                            <button class="switcher-option" data-lang="bg">BG</button>
                         </div>
                     </div>
 
