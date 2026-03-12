@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level Up - Premium Gaming Accessories</title>
+    <meta name="description" content="Premium gaming accessories for champions. High-quality gaming mousepads and gaming gear from Level Up.">
     <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="frontend/images/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,43 +28,43 @@
 
                 <!-- Navigation Menu -->
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
                 <!-- Right Side Buttons -->
                 <div class="nav-actions">
                     <!-- Auth Buttons (shown when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="Регистрация">Registration</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="Вход">Login</a>
                     </div>
 
                     <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">My Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -71,7 +73,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -111,103 +113,194 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="gradient-text" data-en="Level Up Your Gaming" data-ru="Подними Свой Гейминг">Подними Свой Гейминг</span>
-                </h1>
-                <p class="hero-subtitle" data-en="Premium gaming accessories for champions" data-ru="Премиальные игровые аксессуары для чемпионов">
-                    Премиальные игровые аксессуары для чемпионов
-                </p>
-                <div class="hero-buttons">
-                    <a href="shop.html" class="btn btn-large btn-primary" data-en="SHOP NOW" data-ru="КУПИТЬ СЕЙЧАС">КУПИТЬ СЕЙЧАС</a>
-                    <a href="about.html" class="btn btn-large btn-outline" data-en="LEARN MORE" data-ru="УЗНАТЬ БОЛЬШЕ">УЗНАТЬ БОЛЬШЕ</a>
-                </div>
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="gradient-text" 
+                data-en="Level Up Your Gaming" 
+                data-ru="Подними Свой Гейминг"
+                data-bg="Подобри своята игра">
+                Level Up Your Gaming
+                </span>
+            </h1>
+
+            <p class="hero-subtitle" 
+            data-en="Premium gaming accessories for champions" 
+            data-ru="Премиальные игровые аксессуары для чемпионов"
+            data-bg="Премиални гейминг аксесоари за шампиони">
+                Premium gaming accessories for champions
+            </p>
+
+            <div class="hero-buttons">
+                <a href="shop.html" 
+                class="btn btn-large btn-primary" 
+                data-en="SHOP NOW" 
+                data-ru="КУПИТЬ СЕЙЧАС"
+                data-bg="КУПИ СЕГА">
+                SHOP NOW
+                </a>
+
+                <a href="about.html" 
+                class="btn btn-large btn-outline" 
+                data-en="LEARN MORE" 
+                data-ru="УЗНАТЬ БОЛЬШЕ"
+                data-bg="НАУЧИ ПОВЕЧЕ">
+                LEARN MORE
+                </a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Featured Products Section -->
     <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title" data-en="Featured Products" data-ru="Популярные товары">
-                <span class="gradient-text">Популярные товары</span>
-            </h2>
-            <div class="products-grid" id="featuredProducts">
-                <!-- Products will be loaded dynamically -->
-            </div>
-            <div class="section-footer">
-                <a href="shop.html" class="btn btn-outline" data-en="View All Products" data-ru="Посмотреть все товары">Посмотреть все товары</a>
-            </div>
-        </div>
-    </section>
+    <div class="container">
+        <h2 class="section-title">
+        <span class="gradient-text"
+        data-en="Featured Products"
+        data-ru="Популярные товары"
+        data-bg="Популярни продукти">
+        Featured Products
+        </span>
+        </h2>
 
+        <div class="products-grid" id="featuredProducts">
+            <!-- Products will be loaded dynamically -->
+        </div>
+
+        <div class="section-footer">
+            <a href="shop.html" 
+            class="btn btn-outline" 
+            data-en="View All Products" 
+            data-ru="Посмотреть все товары"
+            data-bg="Виж всички продукти">
+            View All Products
+            </a>
+        </div>
+    </div>
+</section>
     <!-- Features Section -->
     <section class="features">
-        <div class="container">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="Fast Shipping" data-ru="Быстрая доставка">Быстрая доставка</h3>
-                    <p class="feature-text" data-en="Free shipping on orders over $50" data-ru="Бесплатная доставка при заказе от $50">Бесплатная доставка при заказе от $50</p>
+    <div class="container">
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shipping-fast"></i>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="Secure Payment" data-ru="Безопасная оплата">Безопасная оплата</h3>
-                    <p class="feature-text" data-en="100% secure payment via PayPal" data-ru="100% безопасная оплата через PayPal">100% безопасная оплата через PayPal</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="24/7 Support" data-ru="Поддержка 24/7">Поддержка 24/7</h3>
-                    <p class="feature-text" data-en="Contact us anytime, anywhere" data-ru="Связывайтесь с нами в любое время">Связывайтесь с нами в любое время</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                    <h3 class="feature-title" data-en="Easy Returns" data-ru="Простой возврат">Простой возврат</h3>
-                    <p class="feature-text" data-en="30-day money back guarantee" data-ru="30-дневная гарантия возврата денег">30-дневная гарантия возврата денег</p>
-                </div>
+
+                <h3 class="feature-title"
+                data-en="Fast Shipping"
+                data-ru="Быстрая доставка"
+                data-bg="Бърза доставка">
+                Fast Shipping
+                </h3>
+
+                <p class="feature-text"
+                data-en="Free shipping"
+                data-ru="Бесплатная доставка"
+                data-bg="Безплатна доставка">
+                Free shipping
+                </p>
             </div>
+
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+
+                <h3 class="feature-title"
+                data-en="Secure Payment"
+                data-ru="Безопасная оплата"
+                data-bg="Сигурно плащане">
+                Secure Payment
+                </h3>
+
+                <p class="feature-text"
+                data-en="100% secure payment"
+                data-ru="100% безопасная оплата"
+                data-bg="100% сигурно плащане">
+                100% secure payment
+                </p>
+            </div>
+
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+
+                <h3 class="feature-title"
+                data-en="24/7 Support"
+                data-ru="Поддержка 24/7"
+                data-bg="Поддръжка 24/7">
+                24/7 Support
+                </h3>
+
+                <p class="feature-text"
+                data-en="Contact us anytime, anywhere"
+                data-ru="Связывайтесь с нами в любое время"
+                data-bg="Свържете се с нас по всяко време">
+                Contact us anytime, anywhere
+                </p>
+            </div>
+
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+
+                <h3 class="feature-title"
+                data-en="Easy Returns"
+                data-ru="Простой возврат"
+                data-bg="Лесно връщане">
+                Easy Returns
+                </h3>
+
+                <p class="feature-text"
+                data-en="14-day money back guarantee"
+                data-ru="14-дневная гарантия возврата денег"
+                data-bg="14-дневна гаранция за връщане на парите">
+                14-day money back guarantee
+                </p>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">О Level Up</h4>
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">About Level Up</h4>
                     <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень." data-bg="Премиални игрови аксесоари за шампиони, които искат да повишат нивото на своята игра.">
-                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                    Premium gaming accessories for champions who want to level up their game.
                     </p>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Быстрые ссылки</h4>
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Магазин</a></li>
-                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">О нас</a></li>
-                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Контакты</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Shop</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">About Us</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Contact</a></li>
                         
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Обслуживание клиентов</h4>
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Customer Service</h4>
                     <ul class="footer-links">
-                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Условия использования</a></li>
-                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Поддержка</a></li>
-                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Возвраты</a></li>
-                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Политика конфиденциальности</a></li>
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Terms of Service</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Support</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Returns</a></li>
+                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Следите за нами</h4>
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Follow Us</h4>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -218,12 +311,12 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">Все права защищены.</span></p>
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">All rights reserved.</span></p>
             </div>
         </div>
     </footer>
 
-    <script src="frontend/js/main.js"></script>
+    <script defer src="frontend/js/main.js"></script>
    
 </body>
 </html>
