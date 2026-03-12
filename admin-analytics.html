@@ -1,4 +1,3 @@
-//admin-analytics.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,16 +25,16 @@
                     <img src="frontend/images/logo.svg" alt="Level Up" class="logo-img">
                 </a>
                 <h1 class="admin-title">
-                    <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">Админ Панель</span>
+                    <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель" data-bg="Админ Панел">Admin Panel</span>
                 </h1>
                 <div class="admin-actions">
                     <a href="admin.html" class="btn btn-outline">
                         <i class="fas fa-arrow-left"></i>
-                        <span data-en="Back to Admin" data-ru="К Админке">К Админке</span>
+                        <span data-en="Back to Admin" data-ru="К Админке" data-bg="Към админ панела">Back to Admin</span>
                     </a>
                     <button class="btn btn-outline" onclick="window.location.href='index.html'">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span data-en="Exit" data-ru="Выйти">Выйти</span>
+                        <span data-en="Exit" data-ru="Выйти" data-bg="Изход">Exit</span>
                     </button>
                 </div>
             </div>
@@ -50,15 +49,25 @@
                 <div>
                     <h1 class="page-title">
                         <i class="fas fa-chart-line"></i>
-                        <span class="gradient-text" data-en="Analytics Dashboard" data-ru="Панель Аналитики">Панель Аналитики</span>
+                        <span class="gradient-text" 
+data-en="Analytics Dashboard" 
+data-ru="Панель Аналитики" 
+data-bg="Аналитичен панел">
+Analytics Dashboard
+</span>
                     </h1>
-                    <p class="page-subtitle" data-en="Business performance overview" data-ru="Обзор эффективности бизнеса">
-                        Обзор эффективности бизнеса
-                    </p>
+                    <p class="page-subtitle" 
+data-en="Business performance overview" 
+data-ru="Обзор эффективности бизнеса"
+data-bg="Преглед на бизнес ефективността">
+Business performance overview
+</p>
                 </div>
                 <button class="btn btn-primary" id="refreshBtn">
                     <i class="fas fa-sync-alt"></i>
-                    <span data-en="Refresh Data" data-ru="Обновить Данные">Обновить Данные</span>
+                    <span data-en="Refresh Data" data-ru="Обновить Данные" data-bg="Обнови данните">
+Refresh Data
+</span>
                 </button>
             </div>
 
@@ -66,50 +75,72 @@
             <div class="filter-card">
                 <h3 class="filter-title">
                     <i class="fas fa-calendar-alt"></i>
-                    <span data-en="Date Range" data-ru="Период">Период</span>
+                    <span data-en="Date Range" data-ru="Период" data-bg="Период">Date Range</span>
                 </h3>
                 <div class="filter-content">
                     <div class="date-inputs">
                         <div class="input-group">
-                            <label data-en="From" data-ru="С">С</label>
+                            <label data-en="From" data-ru="С" data-bg="От">From</label>
                             <input type="date" id="dateFrom" class="date-input">
                         </div>
                         <div class="input-group">
-                            <label data-en="To" data-ru="До">До</label>
+                            <label data-en="To" data-ru="До" data-bg="До">To</label>
                             <input type="date" id="dateTo" class="date-input">
                         </div>
                         <button class="btn btn-primary" id="applyFilter">
                             <i class="fas fa-filter"></i>
-                            <span data-en="Apply Filter" data-ru="Применить Фильтр">Применить Фильтр</span>
+                            <span data-en="Apply Filter" data-ru="Применить Фильтр" data-bg="Приложи филтъра">Apply Filter</span>
                         </button>
                     </div>
                     <div class="quick-filters">
                         <button class="btn-quick" data-days="7">
                             <i class="fas fa-calendar-week"></i>
-                            <span data-en="Last 7 Days" data-ru="Последние 7 Дней">Последние 7 Дней</span>
+                            <span data-en="Last 7 Days" data-ru="Последние 7 Дней" data-bg="Последните 7 дни">Last 7 Days</span>
                         </button>
                         <button class="btn-quick active" data-days="30">
                             <i class="fas fa-calendar-alt"></i>
-                            <span data-en="Last 30 Days" data-ru="Последние 30 Дней">Последние 30 Дней</span>
+                            <span data-en="Last 30 Days" data-ru="Последние 30 Дней" data-bg="Последните 30 дни">Last 30 Days</span>
                         </button>
                         <button class="btn-quick" data-days="90">
                             <i class="fas fa-calendar"></i>
-                            <span data-en="Last 90 Days" data-ru="Последние 90 Дней">Последние 90 Дней</span>
+                            <span data-en="Last 90 Days" data-ru="Последние 90 Дней" data-bg="Последните 90 дни">Last 90 Days</span>
                         </button>
                     <!-- STATUS FILTER -->
                         <div class="status-filter">
     <button class="btn-quick status-btn" id="statusBtn">
         <i class="fas fa-layer-group"></i>
-        <span id="selectedStatusText">All</span>
+        <span id="selectedStatusText"
+data-en="All"
+data-ru="Все"
+data-bg="Всички">All</span>
         <i class="fas fa-chevron-down"></i>
     </button>
 
     <div class="status-menu" id="statusMenu">
-        <div class="status-option" data-status="ALL">All</div>
-        <div class="status-option" data-status="PAID">Paid</div>
-        <div class="status-option" data-status="DELIVERED">Delivered</div>
-        <div class="status-option" data-status="REFUNDED">Refunded</div>
-        <div class="status-option" data-status="PARTIALLY_REFUNDED">Partially Refunded</div>
+        <div class="status-option" data-status="ALL"
+data-en="All"
+data-ru="Все"
+data-bg="Всички">All</div>
+
+<div class="status-option" data-status="PAID"
+data-en="Paid"
+data-ru="Оплачено"
+data-bg="Платено">Paid</div>
+
+<div class="status-option" data-status="DELIVERED"
+data-en="Delivered"
+data-ru="Доставлено"
+data-bg="Доставено">Delivered</div>
+
+<div class="status-option" data-status="REFUNDED"
+data-en="Refunded"
+data-ru="Возвращено"
+data-bg="Възстановено">Refunded</div>
+
+<div class="status-option" data-status="PARTIALLY_REFUNDED"
+data-en="Partially Refunded"
+data-ru="Частичный возврат"
+data-bg="Частично възстановено">Partially Refunded</div>
     </div>
 </div>
                     </div>
@@ -119,17 +150,17 @@
             <!-- Loader -->
             <div class="loader" id="loader" style="display: none;">
                 <div class="spinner"></div>
-                <p data-en="Loading analytics data..." data-ru="Загрузка аналитики...">Загрузка аналитики...</p>
+                <p data-en="Loading analytics data..." data-ru="Загрузка аналитики..." data-bg="Зареждане на аналитични данни...">Loading analytics data...</p>
             </div>
 
             <!-- Error Message -->
             <div class="error-message" id="errorMessage" style="display: none;">
                 <i class="fas fa-exclamation-triangle"></i>
-                <h3 data-en="No Data Available" data-ru="Нет Данных">Нет Данных</h3>
-                <p data-en="No data for selected period" data-ru="Нет данных за выбранный период">Нет данных за выбранный период</p>
+                <h3 data-en="No Data Available" data-ru="Нет Данных" data-bg="Няма данни">No Data Available</h3>
+                <p data-en="No data for selected period" data-ru="Нет данных за выбранный период" data-bg="Няма данни за избрания период">No data for selected period</p>
                 <button class="btn btn-primary" onclick="location.reload()">
                     <i class="fas fa-redo"></i>
-                    <span data-en="Try Again" data-ru="Попробовать Снова">Попробовать Снова</span>
+                    <span data-en="Try Again" data-ru="Попробовать Снова" data-bg="Опитай отново">Try Again</span>
                 </button>
             </div>
 
@@ -144,7 +175,7 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="totalRevenue">$0</div>
-                            <div class="kpi-label" data-en="Total Revenue" data-ru="Общая Выручка">Общая Выручка</div>
+                            <div class="kpi-label" data-en="Total Revenue" data-ru="Общая Выручка" data-bg="Общ приход">Total Revenue</div>
                             <div class="kpi-trend positive">
                                 <i class="fas fa-arrow-up"></i>
                                 <span>+12.5%</span>
@@ -159,8 +190,8 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="netRevenue">$0</div>
-                            <div class="kpi-label" data-en="Net Revenue" data-ru="Чистая Выручка">Чистая Выручка</div>
-                            <div class="kpi-description" data-en="Net after refunds" data-ru="После возвратов">После возвратов</div>
+                            <div class="kpi-label" data-en="Net Revenue" data-ru="Чистая Выручка" data-bg="Чист приход">Net Revenue</div>
+                            <div class="kpi-description" data-en="Net after refunds" data-ru="После возвратов" data-bg="След възстановявания">Net after refunds</div>
                         </div>
                     </div>
 
@@ -171,8 +202,8 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="totalOrders">0</div>
-                            <div class="kpi-label" data-en="Orders" data-ru="Заказы">Заказы</div>
-                            <div class="kpi-description" data-en="Orders in period" data-ru="Заказов за период">Заказов за период</div>
+                            <div class="kpi-label" data-en="Orders" data-ru="Заказы" data-bg="Поръчки">Orders</div>
+                            <div class="kpi-description" data-en="Orders in period" data-ru="Заказов за период" data-bg="Поръчки за периода">Orders in period</div>
                         </div>
                     </div>
 
@@ -183,8 +214,8 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="refundRate">0%</div>
-                            <div class="kpi-label" data-en="Refund Rate" data-ru="Процент Возвратов">Процент Возвратов</div>
-                            <div class="kpi-description" data-en="Refund ratio" data-ru="Коэффициент возврата">Коэффициент возврата</div>
+                            <div class="kpi-label" data-en="Refund Rate" data-ru="Процент Возвратов" data-bg="Процент възстановявания">Refund Rate</div>
+                            <div class="kpi-description" data-en="Refund ratio" data-ru="Коэффициент возврата" data-bg="Коефициент на възстановяване">Refund ratio</div>
                         </div>
                     </div>
 
@@ -195,8 +226,8 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="avgOrderValue">$0</div>
-                            <div class="kpi-label" data-en="Average Order Value" data-ru="Средний Чек">Средний Чек</div>
-                            <div class="kpi-description" data-en="Revenue per order" data-ru="Выручка на заказ">Выручка на заказ</div>
+                            <div class="kpi-label" data-en="Average Order Value" data-ru="Средний чек" data-bg="Средна стойност на поръчка">Average Order Value</div>
+                            <div class="kpi-description" data-en="Revenue per order" data-ru="Выручка на заказ" data-bg="Приход на поръчка">Revenue per order</div>
                         </div>
                     </div>
 
@@ -207,8 +238,8 @@
                         </div>
                         <div class="kpi-content">
                             <div class="kpi-value" id="totalCustomers">0</div>
-                            <div class="kpi-label" data-en="Customers" data-ru="Клиенты">Клиенты</div>
-                            <div class="kpi-description" data-en="Unique customers" data-ru="Уникальные клиенты">Уникальные клиенты</div>
+                            <div class="kpi-label" data-en="Customers" data-ru="Клиенты" data-bg="Клиенти">Customers</div>
+                            <div class="kpi-description" data-en="Unique customers" data-ru="Уникальные клиенты" data-bg="Уникални клиенти">Unique customers</div>
                         </div>
                     </div>
                 </div>
@@ -218,16 +249,16 @@
                     <div class="chart-header">
                         <h3>
                             <i class="fas fa-chart-area"></i>
-                            <span data-en="Revenue Over Time" data-ru="Выручка по Времени">Выручка по Времени</span>
+                            <span data-en="Revenue Over Time" data-ru="Выручка по Времени" data-bg="Приходи във времето">Revenue Over Time</span>
                         </h3>
                         <div class="chart-legend">
                             <div class="legend-item">
                                 <span class="legend-color revenue"></span>
-                                <span data-en="Revenue" data-ru="Выручка">Выручка</span>
+                                <span data-en="Revenue" data-ru="Выручка" data-bg="Приход">Revenue</span>
                             </div>
                             <div class="legend-item">
                                 <span class="legend-color orders"></span>
-                                <span data-en="Orders" data-ru="Заказы">Заказы</span>
+                                <span data-en="Orders" data-ru="Заказы" data-bg="Поръчки">Orders</span>
                             </div>
                         </div>
                     </div>
@@ -241,22 +272,22 @@
                     <div class="table-header">
                         <h3>
                             <i class="fas fa-trophy"></i>
-                            <span data-en="Top Selling Products" data-ru="Топ Продаж">Топ Продаж</span>
+                            <span data-en="Top Selling Products" data-ru="Топ Продаж" data-bg="Най-продавани продукти">Top Selling Products</span>
                         </h3>
                         <button class="btn btn-outline btn-sm" id="exportBtn">
                             <i class="fas fa-download"></i>
-                            <span data-en="Export" data-ru="Экспорт">Экспорт</span>
+                            <span data-en="Export" data-ru="Экспорт" data-bg="Експорт">Export</span>
                         </button>
                     </div>
                     <div class="table-container">
                         <table class="products-table">
                             <thead>
                                 <tr>
-                                    <th data-en="Rank" data-ru="Место">#</th>
-                                    <th data-en="Product" data-ru="Товар">Товар</th>
-                                    <th data-en="Units Sold" data-ru="Продано">Продано</th>
-                                    <th data-en="Revenue" data-ru="Выручка">Выручка</th>
-                                    <th data-en="Actions" data-ru="Действия">Действия</th>
+                                    <th data-en="Rank" data-ru="Место" data-bg="Място"> # </th>
+                                    <th data-en="Product" data-ru="Товар" data-bg="Продукт"> Product </th>
+                                    <th data-en="Units Sold" data-ru="Продано" data-bg="Продадени единици"> Units Sold </th>
+                                    <th data-en="Revenue" data-ru="Выручка" data-bg="Приходи"> Revenue </th>
+                                    <th data-en="Actions" data-ru="Действия" data-bg="Действия"> Actions </th>
                                 </tr>
                             </thead>
                             <tbody id="productsTableBody">
