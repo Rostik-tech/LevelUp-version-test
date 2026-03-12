@@ -1,0 +1,145 @@
+/* ============================= */
+/* PAGE HEADER */
+/* ============================= */
+
+.page-header {
+    padding-top: 160px;
+    padding-bottom: 80px;
+    text-align: center;
+}
+
+.page-pretitle {
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: #bdbdf7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* Gradient animated title */
+
+.gradient-text {
+    font-size: 64px;
+    font-weight: 800;
+    font-family: "Orbitron", sans-serif;
+
+    background: linear-gradient(
+        90deg,
+        #ff00ff,
+        #00ffff,
+        #ff00ff
+    );
+
+    background-size: 200% 200%;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: gradientMove 4s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% {background-position: 0%}
+    100% {background-position: 200%}
+}
+
+.page-subtitle {
+    font-size: 20px;
+    color: #d4d4ff;
+    margin-top: 10px;
+}
+
+/* ============================= */
+/* CONTENT SECTION */
+/* ============================= */
+
+.content-section {
+    padding: 60px 0 120px 0;
+}
+
+/* Card container */
+
+.content-card {
+
+    max-width: 900px;
+    margin: 0 auto 80px auto;
+
+    padding: 60px;
+
+    border-radius: 14px;
+
+    background: rgba(15,15,35,0.55);
+
+    backdrop-filter: blur(8px);
+
+    box-shadow: 0 0 40px rgba(255,0,255,0.08);
+
+    transition: 0.35s ease;
+}
+
+.content-card:hover {
+    transform: translateY(-6px);
+}
+
+/* ============================= */
+/* TITLES */
+/* ============================= */
+
+.content-title {
+
+    font-size: 38px;
+
+    font-family: "Orbitron", sans-serif;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 20px;
+
+    position: relative;
+
+    color: #ffffff;
+}
+
+.content-title i {
+    color: #ff00ff;
+    margin-right: 12px;
+}
+
+/* neon line under title */
+
+.content-title::after {
+
+    content: "";
+
+    width: 80px;
+    height: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #ff00ff,
+        #00ffff
+    );
+
+    display: block;
+
+    margin-top: 10px;
+}
+
+/* ============================= */
+/* TEXT */
+/* ============================= */
+
+.content-text {
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    color: #d6d6f0;
+
+    margin-bottom: 20px;
+
+    font-family: "Rajdhani", sans-serif;
+}
