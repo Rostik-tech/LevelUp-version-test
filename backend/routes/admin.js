@@ -17,6 +17,7 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/adminMiddleware.js";
 import { canTransition } from "../utils/orderStatus.js";
 import crypto from "crypto";
+import { translateProduct } from "../services/translationService.js";
 
 const router = express.Router();
 
@@ -307,6 +308,25 @@ if (data.sizes && typeof data.sizes === "string") {
         0
       );
     }
+let translations = null;
+
+try {
+  translations = await translateProduct(data);
+  console.log("TRANSLATIONS RESULT:", translations);
+} catch (err) {
+  console.error("TRANSLATION ERROR:", err.response?.data || err.message);
+}
+
+if (translations) {
+  data.name_ru = translations.name_ru;
+  data.name_bg = translations.name_bg;
+
+  data.shortDescription_ru = translations.shortDescription_ru;
+  data.shortDescription_bg = translations.shortDescription_bg;
+
+  data.longDescription_ru = translations.longDescription_ru;
+  data.longDescription_bg = translations.longDescription_bg;
+}
 
     const product = await Product.create(data);
 

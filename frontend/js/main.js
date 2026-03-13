@@ -370,3 +370,37 @@ function injectAdminButton(user) {
   dropdownMenu.insertBefore(divider, dropdownMenu.firstChild);
   dropdownMenu.insertBefore(adminLink, divider);
 }
+
+document.querySelectorAll('a[href="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const banner = document.getElementById("cookieBanner");
+const accept = document.getElementById("acceptCookies");
+const decline = document.getElementById("declineCookies");
+
+const consent = localStorage.getItem("cookieConsent");
+
+if (consent === null) {
+banner.style.display = "block";
+}
+
+accept.addEventListener("click", function () {
+localStorage.setItem("cookieConsent", "accepted");
+banner.style.display = "none";
+});
+
+decline.addEventListener("click", function () {
+localStorage.setItem("cookieConsent", "declined");
+banner.style.display = "none";
+});
+
+});

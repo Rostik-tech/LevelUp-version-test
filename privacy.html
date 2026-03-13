@@ -4,12 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Privacy Policy - Level Up Gaming" data-ru="Политика конфиденциальности - Level Up Gaming">Политика конфиденциальности - Level Up Gaming</title>
+    <title data-en="Privacy Policy - Level Up Gaming" data-ru="Политика конфиденциальности - Level Up Gaming" data-bg="Политика на поверителността - Level Up Gaming">Privacy Policy - Level Up Gaming</title>
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/privacy.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<!-- Cookie Banner -->
+<div id="cookieBanner" class="cookie-banner">
+
+    <div class="cookie-content">
+
+        <p
+        data-en="We use cookies and similar technologies to improve your browsing experience and analyze website traffic."
+        data-ru="Мы используем файлы cookie и аналогичные технологии для улучшения работы сайта и анализа трафика."
+        data-bg="Използваме бисквитки и подобни технологии, за да подобрим работата на сайта и да анализираме трафика.">
+        We use cookies and similar technologies to improve your browsing experience and analyze website traffic.
+        </p>
+
+        <div class="cookie-buttons">
+
+            <button id="acceptCookies" class="btn btn-primary"
+            data-en="Accept"
+            data-ru="Принять"
+            data-bg="Приемам">
+            Accept
+            </button>
+
+            <button id="declineCookies" class="btn btn-secondary"
+            data-en="Decline"
+            data-ru="Отклонить"
+            data-bg="Отказ">
+            Decline
+            </button>
+
+            <a href="privacy.html" class="cookie-link"
+            data-en="Learn more"
+            data-ru="Подробнее"
+            data-bg="Повече информация">
+            Learn more
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 <body>
     <!-- Animated Background -->
     <div class="stars-background"></div>
@@ -25,43 +65,43 @@
 
                 <!-- Navigation Menu -->
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
                 <!-- Right Side Buttons -->
                 <div class="nav-actions">
                     <!-- Auth Buttons (shown when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Register</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Login</a>
                     </div>
 
                     <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -70,7 +110,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -83,7 +123,7 @@
                     <div class="switcher currency-switcher">
                         <button class="switcher-btn" id="currencyBtn">
                             <i class="fas fa-dollar-sign"></i>
-                            <span id="currentCurrency">USD</span>
+                            <span id="currentCurrency">EUR</span>
                         </button>
                         <div class="switcher-menu" id="currencyMenu">
                             <button class="switcher-option" data-currency="usd">USD</button>
@@ -113,247 +153,839 @@
         <div class="container">
             <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-title" data-en="Privacy Policy" data-ru="Политика конфиденциальности">Политика конфиденциальности</h1>
-                <p class="page-subtitle" data-en="Last updated: February 2026" data-ru="Последнее обновление: Февраль 2026">Последнее обновление: Февраль 2026</p>
+                <h1 class="page-title" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Privacy Policy</h1>
+                <p class="page-subtitle" data-en="Last updated: March 2026" data-ru="Последнее обновление: Март 2026" data-bg="Последно обновяване: Март 2026">Last updated: March 2026</p>
             </div>
 
             <!-- Privacy Content -->
             <div class="privacy-content">
                 <!-- Section 1: Introduction -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="1. Introduction" data-ru="1. Введение">1. Введение</h2>
-                    <div class="section-content">
-                        <p data-en="Welcome to Level Up Gaming. We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website and make purchases." data-ru="Добро пожаловать в Level Up Gaming. Мы стремимся защитить вашу личную информацию и ваше право на конфиденциальность. Эта Политика конфиденциальности объясняет, как мы собираем, используем и защищаем вашу информацию при посещении нашего сайта и совершении покупок.">
-                            Добро пожаловать в Level Up Gaming. Мы стремимся защитить вашу личную информацию и ваше право на конфиденциальность. Эта Политика конфиденциальности объясняет, как мы собираем, используем и защищаем вашу информацию при посещении нашего сайта и совершении покупок.
-                        </p>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+    <h2 class="section-title"
+    data-en="1. Introduction"
+    data-ru="1. Введение"
+    data-bg="1. Въведение">
+    1. Introduction
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Welcome to Level Up Gaming. We respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website, create an account, or purchase our products."
+        data-ru="Добро пожаловать в Level Up Gaming. Мы уважаем вашу конфиденциальность и стремимся защищать ваши персональные данные. Эта Политика конфиденциальности объясняет, как мы собираем, используем, храним и защищаем вашу личную информацию, когда вы посещаете наш сайт, создаёте аккаунт или покупаете наши товары."
+        data-bg="Добре дошли в Level Up Gaming. Ние уважаваме вашата поверителност и се ангажираме да защитаваме вашите лични данни. Тази политика за поверителност обяснява как събираме, използваме, съхраняваме и защитаваме вашата лична информация, когато посещавате нашия уебсайт, създавате акаунт или закупувате нашите продукти.">
+        Welcome to Level Up Gaming. We respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website, create an account, or purchase our products.
+        </p>
+
+        <p
+        data-en="Level Up Gaming operates an online store offering branded gaming mousepads and related accessories. When you use our website, certain personal data may be collected in accordance with applicable data protection laws, including the General Data Protection Regulation (GDPR)."
+        data-ru="Level Up Gaming управляет интернет-магазином, предлагающим брендированные игровые коврики для мыши и сопутствующие аксессуары. При использовании нашего сайта некоторые персональные данные могут собираться в соответствии с применимым законодательством о защите данных, включая Общий регламент по защите данных (GDPR)."
+        data-bg="Level Up Gaming управлява онлайн магазин, предлагащ брандирани геймърски подложки за мишка и свързани аксесоари. При използване на нашия уебсайт могат да се събират определени лични данни в съответствие с приложимото законодателство за защита на данните, включително Общия регламент за защита на данните (GDPR).">
+        Level Up Gaming operates an online store offering branded gaming mousepads and related accessories. When you use our website, certain personal data may be collected in accordance with applicable data protection laws, including the General Data Protection Regulation (GDPR).
+        </p>
+
+        <p
+        data-en="For the purposes of applicable data protection legislation, Level Up Gaming acts as the data controller responsible for processing your personal data collected through this website."
+        data-ru="Для целей применимого законодательства о защите данных Level Up Gaming выступает в качестве оператора данных, ответственного за обработку ваших персональных данных, собираемых через данный веб-сайт."
+        data-bg="За целите на приложимото законодателство за защита на данните Level Up Gaming действа като администратор на лични данни, отговорен за обработването на личните данни, събирани чрез този уебсайт.">
+        For the purposes of applicable data protection legislation, Level Up Gaming acts as the data controller responsible for processing your personal data collected through this website.
+        </p>
+
+    </div>
+</section>
 
                 <!-- Section 2: Information We Collect -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="2. Information We Collect" data-ru="2. Информация, которую мы собираем">2. Информация, которую мы собираем</h2>
-                    <div class="section-content">
-                        <p data-en="We collect the following types of information:" data-ru="Мы собираем следующие типы информации:">Мы собираем следующие типы информации:</p>
-                        <ul class="privacy-list">
-                            <li data-en="Personal Information: Name, email address, username" data-ru="Личная информация: Имя, адрес электронной почты, имя пользователя">
-                                <strong data-en="Personal Information:" data-ru="Личная информация:">Личная информация:</strong> 
-                                <span data-en="Name, email address, username" data-ru="Имя, адрес электронной почты, имя пользователя">Имя, адрес электронной почты, имя пользователя</span>
-                            </li>
-                            <li data-en="Shipping Information: Delivery address, phone number, postal code" data-ru="Информация о доставке: Адрес доставки, номер телефона, почтовый индекс">
-                                <strong data-en="Shipping Information:" data-ru="Информация о доставке:">Информация о доставке:</strong> 
-                                <span data-en="Delivery address, phone number, postal code" data-ru="Адрес доставки, номер телефона, почтовый индекс">Адрес доставки, номер телефона, почтовый индекс</span>
-                            </li>
-                            <li data-en="Payment Information: Payment method (processed securely via PayPal)" data-ru="Платежная информация: Способ оплаты (обрабатывается безопасно через PayPal)">
-                                <strong data-en="Payment Information:" data-ru="Платежная информация:">Платежная информация:</strong> 
-                                <span data-en="Payment method (processed securely via PayPal)" data-ru="Способ оплаты (обрабатывается безопасно через PayPal)">Способ оплаты (обрабатывается безопасно через PayPal)</span>
-                            </li>
-                            <li data-en="Order Information: Products purchased, order history, preferences" data-ru="Информация о заказах: Купленные товары, история заказов, предпочтения">
-                                <strong data-en="Order Information:" data-ru="Информация о заказах:">Информация о заказах:</strong> 
-                                <span data-en="Products purchased, order history, preferences" data-ru="Купленные товары, история заказов, предпочтения">Купленные товары, история заказов, предпочтения</span>
-                            </li>
-                            <li data-en="Technical Information: Browser type, device information, IP address" data-ru="Техническая информация: Тип браузера, информация об устройстве, IP-адрес">
-                                <strong data-en="Technical Information:" data-ru="Техническая информация:">Техническая информация:</strong> 
-                                <span data-en="Browser type, device information, IP address" data-ru="Тип браузера, информация об устройстве, IP-адрес">Тип браузера, информация об устройстве, IP-адрес</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="2. Information We Collect"
+    data-ru="2. Информация, которую мы собираем"
+    data-bg="2. Информация, която събираме">
+    2. Information We Collect
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="We may collect different types of information when you use our website, create an account, place an order, or interact with our services."
+        data-ru="Мы можем собирать различные типы информации, когда вы используете наш сайт, создаете аккаунт, оформляете заказ или взаимодействуете с нашими сервисами."
+        data-bg="Можем да събираме различни видове информация, когато използвате нашия уебсайт, създавате акаунт, правите поръчка или взаимодействате с нашите услуги.">
+        We may collect different types of information when you use our website, create an account, place an order, or interact with our services.
+        </p>
+
+        <ul class="privacy-list">
+
+            <li
+            data-en="Account Information: Name, email address, username, and other details you provide when creating an account."
+            data-ru="Информация об аккаунте: имя, адрес электронной почты, имя пользователя и другие данные, которые вы указываете при создании аккаунта."
+            data-bg="Информация за акаунта: име, имейл адрес, потребителско име и други данни, които предоставяте при създаване на акаунт.">
+            <strong
+            data-en="Account Information:"
+            data-ru="Информация об аккаунте:"
+            data-bg="Информация за акаунта:">
+            Account Information:
+            </strong>
+            <span
+            data-en="Name, email address, username, and other details you provide when creating an account."
+            data-ru="Имя, адрес электронной почты, имя пользователя и другие данные, которые вы указываете при создании аккаунта."
+            data-bg="Име, имейл адрес, потребителско име и други данни, които предоставяте при създаване на акаунт.">
+            Name, email address, username, and other details you provide when creating an account.
+            </span>
+            </li>
+
+            <li
+            data-en="Shipping Information: Delivery address, phone number, postal code, and other details required to deliver your order."
+            data-ru="Информация о доставке: адрес доставки, номер телефона, почтовый индекс и другие данные, необходимые для доставки заказа."
+            data-bg="Информация за доставка: адрес за доставка, телефонен номер, пощенски код и други данни, необходими за доставката на поръчката.">
+            <strong
+            data-en="Shipping Information:"
+            data-ru="Информация о доставке:"
+            data-bg="Информация за доставка:">
+            Shipping Information:
+            </strong>
+            <span
+            data-en="Delivery address, phone number, postal code, and other details required to deliver your order."
+            data-ru="Адрес доставки, номер телефона, почтовый индекс и другие данные, необходимые для доставки заказа."
+            data-bg="Адрес за доставка, телефонен номер, пощенски код и други данни, необходими за доставката на поръчката.">
+            Delivery address, phone number, postal code, and other details required to deliver your order.
+            </span>
+            </li>
+
+            <li
+            data-en="Payment Information: Payment details required to complete your purchase. Payments are processed securely by third-party payment providers and we do not store your full payment card information."
+            data-ru="Платежная информация: данные, необходимые для обработки платежа. Платежи обрабатываются безопасно сторонними платежными провайдерами, и мы не храним полную информацию о вашей банковской карте."
+            data-bg="Информация за плащане: данни, необходими за обработка на плащането. Плащанията се обработват сигурно от външни доставчици на платежни услуги и ние не съхраняваме пълната информация за вашата карта.">
+            <strong
+            data-en="Payment Information:"
+            data-ru="Платежная информация:"
+            data-bg="Информация за плащане:">
+            Payment Information:
+            </strong>
+            <span
+            data-en="Payment details required to complete your purchase. Payments are processed securely by third-party payment providers and we do not store your full payment card information."
+            data-ru="Данные, необходимые для обработки платежа. Платежи обрабатываются сторонними платежными системами, и мы не храним полную информацию о вашей банковской карте."
+            data-bg="Данни, необходими за извършване на плащането. Плащанията се обработват от външни доставчици и ние не съхраняваме пълната информация за вашата карта.">
+            Payment details required to complete your purchase.
+            </span>
+            </li>
+
+            <li
+            data-en="Order Information: Products purchased, order history, order value, and transaction details related to your purchases."
+            data-ru="Информация о заказах: купленные товары, история заказов, стоимость заказа и другие детали транзакций."
+            data-bg="Информация за поръчките: закупени продукти, история на поръчките, стойност на поръчките и детайли за транзакциите.">
+            <strong
+            data-en="Order Information:"
+            data-ru="Информация о заказах:"
+            data-bg="Информация за поръчките:">
+            Order Information:
+            </strong>
+            <span
+            data-en="Products purchased, order history, order value, and transaction details related to your purchases."
+            data-ru="Купленные товары, история заказов, стоимость заказа и детали транзакций."
+            data-bg="Закупени продукти, история на поръчките, стойност на поръчките и детайли за транзакциите.">
+            Products purchased, order history, and transaction details.
+            </span>
+            </li>
+
+            <li
+            data-en="Technical Information: IP address, browser type, device information, operating system, pages visited, and other technical data collected automatically when you use our website."
+            data-ru="Техническая информация: IP-адрес, тип браузера, информация об устройстве, операционная система, посещенные страницы и другие технические данные, автоматически собираемые при использовании сайта."
+            data-bg="Техническа информация: IP адрес, тип браузър, информация за устройството, операционна система, посетени страници и други технически данни, които се събират автоматично при използване на сайта.">
+            <strong
+            data-en="Technical Information:"
+            data-ru="Техническая информация:"
+            data-bg="Техническа информация:">
+            Technical Information:
+            </strong>
+            <span
+            data-en="IP address, browser type, device information, operating system, pages visited, and other technical data collected automatically when you use our website."
+            data-ru="IP-адрес, тип браузера, информация об устройстве, операционная система, посещенные страницы и другие технические данные."
+            data-bg="IP адрес, тип браузър, информация за устройството, операционна система, посетени страници и други технически данни.">
+            IP address, browser type, device information and usage data.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
                 <!-- Section 3: How We Use Your Information -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="3. How We Use Your Information" data-ru="3. Как мы используем вашу информацию">3. Как мы используем вашу информацию</h2>
-                    <div class="section-content">
-                        <p data-en="We use your information for the following purposes:" data-ru="Мы используем вашу информацию для следующих целей:">Мы используем вашу информацию для следующих целей:</p>
-                        <ul class="privacy-list">
-                            <li data-en="Process and fulfill your orders" data-ru="Обработка и выполнение ваших заказов">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Process and fulfill your orders" data-ru="Обработка и выполнение ваших заказов">Обработка и выполнение ваших заказов</span>
-                            </li>
-                            <li data-en="Send order confirmations and shipping updates" data-ru="Отправка подтверждений заказов и обновлений о доставке">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Send order confirmations and shipping updates" data-ru="Отправка подтверждений заказов и обновлений о доставке">Отправка подтверждений заказов и обновлений о доставке</span>
-                            </li>
-                            <li data-en="Provide customer support and respond to inquiries" data-ru="Предоставление поддержки клиентов и ответы на запросы">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Provide customer support and respond to inquiries" data-ru="Предоставление поддержки клиентов и ответы на запросы">Предоставление поддержки клиентов и ответы на запросы</span>
-                            </li>
-                            <li data-en="Improve our website and services" data-ru="Улучшение нашего сайта и услуг">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Improve our website and services" data-ru="Улучшение нашего сайта и услуг">Улучшение нашего сайта и услуг</span>
-                            </li>
-                            <li data-en="Analyze website usage and trends" data-ru="Анализ использования сайта и тенденций">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Analyze website usage and trends" data-ru="Анализ использования сайта и тенденций">Анализ использования сайта и тенденций</span>
-                            </li>
-                            <li data-en="Send promotional offers (with your consent)" data-ru="Отправка рекламных предложений (с вашего согласия)">
-                                <i class="fas fa-check-circle"></i> 
-                                <span data-en="Send promotional offers (with your consent)" data-ru="Отправка рекламных предложений (с вашего согласия)">Отправка рекламных предложений (с вашего согласия)</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="3. How We Use Your Information"
+    data-ru="3. Как мы используем вашу информацию"
+    data-bg="3. Как използваме вашата информация">
+    3. How We Use Your Information
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="We use the personal information we collect for various purposes related to operating our website, processing orders, and improving our services."
+        data-ru="Мы используем собранную личную информацию для различных целей, связанных с работой нашего сайта, обработкой заказов и улучшением наших услуг."
+        data-bg="Използваме събраната лична информация за различни цели, свързани с работата на нашия уебсайт, обработката на поръчки и подобряването на нашите услуги.">
+        We use the personal information we collect for various purposes related to operating our website, processing orders, and improving our services.
+        </p>
+
+        <ul class="privacy-list">
+
+            <li
+            data-en="Process and fulfill your orders, including payment processing, shipping, and order management."
+            data-ru="Обработка и выполнение ваших заказов, включая обработку платежей, доставку и управление заказами."
+            data-bg="Обработка и изпълнение на вашите поръчки, включително обработка на плащания, доставка и управление на поръчките.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Process and fulfill your orders, including payment processing, shipping, and order management."
+            data-ru="Обработка и выполнение ваших заказов, включая обработку платежей, доставку и управление заказами."
+            data-bg="Обработка и изпълнение на вашите поръчки, включително обработка на плащания, доставка и управление на поръчките.">
+            Process and fulfill your orders.
+            </span>
+            </li>
+
+            <li
+            data-en="Send order confirmations, shipping updates, and other transactional communications related to your purchases."
+            data-ru="Отправка подтверждений заказов, уведомлений о доставке и других сообщений, связанных с вашими покупками."
+            data-bg="Изпращане на потвърждения за поръчки, известия за доставка и други съобщения, свързани с вашите покупки.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Send order confirmations, shipping updates, and other transactional communications related to your purchases."
+            data-ru="Отправка подтверждений заказов, уведомлений о доставке и других сообщений, связанных с вашими покупками."
+            data-bg="Изпращане на потвърждения за поръчки, известия за доставка и други съобщения, свързани с вашите покупки.">
+            Send order confirmations and shipping updates.
+            </span>
+            </li>
+
+            <li
+            data-en="Provide customer support, respond to inquiries, and assist you with issues related to your account or orders."
+            data-ru="Предоставление поддержки клиентам, ответы на запросы и помощь по вопросам, связанным с вашим аккаунтом или заказами."
+            data-bg="Предоставяне на клиентска поддръжка, отговаряне на запитвания и помощ по въпроси, свързани с вашия акаунт или поръчки.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Provide customer support, respond to inquiries, and assist you with issues related to your account or orders."
+            data-ru="Предоставление поддержки клиентам, ответы на запросы и помощь по вопросам, связанным с вашим аккаунтом или заказами."
+            data-bg="Предоставяне на клиентска поддръжка и помощ по въпроси, свързани с вашия акаунт или поръчки.">
+            Provide customer support and respond to inquiries.
+            </span>
+            </li>
+
+            <li
+            data-en="Improve the functionality, performance, and user experience of our website and services."
+            data-ru="Улучшение функциональности, производительности и пользовательского опыта нашего сайта и услуг."
+            data-bg="Подобряване на функционалността, производителността и потребителското изживяване на нашия уебсайт и услуги.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Improve the functionality, performance, and user experience of our website and services."
+            data-ru="Улучшение функциональности и пользовательского опыта сайта."
+            data-bg="Подобряване на функционалността и потребителското изживяване на сайта.">
+            Improve our website and services.
+            </span>
+            </li>
+
+            <li
+            data-en="Analyze website usage and trends to better understand how visitors interact with our website."
+            data-ru="Анализ использования сайта и поведения пользователей для улучшения наших сервисов."
+            data-bg="Анализ на използването на уебсайта и поведението на потребителите с цел подобряване на нашите услуги.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Analyze website usage and trends to better understand how visitors interact with our website."
+            data-ru="Анализ использования сайта и поведения пользователей."
+            data-bg="Анализ на използването на уебсайта и поведението на потребителите.">
+            Analyze website usage and trends.
+            </span>
+            </li>
+
+            <li
+            data-en="Send marketing or promotional communications only if you have given your consent. You may withdraw this consent at any time."
+            data-ru="Отправка маркетинговых или рекламных сообщений только при наличии вашего согласия. Вы можете отозвать это согласие в любое время."
+            data-bg="Изпращане на маркетингови или рекламни съобщения само ако сте дали съгласие. Можете да оттеглите това съгласие по всяко време.">
+            <i class="fas fa-check-circle"></i>
+            <span
+            data-en="Send marketing or promotional communications only if you have given your consent."
+            data-ru="Отправка рекламных предложений только с вашего согласия."
+            data-bg="Изпращане на рекламни предложения само с ваше съгласие.">
+            Send promotional offers (with your consent).
+            </span>
+            </li>
+
+        </ul>
+
+        <p
+        data-en="Our processing of personal data is based on applicable legal grounds under the General Data Protection Regulation (GDPR), including the performance of a contract, compliance with legal obligations, legitimate interests, and your consent where required."
+        data-ru="Обработка ваших персональных данных осуществляется на законных основаниях в соответствии с Общим регламентом по защите данных (GDPR), включая выполнение договора, соблюдение юридических обязательств, законные интересы и ваше согласие, когда это требуется."
+        data-bg="Обработването на личните ви данни се извършва на законни основания съгласно Общия регламент за защита на данните (GDPR), включително изпълнение на договор, спазване на законови задължения, легитимен интерес и вашето съгласие, когато е необходимо.">
+        Our processing of personal data is based on applicable legal grounds under the General Data Protection Regulation (GDPR).
+        </p>
+
+    </div>
+
+</section>
 
                 <!-- Section 4: Payment Processing -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="4. Payment Processing" data-ru="4. Обработка платежей">4. Обработка платежей</h2>
-                    <div class="section-content">
-                        <p data-en="All payments are processed securely through PayPal. We do not store your credit card information on our servers. PayPal's privacy policy governs the handling of your payment information." data-ru="Все платежи обрабатываются безопасно через PayPal. Мы не храним информацию о вашей кредитной карте на наших серверах. Политика конфиденциальности PayPal регулирует обработку вашей платежной информации.">
-                            Все платежи обрабатываются безопасно через PayPal. Мы не храним информацию о вашей кредитной карте на наших серверах. Политика конфиденциальности PayPal регулирует обработку вашей платежной информации.
-                        </p>
-                        <div class="info-box">
-                            <i class="fas fa-shield-alt"></i>
-                            <div>
-                                <h4 data-en="Secure Payment Processing" data-ru="Безопасная обработка платежей">Безопасная обработка платежей</h4>
-                                <p data-en="Your payment information is encrypted and processed by PayPal, one of the world's most trusted payment platforms." data-ru="Ваша платежная информация шифруется и обрабатывается PayPal, одной из самых надежных платежных платформ в мире.">
-                                    Ваша платежная информация шифруется и обрабатывается PayPal, одной из самых надежных платежных платформ в мире.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="4. Payment Processing"
+    data-ru="4. Обработка платежей"
+    data-bg="4. Обработка на плащанията">
+    4. Payment Processing
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Payments made through our website are processed securely by third-party payment service providers. Level Up Gaming does not collect or store your full payment card details."
+        data-ru="Платежи, совершаемые на нашем сайте, обрабатываются безопасно сторонними поставщиками платежных услуг. Level Up Gaming не собирает и не хранит полные данные вашей банковской карты."
+        data-bg="Плащанията, извършвани чрез нашия уебсайт, се обработват сигурно от външни доставчици на платежни услуги. Level Up Gaming не събира и не съхранява пълните данни на вашата банкова карта.">
+        Payments made through our website are processed securely by third-party payment service providers. Level Up Gaming does not collect or store your full payment card details.
+        </p>
+
+        <p
+        data-en="When you make a purchase, your payment information is transmitted directly to the payment provider and processed according to their privacy policies and security standards."
+        data-ru="Когда вы совершаете покупку, ваша платежная информация передается напрямую платежному провайдеру и обрабатывается в соответствии с его политикой конфиденциальности и стандартами безопасности."
+        data-bg="Когато извършвате покупка, вашата платежна информация се предава директно на платежния доставчик и се обработва съгласно неговата политика за поверителност и стандарти за сигурност.">
+        When you make a purchase, your payment information is transmitted directly to the payment provider and processed according to their privacy policies and security standards.
+        </p>
+
+        <p
+        data-en="Payment service providers may collect and process personal and payment information in order to complete transactions, prevent fraud, and comply with legal obligations."
+        data-ru="Поставщики платежных услуг могут собирать и обрабатывать персональные и платежные данные для завершения транзакций, предотвращения мошенничества и соблюдения юридических требований."
+        data-bg="Доставчиците на платежни услуги могат да събират и обработват лични и платежни данни, за да извършват транзакции, да предотвратяват измами и да спазват законовите изисквания.">
+        Payment service providers may collect and process personal and payment information in order to complete transactions, prevent fraud, and comply with legal obligations.
+        </p>
+
+        <div class="info-box">
+
+            <i class="fas fa-shield-alt"></i>
+
+            <div>
+
+                <h4
+                data-en="Secure Payment Processing"
+                data-ru="Безопасная обработка платежей"
+                data-bg="Сигурна обработка на плащания">
+                Secure Payment Processing
+                </h4>
+
+                <p
+                data-en="Payment providers use industry-standard encryption and security technologies to protect your payment information during transactions."
+                data-ru="Платежные системы используют стандартные технологии шифрования и защиты данных для обеспечения безопасности платежной информации."
+                data-bg="Платежните доставчици използват стандартни технологии за криптиране и сигурност, за да защитят вашата платежна информация по време на транзакции.">
+                Payment providers use industry-standard encryption and security technologies to protect your payment information during transactions.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
                 <!-- Section 5: Data Security -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="5. Data Security" data-ru="5. Безопасность данных">5. Безопасность данных</h2>
-                    <div class="section-content">
-                        <p data-en="We implement industry-standard security measures to protect your information:" data-ru="Мы применяем стандартные меры безопасности для защиты вашей информации:">Мы применяем стандартные меры безопасности для защиты вашей информации:</p>
-                        <div class="security-features">
-                            <div class="security-item">
-                                <i class="fas fa-lock"></i>
-                                <h4 data-en="SSL Encryption" data-ru="SSL шифрование">SSL шифрование</h4>
-                                <p data-en="All data transmitted between your browser and our servers is encrypted" data-ru="Все данные, передаваемые между вашим браузером и нашими серверами, зашифрованы">Все данные, передаваемые между вашим браузером и нашими серверами, зашифрованы</p>
-                            </div>
-                            <div class="security-item">
-                                <i class="fas fa-database"></i>
-                                <h4 data-en="Secure Storage" data-ru="Безопасное хранение">Безопасное хранение</h4>
-                                <p data-en="Your data is stored securely with restricted access" data-ru="Ваши данные хранятся безопасно с ограниченным доступом">Ваши данные хранятся безопасно с ограниченным доступом</p>
-                            </div>
-                            <div class="security-item">
-                                <i class="fas fa-user-shield"></i>
-                                <h4 data-en="Access Control" data-ru="Контроль доступа">Контроль доступа</h4>
-                                <p data-en="Only authorized personnel have access to your personal information" data-ru="Только уполномоченный персонал имеет доступ к вашей личной информации">Только уполномоченный персонал имеет доступ к вашей личной информации</p>
-                            </div>
-                            <div class="security-item">
-                                <i class="fas fa-shield-virus"></i>
-                                <h4 data-en="Regular Audits" data-ru="Регулярные аудиты">Регулярные аудиты</h4>
-                                <p data-en="We regularly review and update our security practices" data-ru="Мы регулярно проверяем и обновляем наши меры безопасности">Мы регулярно проверяем и обновляем наши меры безопасности</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="5. Data Security"
+    data-ru="5. Безопасность данных"
+    data-bg="5. Сигурност на данните">
+    5. Data Security
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="We implement appropriate technical and organizational security measures designed to protect your personal data from unauthorized access, disclosure, alteration, or destruction."
+        data-ru="Мы применяем соответствующие технические и организационные меры безопасности для защиты ваших персональных данных от несанкционированного доступа, раскрытия, изменения или уничтожения."
+        data-bg="Прилагаме подходящи технически и организационни мерки за сигурност, за да защитим вашите лични данни от неоторизиран достъп, разкриване, промяна или унищожаване.">
+        We implement appropriate technical and organizational security measures designed to protect your personal data from unauthorized access, disclosure, alteration, or destruction.
+        </p>
+
+        <div class="security-features">
+
+            <div class="security-item">
+                <i class="fas fa-lock"></i>
+
+                <h4
+                data-en="SSL Encryption"
+                data-ru="SSL шифрование"
+                data-bg="SSL криптиране">
+                SSL Encryption
+                </h4>
+
+                <p
+                data-en="All data transmitted between your browser and our servers is encrypted using secure technologies."
+                data-ru="Все данные, передаваемые между вашим браузером и нашими серверами, защищены с помощью современных технологий шифрования."
+                data-bg="Всички данни, предавани между вашия браузър и нашите сървъри, са защитени чрез съвременни технологии за криптиране.">
+                All data transmitted between your browser and our servers is encrypted using secure technologies.
+                </p>
+            </div>
+
+            <div class="security-item">
+                <i class="fas fa-database"></i>
+
+                <h4
+                data-en="Secure Storage"
+                data-ru="Безопасное хранение"
+                data-bg="Сигурно съхранение">
+                Secure Storage
+                </h4>
+
+                <p
+                data-en="Personal data is stored on secure systems with restricted access and appropriate protection mechanisms."
+                data-ru="Персональные данные хранятся в защищенных системах с ограниченным доступом и соответствующими механизмами защиты."
+                data-bg="Личните данни се съхраняват в защитени системи с ограничен достъп и подходящи механизми за защита.">
+                Personal data is stored on secure systems with restricted access.
+                </p>
+            </div>
+
+            <div class="security-item">
+                <i class="fas fa-user-shield"></i>
+
+                <h4
+                data-en="Access Control"
+                data-ru="Контроль доступа"
+                data-bg="Контрол на достъпа">
+                Access Control
+                </h4>
+
+                <p
+                data-en="Access to personal data is limited to authorized personnel who require the information to perform their duties."
+                data-ru="Доступ к персональным данным имеют только уполномоченные сотрудники, которым эта информация необходима для выполнения своих обязанностей."
+                data-bg="Достъп до личните данни имат само упълномощени лица, на които тази информация е необходима за изпълнение на техните задължения.">
+                Only authorized personnel have access to personal information.
+                </p>
+            </div>
+
+            <div class="security-item">
+                <i class="fas fa-shield-virus"></i>
+
+                <h4
+                data-en="Security Monitoring"
+                data-ru="Контроль безопасности"
+                data-bg="Мониторинг на сигурността">
+                Security Monitoring
+                </h4>
+
+                <p
+                data-en="We regularly review and update our security practices to improve the protection of personal data."
+                data-ru="Мы регулярно проверяем и обновляем наши меры безопасности для улучшения защиты персональных данных."
+                data-bg="Редовно преглеждаме и актуализираме нашите мерки за сигурност, за да подобрим защитата на личните данни.">
+                We regularly review and update our security practices.
+                </p>
+            </div>
+
+        </div>
+
+        <p
+        data-en="While we take reasonable steps to protect your personal information, no system can guarantee complete security. You use our website and provide personal information at your own risk."
+        data-ru="Хотя мы принимаем разумные меры для защиты вашей информации, ни одна система не может гарантировать абсолютную безопасность. Использование сайта и предоставление персональных данных осуществляется на ваш собственный риск."
+        data-bg="Въпреки че предприемаме разумни мерки за защита на личните ви данни, никоя система не може да гарантира пълна сигурност. Използването на сайта и предоставянето на лични данни е на ваша собствена отговорност.">
+        While we take reasonable steps to protect your personal information, no system can guarantee complete security.
+        </p>
+
+    </div>
+
+</section>
 
                 <!-- Section 6: Cookies and Tracking -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="6. Cookies and Tracking" data-ru="6. Файлы cookie и отслеживание">6. Файлы cookie и отслеживание</h2>
-                    <div class="section-content">
-                        <p data-en="We use localStorage and similar technologies to enhance your experience:" data-ru="Мы используем localStorage и аналогичные технологии для улучшения вашего опыта:">Мы используем localStorage и аналогичные технологии для улучшения вашего опыта:</p>
-                        <ul class="privacy-list">
-                            <li data-en="Remember your language and currency preferences" data-ru="Запоминание ваших языковых и валютных предпочтений">
-                                <span data-en="Remember your language and currency preferences" data-ru="Запоминание ваших языковых и валютных предпочтений">Запоминание ваших языковых и валютных предпочтений</span>
-                            </li>
-                            <li data-en="Keep items in your shopping cart" data-ru="Сохранение товаров в корзине">
-                                <span data-en="Keep items in your shopping cart" data-ru="Сохранение товаров в корзине">Сохранение товаров в корзине</span>
-                            </li>
-                            <li data-en="Maintain your login session" data-ru="Поддержание вашей сессии входа">
-                                <span data-en="Maintain your login session" data-ru="Поддержание вашей сессии входа">Поддержание вашей сессии входа</span>
-                            </li>
-                            <li data-en="Analyze website usage and performance" data-ru="Анализ использования и производительности сайта">
-                                <span data-en="Analyze website usage and performance" data-ru="Анализ использования и производительности сайта">Анализ использования и производительности сайта</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="6. Cookies and Tracking Technologies"
+    data-ru="6. Файлы cookie и технологии отслеживания"
+    data-bg="6. Бисквитки и технологии за проследяване">
+    6. Cookies and Tracking Technologies
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Our website uses cookies, local storage, and similar technologies to improve your browsing experience, provide essential website functionality, and analyze how our website is used."
+        data-ru="Наш сайт использует файлы cookie, localStorage и аналогичные технологии для улучшения пользовательского опыта, обеспечения работы сайта и анализа его использования."
+        data-bg="Нашият уебсайт използва бисквитки, localStorage и подобни технологии, за да подобри потребителското изживяване, да осигури функционалността на сайта и да анализира използването му.">
+        Our website uses cookies, local storage, and similar technologies to improve your browsing experience, provide essential website functionality, and analyze how our website is used.
+        </p>
+
+        <p
+        data-en="Cookies are small data files stored on your device when you visit a website. These technologies help websites remember user preferences, maintain sessions, and improve website performance."
+        data-ru="Файлы cookie — это небольшие файлы данных, которые сохраняются на вашем устройстве при посещении сайта. Они помогают сайтам запоминать настройки пользователя, поддерживать сессии и улучшать работу сайта."
+        data-bg="Бисквитките са малки файлове с данни, които се съхраняват на вашето устройство, когато посещавате уебсайт. Те помагат на сайтовете да запомнят потребителските настройки, да поддържат сесии и да подобряват работата на сайта.">
+        Cookies are small data files stored on your device when you visit a website.
+        </p>
+
+        <ul class="privacy-list">
+
+            <li
+            data-en="Essential cookies: Required for the basic functionality of the website, such as maintaining login sessions and processing orders."
+            data-ru="Обязательные cookie: необходимы для базовой работы сайта, например для поддержания сессии входа и обработки заказов."
+            data-bg="Задължителни бисквитки: необходими за основната функционалност на сайта, като поддържане на сесии и обработка на поръчки.">
+            <span
+            data-en="Essential cookies: Required for the basic functionality of the website."
+            data-ru="Обязательные cookie для работы сайта."
+            data-bg="Задължителни бисквитки за функционирането на сайта.">
+            Essential cookies: Required for the basic functionality of the website.
+            </span>
+            </li>
+
+            <li
+            data-en="Preference cookies: Allow the website to remember your language, currency, and other preferences."
+            data-ru="Cookie предпочтений: позволяют сайту запоминать язык, валюту и другие настройки."
+            data-bg="Бисквитки за предпочитания: позволяват на сайта да запомни език, валута и други настройки.">
+            <span
+            data-en="Preference cookies: Remember your language and currency settings."
+            data-ru="Cookie для сохранения настроек языка и валюты."
+            data-bg="Бисквитки за запомняне на език и валута.">
+            Preference cookies: Remember your language and currency settings.
+            </span>
+            </li>
+
+            <li
+            data-en="Session storage technologies: Used to maintain your shopping cart and login session."
+            data-ru="Технологии хранения сессии: используются для сохранения корзины и сессии входа."
+            data-bg="Технологии за съхранение на сесия: използват се за поддържане на количката и потребителската сесия.">
+            <span
+            data-en="Session technologies maintain your shopping cart and login session."
+            data-ru="Поддержание корзины и сессии пользователя."
+            data-bg="Поддържане на количката и потребителската сесия.">
+            Session technologies maintain your shopping cart and login session.
+            </span>
+            </li>
+
+            <li
+            data-en="Analytics technologies: Help us understand how visitors use our website and improve its functionality."
+            data-ru="Аналитические технологии: помогают нам понимать, как пользователи используют сайт, и улучшать его работу."
+            data-bg="Аналитични технологии: помагат ни да разберем как посетителите използват сайта и да подобрим неговата функционалност.">
+            <span
+            data-en="Analytics technologies help us improve website performance."
+            data-ru="Анализ использования сайта."
+            data-bg="Анализ на използването на сайта.">
+            Analytics technologies help us improve website performance.
+            </span>
+            </li>
+
+        </ul>
+
+        <p
+        data-en="You can control or disable cookies through your browser settings. However, disabling certain cookies may affect the functionality of the website."
+        data-ru="Вы можете управлять файлами cookie или отключить их через настройки вашего браузера. Однако отключение некоторых cookie может повлиять на работу сайта."
+        data-bg="Можете да контролирате или изключите бисквитките чрез настройките на вашия браузър. Деактивирането на някои бисквитки може да повлияе на функционалността на сайта.">
+        You can control or disable cookies through your browser settings.
+        </p>
+
+    </div>
+
+</section>
 
                 <!-- Section 7: Your Rights -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="7. Your Rights" data-ru="7. Ваши права">7. Ваши права</h2>
-                    <div class="section-content">
-                        <p data-en="You have the following rights regarding your personal information:" data-ru="У вас есть следующие права в отношении вашей личной информации:">У вас есть следующие права в отношении вашей личной информации:</p>
-                        <div class="rights-grid">
-                            <div class="right-item">
-                                <i class="fas fa-eye"></i>
-                                <h4 data-en="Access" data-ru="Доступ">Доступ</h4>
-                                <p data-en="Request a copy of your personal data" data-ru="Запросить копию ваших личных данных">Запросить копию ваших личных данных</p>
-                            </div>
-                            <div class="right-item">
-                                <i class="fas fa-edit"></i>
-                                <h4 data-en="Correction" data-ru="Исправление">Исправление</h4>
-                                <p data-en="Update or correct your information" data-ru="Обновить или исправить вашу информацию">Обновить или исправить вашу информацию</p>
-                            </div>
-                            <div class="right-item">
-                                <i class="fas fa-trash"></i>
-                                <h4 data-en="Deletion" data-ru="Удаление">Удаление</h4>
-                                <p data-en="Request deletion of your personal data" data-ru="Запросить удаление ваших личных данных">Запросить удаление ваших личных данных</p>
-                            </div>
-                            <div class="right-item">
-                                <i class="fas fa-ban"></i>
-                                <h4 data-en="Opt-Out" data-ru="Отказ">Отказ</h4>
-                                <p data-en="Unsubscribe from marketing communications" data-ru="Отписаться от маркетинговых рассылок">Отписаться от маркетинговых рассылок</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="7. Your Rights"
+    data-ru="7. Ваши права"
+    data-bg="7. Вашите права">
+    7. Your Rights
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Under applicable data protection laws, including the General Data Protection Regulation (GDPR), you have several rights regarding your personal data."
+        data-ru="В соответствии с применимым законодательством о защите данных, включая Общий регламент по защите данных (GDPR), вы имеете ряд прав в отношении ваших персональных данных."
+        data-bg="Съгласно приложимото законодателство за защита на данните, включително Общия регламент за защита на данните (GDPR), имате редица права относно вашите лични данни.">
+        Under applicable data protection laws, including the General Data Protection Regulation (GDPR), you have several rights regarding your personal data.
+        </p>
+
+        <div class="rights-grid">
+
+            <div class="right-item">
+                <i class="fas fa-eye"></i>
+                <h4
+                data-en="Right of Access"
+                data-ru="Право доступа"
+                data-bg="Право на достъп">
+                Right of Access
+                </h4>
+                <p
+                data-en="You may request a copy of the personal data we hold about you."
+                data-ru="Вы можете запросить копию ваших персональных данных, которые мы храним."
+                data-bg="Можете да поискате копие на личните данни, които съхраняваме за вас.">
+                Request a copy of your personal data.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-edit"></i>
+                <h4
+                data-en="Right to Rectification"
+                data-ru="Право на исправление"
+                data-bg="Право на корекция">
+                Right to Rectification
+                </h4>
+                <p
+                data-en="You may request correction of inaccurate or incomplete personal information."
+                data-ru="Вы можете запросить исправление неточных или неполных персональных данных."
+                data-bg="Можете да поискате корекция на неточни или непълни лични данни.">
+                Update or correct your information.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-trash"></i>
+                <h4
+                data-en="Right to Erasure"
+                data-ru="Право на удаление"
+                data-bg="Право на изтриване">
+                Right to Erasure
+                </h4>
+                <p
+                data-en="You may request deletion of your personal data where legally permitted."
+                data-ru="Вы можете запросить удаление ваших персональных данных, если это разрешено законом."
+                data-bg="Можете да поискате изтриване на вашите лични данни, когато това е разрешено от закона.">
+                Request deletion of your personal data.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-pause-circle"></i>
+                <h4
+                data-en="Right to Restrict Processing"
+                data-ru="Право на ограничение обработки"
+                data-bg="Право на ограничаване на обработката">
+                Restrict Processing
+                </h4>
+                <p
+                data-en="You may request that we limit how we use your personal data in certain circumstances."
+                data-ru="Вы можете запросить ограничение обработки ваших персональных данных в определённых случаях."
+                data-bg="Можете да поискате ограничаване на обработката на вашите лични данни в определени случаи.">
+                Restrict how your data is processed.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-download"></i>
+                <h4
+                data-en="Right to Data Portability"
+                data-ru="Право на перенос данных"
+                data-bg="Право на преносимост на данните">
+                Data Portability
+                </h4>
+                <p
+                data-en="You may request that your personal data be provided in a structured, commonly used format."
+                data-ru="Вы можете запросить предоставление ваших данных в структурированном формате."
+                data-bg="Можете да поискате вашите данни да бъдат предоставени в структуриран формат.">
+                Receive your data in a portable format.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-ban"></i>
+                <h4
+                data-en="Right to Object"
+                data-ru="Право возражения"
+                data-bg="Право на възражение">
+                Right to Object
+                </h4>
+                <p
+                data-en="You may object to the processing of your personal data in certain situations."
+                data-ru="Вы можете возразить против обработки ваших персональных данных в определённых случаях."
+                data-bg="Можете да възразите срещу обработката на вашите лични данни в определени ситуации.">
+                Object to certain types of data processing.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-envelope-open-text"></i>
+                <h4
+                data-en="Withdraw Consent"
+                data-ru="Отзыв согласия"
+                data-bg="Оттегляне на съгласие">
+                Withdraw Consent
+                </h4>
+                <p
+                data-en="If processing is based on your consent, you may withdraw that consent at any time."
+                data-ru="Если обработка основана на вашем согласии, вы можете отозвать его в любое время."
+                data-bg="Ако обработката се основава на вашето съгласие, можете да го оттеглите по всяко време.">
+                Withdraw your consent at any time.
+                </p>
+            </div>
+
+            <div class="right-item">
+                <i class="fas fa-balance-scale"></i>
+                <h4
+                data-en="Right to Lodge a Complaint"
+                data-ru="Право подать жалобу"
+                data-bg="Право на жалба">
+                Lodge a Complaint
+                </h4>
+                <p
+                data-en="You have the right to lodge a complaint with a data protection authority if you believe your data has been processed unlawfully."
+                data-ru="Вы имеете право подать жалобу в орган по защите данных, если считаете, что ваши данные обрабатываются незаконно."
+                data-bg="Имате право да подадете жалба до орган за защита на данните, ако смятате, че вашите данни се обработват неправомерно.">
+                File a complaint with a data protection authority.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
                 <!-- Section 8: Contact Information -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="8. Contact Us" data-ru="8. Свяжитесь с нами">8. Свяжитесь с нами</h2>
-                    <div class="section-content">
-                        <p data-en="If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us:" data-ru="Если у вас есть вопросы о данной Политике конфиденциальности или вы хотите воспользоваться своими правами, пожалуйста, свяжитесь с нами:">
-                            Если у вас есть вопросы о данной Политике конфиденциальности или вы хотите воспользоваться своими правами, пожалуйста, свяжитесь с нами:
-                        </p>
-                        <div class="contact-box">
-                            <div class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <h4 data-en="Email" data-ru="Электронная почта">Электронная почта</h4>
-                                    <a href="mailto:privacy@levelupgaming.com">privacy@levelupgaming.com</a>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <h4 data-en="Phone" data-ru="Телефон">Телефон</h4>
-                                    <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-                                </div>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    <h4 data-en="Address" data-ru="Адрес">Адрес</h4>
-                                    <p data-en="Moscow, Russia" data-ru="Москва, Россия">Москва, Россия</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="8. Contact Information"
+    data-ru="8. Контактная информация"
+    data-bg="8. Контактна информация">
+    8. Contact Information
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="If you have any questions about this Privacy Policy, our data practices, or if you wish to exercise your data protection rights, you may contact us using the information below."
+        data-ru="Если у вас есть вопросы относительно этой Политики конфиденциальности, обработки данных или вы хотите воспользоваться своими правами, вы можете связаться с нами по указанным ниже контактам."
+        data-bg="Ако имате въпроси относно тази Политика за поверителност, обработката на данни или желаете да упражните своите права, можете да се свържете с нас чрез информацията по-долу.">
+        If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us using the information below.
+        </p>
+
+        <div class="contact-box">
+
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+
+                <div>
+                    <h4
+                    data-en="Email"
+                    data-ru="Электронная почта"
+                    data-bg="Имейл">
+                    Email
+                    </h4>
+
+                    <a href="mailto:privacy@levelupgaming.com">
+                    privacy@levelupgaming.com
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-headset"></i>
+
+                <div>
+                    <h4
+                    data-en="Customer Support"
+                    data-ru="Поддержка клиентов"
+                    data-bg="Клиентска поддръжка">
+                    Customer Support
+                    </h4>
+
+                    <a href="contact.html"
+                    data-en="Contact Page"
+                    data-ru="Страница контактов"
+                    data-bg="Страница за контакт">
+                    Contact Page
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-building"></i>
+
+                <div>
+                    <h4
+                    data-en="Data Controller"
+                    data-ru="Оператор персональных данных"
+                    data-bg="Администратор на лични данни">
+                    Data Controller
+                    </h4>
+
+                    <p
+                    data-en="Level Up Gaming"
+                    data-ru="Level Up Gaming"
+                    data-bg="Level Up Gaming">
+                    Level Up Gaming
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
                 <!-- Section 9: Policy Updates -->
-                <section class="privacy-section-item">
-                    <h2 class="section-title" data-en="9. Changes to This Policy" data-ru="9. Изменения в политике">9. Изменения в политике</h2>
-                    <div class="section-content">
-                        <p data-en="We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'Last updated' date." data-ru="Мы можем время от времени обновлять эту Политику конфиденциальности. Мы уведомим вас о любых изменениях, разместив новую Политику конфиденциальности на этой странице и обновив дату 'Последнее обновление'.">
-                            Мы можем время от времени обновлять эту Политику конфиденциальности. Мы уведомим вас о любых изменениях, разместив новую Политику конфиденциальности на этой странице и обновив дату "Последнее обновление".
-                        </p>
-                        <div class="info-box warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div>
-                                <h4 data-en="Important Notice" data-ru="Важное уведомление">Важное уведомление</h4>
-                                <p data-en="Continued use of our website after any changes indicates your acceptance of the updated Privacy Policy." data-ru="Продолжение использования нашего сайта после любых изменений означает ваше согласие с обновленной Политикой конфиденциальности.">
-                                    Продолжение использования нашего сайта после любых изменений означает ваше согласие с обновленной Политикой конфиденциальности.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="privacy-section-item">
+
+    <h2 class="section-title"
+    data-en="9. Changes to This Privacy Policy"
+    data-ru="9. Изменения в Политике конфиденциальности"
+    data-bg="9. Промени в политиката за поверителност">
+    9. Changes to This Privacy Policy
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="We may update or modify this Privacy Policy from time to time to reflect changes in our services, legal requirements, or data protection practices."
+        data-ru="Мы можем время от времени обновлять или изменять эту Политику конфиденциальности, чтобы отражать изменения в наших услугах, требованиях законодательства или практике обработки данных."
+        data-bg="Можем периодично да актуализираме или променяме тази Политика за поверителност, за да отразим промени в нашите услуги, законодателството или практиките за защита на данните.">
+        We may update or modify this Privacy Policy from time to time.
+        </p>
+
+        <p
+        data-en="When changes are made, the updated version will be published on this page and the 'Last updated' date at the top of the policy will be revised."
+        data-ru="При внесении изменений обновлённая версия будет опубликована на этой странице, а дата «Последнее обновление» в начале документа будет изменена."
+        data-bg="Когато се правят промени, актуализираната версия ще бъде публикувана на тази страница, а датата „Последна актуализация“ ще бъде променена.">
+        The updated version will always be available on this page with a revised "Last updated" date.
+        </p>
+
+        <div class="info-box warning">
+
+            <i class="fas fa-exclamation-triangle"></i>
+
+            <div>
+
+                <h4
+                data-en="Important Notice"
+                data-ru="Важное уведомление"
+                data-bg="Важно уведомление">
+                Important Notice
+                </h4>
+
+                <p
+                data-en="By continuing to use our website after any updates to this Privacy Policy, you acknowledge and accept the updated terms of this policy."
+                data-ru="Продолжая использовать наш сайт после внесения изменений в эту Политику конфиденциальности, вы подтверждаете своё согласие с обновлённой версией политики."
+                data-bg="Като продължите да използвате нашия сайт след промени в тази политика, вие приемате актуализираните условия на политиката за поверителност.">
+                Continued use of our website after updates indicates acceptance of the revised Privacy Policy.
+                </p>
+
             </div>
 
-            <!-- Back to Top Button -->
-            <div class="back-to-top">
-                <a href="#" class="btn-primary">
-                    <i class="fas fa-arrow-up"></i>
-                    <span data-en="Back to Top" data-ru="Наверх">Наверх</span>
-                </a>
+        </div>
+
+    </div>
+
+</section>
             </div>
+
+            <!-- Back to Top -->
+<div class="back-to-top">
+    <a href="#" class="btn-primary">
+        <i class="fas fa-arrow-up"></i>
+        <span
+        data-en="Back to Top"
+        data-ru="Наверх"
+        data-bg="Нагоре">
+        Back to Top
+        </span>
+    </a>
+</div>
+              
         </div>
     </main>
 
@@ -362,31 +994,31 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">О Level Up</h4>
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">About Level Up</h4>
                     <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень." data-bg="Премиални игрови аксесоари за шампиони, които искат да повишат нивото на своята игра.">
-                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                        Premium gaming accessories for champions who want to level up their game.
                     </p>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Быстрые ссылки</h4>
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Главная</a></li>
-                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Магазин</a></li>
-                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">О нас</a></li>
-                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Контакты</a></li>
+                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Home</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Shop</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">About Us</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Contact</a></li>
                         
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Обслуживание клиентов</h4>
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Customer Service</h4>
                     <ul class="footer-links">
-                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Условия использования</a></li>
-                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Поддержка</a></li>
-                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Возвраты</a></li>
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Terms of Service</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Support</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Returns</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Следите за нами</h4>
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Follow Us</h4>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -397,7 +1029,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">Все права защищены.</span></p>
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">All rights reserved.</span></p>
             </div>
         </div>
     </footer>

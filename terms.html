@@ -4,14 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Terms of Service - Level Up Gaming" data-ru="Условия использования - Level Up Gaming">Terms of Service - Level Up Gaming</title>
+    <title data-en="Terms of Service - Level Up Gaming" data-ru="Условия использования - Level Up Gaming" data-bg="Условия за използване - Level Up Gaming">Terms of Service - Level Up Gaming</title>
+    <meta name="description" content="Terms of Service for Level Up Gaming. Learn about orders, payments, shipping, returns and the rules for using our website.">
+    <link rel="canonical" href="https://levelupgaming.com/terms.html">
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/terms.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhana:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<!-- Cookie Banner -->
+<div id="cookieBanner" class="cookie-banner">
+
+    <div class="cookie-content">
+
+        <p
+        data-en="We use cookies and similar technologies to improve your browsing experience and analyze website traffic."
+        data-ru="Мы используем файлы cookie и аналогичные технологии для улучшения работы сайта и анализа трафика."
+        data-bg="Използваме бисквитки и подобни технологии, за да подобрим работата на сайта и да анализираме трафика.">
+        We use cookies and similar technologies to improve your browsing experience and analyze website traffic.
+        </p>
+
+        <div class="cookie-buttons">
+
+            <button id="acceptCookies" class="btn btn-primary"
+            data-en="Accept"
+            data-ru="Принять"
+            data-bg="Приемам">
+            Accept
+            </button>
+
+            <button id="declineCookies" class="btn btn-secondary"
+            data-en="Decline"
+            data-ru="Отклонить"
+            data-bg="Отказ">
+            Decline
+            </button>
+
+            <a href="privacy.html" class="cookie-link"
+            data-en="Learn more"
+            data-ru="Подробнее"
+            data-bg="Повече информация">
+            Learn more
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 <body>
-    d Background -->
+    <!-- Background -->
     <div class="stars-background" id="starsBackground"></div>
 
     <!-- Header Navigation -->
@@ -25,43 +67,43 @@
 
                 <!-- Navigation Menu -->
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
                 <!-- Right Side Buttons -->
                 <div class="nav-actions">
                     <!-- Auth Buttons (shown when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Register</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Login</a>
                     </div>
 
                     <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">My Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -69,7 +111,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -82,7 +124,7 @@
                     <div class="switcher currency-switcher">
                         <button class="switcher-btn" id="currencyBtn">
                             <i class="fas fa-dollar-sign"></i>
-                            <span id="currentCurrency">USD</span>
+                            <span id="currentCurrency">EUR</span>
                         </button>
                         <div class="switcher-menu" id="currencyMenu">
                             <button class="switcher-option" data-currency="usd">USD</button>
@@ -113,8 +155,8 @@
         <div class="container">
             <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-title" data-en="Terms of Service" data-ru="Условия использования">Условия использования</h1>
-                <p class="page-subtitle" data-en="Last updated: February 2026" data-ru="Последнее обновление: Февраль 2026">Последнее обновление: Февраль 2026</p>
+                <h1 class="page-title" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Terms of Service</h1>
+                <p class="page-subtitle" data-en="Last updated: February 2026" data-ru="Последнее обновление: Февраль 2026" data-bg="Последна актуализация: Февруари 2026">Last updated: February 2026</p>
             </div>
 
             <!-- Terms Content -->
@@ -122,327 +164,881 @@
                 <!-- Section 1: General Conditions -->
                 <section class="terms-section-item">
                     <div class="section-number">01</div>
-                    <h2 class="section-title" data-en="General Conditions" data-ru="Общие условия">Общие условия</h2>
+                    <h2 class="section-title" data-en="General Conditions" data-ru="Общие условия" data-bg="Общи условия">General Conditions</h2>
                     <div class="section-content">
-                        <p data-en="By accessing and using this website (Level Up Gaming), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this website." data-ru="Получая доступ к этому веб-сайту (Level Up Gaming) и используя его, вы принимаете и соглашаетесь соблюдать условия и положения этого соглашения. Если вы не согласны с этими условиями, пожалуйста, не используйте этот веб-сайт.">
-                            Получая доступ к этому веб-сайту (Level Up Gaming) и используя его, вы принимаете и соглашаетесь соблюдать условия и положения этого соглашения. Если вы не согласны с этими условиями, пожалуйста, не используйте этот веб-сайт.
+                        <p data-en="By accessing and using this website (Level Up Gaming), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this website." data-ru="Получая доступ к этому веб-сайту (Level Up Gaming) и используя его, вы принимаете и соглашаетесь соблюдать условия и положения этого соглашения. Если вы не согласны с этими условиями, пожалуйста, не используйте этот веб-сайт." data-bg="Като използвате този уебсайт (Level Up Gaming), вие приемате и се съгласявате с условията на това споразумение. Ако не сте съгласни с тези условия, моля, не използвайте този уебсайт.">
+                            By accessing and using this website (Level Up Gaming), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use this website.
                         </p>
                         <div class="highlight-box">
                             <i class="fas fa-handshake"></i>
                             <div>
-                                <h4 data-en="Your Agreement" data-ru="Ваше соглашение">Ваше соглашение</h4>
-                                <p data-en="By using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy." data-ru="Используя наши услуги, вы подтверждаете, что прочитали, поняли и соглашаетесь соблюдать настоящие Условия использования и нашу Политику конфиденциальности.">
-                                    Используя наши услуги, вы подтверждаете, что прочитали, поняли и соглашаетесь соблюдать настоящие Условия использования и нашу Политику конфиденциальности.
+                                <h4 data-en="Your Agreement" data-ru="Ваше соглашение" data-bg="Вашето съгласие">Your Agreement</h4>
+                                <p data-en="By using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy." data-ru="Используя наши услуги, вы подтверждаете, что прочитали, поняли и соглашаетесь соблюдать настоящие Условия использования и нашу Политику конфиденциальности." data-bg="Използвайки нашите услуги, вие потвърждавате, че сте прочели, разбрали и се съгласявате с тези Общи условия и нашата Политика за поверителност.">
+                                    By using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy.
                                 </p>
                             </div>
                         </div>
                         <ul class="terms-list">
-                            <li data-en="You must be at least 18 years old to make purchases" data-ru="Вам должно быть не менее 18 лет для совершения покупок">
-                                <span data-en="You must be at least 18 years old to make purchases" data-ru="Вам должно быть не менее 18 лет для совершения покупок">Вам должно быть не менее 18 лет для совершения покупок</span>
+                            <li data-en="You must be at least 18 years old to make purchases" data-ru="Вам должно быть не менее 18 лет для совершения покупок" data-bg="Трябва да сте навършили поне 18 години, за да правите покупки">
+                                <span data-en="You must be at least 18 years old to make purchases" data-ru="Вам должно быть не менее 18 лет для совершения покупок" data-bg="Трябва да сте навършили поне 18 години, за да правите покупки">You must be at least 18 years old to make purchases</span>
                             </li>
-                            <li data-en="You are responsible for maintaining the confidentiality of your account" data-ru="Вы несете ответственность за сохранение конфиденциальности вашей учетной записи">
-                                <span data-en="You are responsible for maintaining the confidentiality of your account" data-ru="Вы несете ответственность за сохранение конфиденциальности вашей учетной записи">Вы несете ответственность за сохранение конфиденциальности вашей учетной записи</span>
+                            <li data-en="You are responsible for maintaining the confidentiality of your account" data-ru="Вы несете ответственность за сохранение конфиденциальности вашей учетной записи" data-bg="Вие несете отговорност за запазване на поверителността на вашата сметка">
+                                <span data-en="You are responsible for maintaining the confidentiality of your account" data-ru="Вы несете ответственность за сохранение конфиденциальности вашей учетной записи" data-bg="Вие несете отговорност за запазване на поверителността на вашата сметка">You are responsible for maintaining the confidentiality of your account</span>
                             </li>
-                            <li data-en="You agree to provide accurate and complete information" data-ru="Вы соглашаетесь предоставлять точную и полную информацию">
-                                <span data-en="You agree to provide accurate and complete information" data-ru="Вы соглашаетесь предоставлять точную и полную информацию">Вы соглашаетесь предоставлять точную и полную информацию</span>
+                            <li data-en="You agree to provide accurate and complete information" data-ru="Вы соглашаетесь предоставлять точную и полную информацию" data-bg="Вие се съгласявате да предоставяте точна и пълна информация">
+                                <span data-en="You agree to provide accurate and complete information" data-ru="Вы соглашаетесь предоставлять точную и полную информацию" data-bg="Вие се съгласявате да предоставяте точна и пълна информация">You agree to provide accurate and complete information</span>
                             </li>
-                            <li data-en="You will not use this website for any illegal or unauthorized purpose" data-ru="Вы не будете использовать этот веб-сайт в незаконных или несанкционированных целях">
-                                <span data-en="You will not use this website for any illegal or unauthorized purpose" data-ru="Вы не будете использовать этот веб-сайт в незаконных или несанкционированных целях">Вы не будете использовать этот веб-сайт в незаконных или несанкционированных целях</span>
+                            <li data-en="You will not use this website for any illegal or unauthorized purpose" data-ru="Вы не будете использовать этот веб-сайт в незаконных или несанкционированных целях" data-bg="Вие няма да използвате този уебсайт за никакви незаконни или неоторизирани цели">
+                                <span data-en="You will not use this website for any illegal or unauthorized purpose" data-ru="Вы не будете использовать этот веб-сайт в незаконных или несанкционированных целях" data-bg="Вие няма да използвате този уебсайт за никакви незаконни или неоторизирани цели">You will not use this website for any illegal or unauthorized purpose</span>
                             </li>
                         </ul>
                     </div>
                 </section>
 
                 <!-- Section 2: Products & Pricing -->
-                <section class="terms-section-item">
-                    <div class="section-number">02</div>
-                    <h2 class="section-title" data-en="Products & Pricing" data-ru="Товары и цены">Товары и цены</h2>
-                    <div class="section-content">
-                        <p data-en="We strive to provide accurate product descriptions and pricing. However, we do not warrant that product descriptions, pricing, or other content on this site is accurate, complete, reliable, current, or error-free." data-ru="Мы стремимся предоставлять точные описания товаров и цены. Однако мы не гарантируем, что описания товаров, цены или другой контент на этом сайте являются точными, полными, надежными, актуальными или безошибочными.">
-                            Мы стремимся предоставлять точные описания товаров и цены. Однако мы не гарантируем, что описания товаров, цены или другой контент на этом сайте являются точными, полными, надежными, актуальными или безошибочными.
-                        </p>
-                        <div class="warning-box">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div>
-                                <h4 data-en="Price Changes" data-ru="Изменение цен">Изменение цен</h4>
-                                <p data-en="Prices are subject to change without notice. We reserve the right to modify prices at any time." data-ru="Цены могут быть изменены без предварительного уведомления. Мы оставляем за собой право изменять цены в любое время.">
-                                    Цены могут быть изменены без предварительного уведомления. Мы оставляем за собой право изменять цены в любое время.
-                                </p>
-                            </div>
-                        </div>
-                        <ul class="terms-list">
-                            <li data-en="All prices are listed in USD or EUR as selected" data-ru="Все цены указаны в USD или EUR в зависимости от выбора">
-                                <span data-en="All prices are listed in USD or EUR as selected" data-ru="Все цены указаны в USD или EUR в зависимости от выбора">Все цены указаны в USD или EUR в зависимости от выбора</span>
-                            </li>
-                            <li data-en="Prices do not include shipping costs and taxes" data-ru="Цены не включают стоимость доставки и налоги">
-                                <span data-en="Prices do not include shipping costs and taxes" data-ru="Цены не включают стоимость доставки и налоги">Цены не включают стоимость доставки и налоги</span>
-                            </li>
-                            <li data-en="We reserve the right to correct pricing errors" data-ru="Мы оставляем за собой право исправлять ошибки в ценах">
-                                <span data-en="We reserve the right to correct pricing errors" data-ru="Мы оставляем за собой право исправлять ошибки в ценах">Мы оставляем за собой право исправлять ошибки в ценах</span>
-                            </li>
-                            <li data-en="Product images are for illustrative purposes and may differ from actual products" data-ru="Изображения товаров предназначены для иллюстрации и могут отличаться от реальных товаров">
-                                <span data-en="Product images are for illustrative purposes and may differ from actual products" data-ru="Изображения товаров предназначены для иллюстрации и могут отличаться от реальных товаров">Изображения товаров предназначены для иллюстрации и могут отличаться от реальных товаров</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
+    <div class="section-number">02</div>
+
+    <h2 class="section-title"
+    data-en="Products & Pricing"
+    data-ru="Товары и цены"
+    data-bg="Продукти и цени">
+    Products & Pricing
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Level Up Gaming offers branded gaming mousepads designed for gaming and everyday computer use. We make every effort to ensure that product descriptions, images, and pricing information displayed on the website are accurate and up to date."
+        data-ru="Level Up Gaming предлагает брендированные игровые коврики для мыши, предназначенные для игр и повседневного использования компьютера. Мы прилагаем все усилия, чтобы описания товаров, изображения и информация о ценах на сайте были точными и актуальными."
+        data-bg="Level Up Gaming предлага брандирани геймърски подложки за мишка, предназначени за игри и ежедневна употреба на компютър. Ние полагаме всички усилия информацията за продуктите, изображенията и цените на сайта да бъде точна и актуална.">
+        Level Up Gaming offers branded gaming mousepads designed for gaming and everyday computer use. We make every effort to ensure that product descriptions, images, and pricing information displayed on the website are accurate and up to date.
+        </p>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i>
+
+            <div>
+                <h4
+                data-en="Product Information"
+                data-ru="Информация о товарах"
+                data-bg="Информация за продуктите">
+                Product Information
+                </h4>
+
+                <p
+                data-en="Product images on the website are provided for illustrative purposes. Actual products may vary slightly due to manufacturing differences, lighting conditions in photographs, or screen display settings."
+                data-ru="Изображения товаров на сайте представлены в иллюстративных целях. Реальные товары могут немного отличаться из-за особенностей производства, освещения при фотографировании или настроек экрана."
+                data-bg="Изображенията на продуктите на сайта са с илюстративна цел. Реалните продукти могат леко да се различават поради производствени особености, осветление при заснемане или настройки на екрана.">
+                Product images on the website are provided for illustrative purposes. Actual products may vary slightly due to manufacturing differences, lighting conditions in photographs, or screen display settings.
+                </p>
+            </div>
+        </div>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="Prices displayed on the website are shown in the selected currency (EUR or USD)."
+            data-ru="Цены на сайте отображаются в выбранной валюте (EUR или USD)."
+            data-bg="Цените на сайта се показват в избраната валута (EUR или USD).">
+            <span
+            data-en="Prices displayed on the website are shown in the selected currency (EUR or USD)."
+            data-ru="Цены на сайте отображаются в выбранной валюте (EUR или USD)."
+            data-bg="Цените на сайта се показват в избраната валута (EUR или USD).">
+            Prices displayed on the website are shown in the selected currency (EUR or USD).
+            </span>
+            </li>
+
+            <li
+            data-en="Shipping costs and any applicable taxes may be calculated separately during checkout."
+            data-ru="Стоимость доставки и применимые налоги могут рассчитываться отдельно при оформлении заказа."
+            data-bg="Разходите за доставка и приложимите данъци могат да бъдат изчислени отделно по време на поръчката.">
+            <span
+            data-en="Shipping costs and any applicable taxes may be calculated separately during checkout."
+            data-ru="Стоимость доставки и применимые налоги могут рассчитываться отдельно при оформлении заказа."
+            data-bg="Разходите за доставка и приложимите данъци могат да бъдат изчислени отделно по време на поръчката.">
+            Shipping costs and any applicable taxes may be calculated separately during checkout.
+            </span>
+            </li>
+
+            <li
+            data-en="We reserve the right to correct pricing errors, update product information, or modify product availability at any time."
+            data-ru="Мы оставляем за собой право исправлять ошибки в ценах, обновлять информацию о товарах или изменять доступность товаров."
+            data-bg="Запазваме си правото да коригираме грешки в цените, да актуализираме информацията за продуктите или да променяме наличността на продуктите.">
+            <span
+            data-en="We reserve the right to correct pricing errors, update product information, or modify product availability at any time."
+            data-ru="Мы оставляем за собой право исправлять ошибки в ценах, обновлять информацию о товарах или изменять доступность товаров."
+            data-bg="Запазваме си правото да коригираме грешки в цените, да актуализираме информацията за продуктите или да променяме наличността на продуктите.">
+            We reserve the right to correct pricing errors, update product information, or modify product availability at any time.
+            </span>
+            </li>
+
+            <li
+            data-en="All products are subject to availability. We cannot guarantee that all products will remain in stock at all times."
+            data-ru="Все товары зависят от наличия на складе. Мы не можем гарантировать постоянное наличие всех товаров."
+            data-bg="Всички продукти зависят от наличност. Не можем да гарантираме, че всички продукти ще бъдат постоянно налични.">
+            <span
+            data-en="All products are subject to availability. We cannot guarantee that all products will remain in stock at all times."
+            data-ru="Все товары зависят от наличия на складе. Мы не можем гарантировать постоянное наличие всех товаров."
+            data-bg="Всички продукти зависят от наличност. Не можем да гарантираме, че всички продукти ще бъдат постоянно налични.">
+            All products are subject to availability. We cannot guarantee that all products will remain in stock at all times.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+</section>
 
                 <!-- Section 3: Orders -->
-                <section class="terms-section-item">
-                    <div class="section-number">03</div>
-                    <h2 class="section-title" data-en="Orders & Cancellation" data-ru="Заказы и отмена">Заказы и отмена</h2>
-                    <div class="section-content">
-                        <p data-en="By placing an order, you are making an offer to purchase products. We reserve the right to accept or decline your order for any reason." data-ru="Размещая заказ, вы делаете предложение о покупке товаров. Мы оставляем за собой право принять или отклонить ваш заказ по любой причине.">
-                            Размещая заказ, вы делаете предложение о покупке товаров. Мы оставляем за собой право принять или отклонить ваш заказ по любой причине.
-                        </p>
-                        <div class="info-box">
-                            <i class="fas fa-info-circle"></i>
-                            <div>
-                                <h4 data-en="Order Confirmation" data-ru="Подтверждение заказа">Подтверждение заказа</h4>
-                                <p data-en="You will receive an order confirmation email after your order is successfully placed. This email is your receipt." data-ru="Вы получите электронное письмо с подтверждением заказа после успешного размещения заказа. Это письмо является вашей квитанцией.">
-                                    Вы получите электронное письмо с подтверждением заказа после успешного размещения заказа. Это письмо является вашей квитанцией.
-                                </p>
-                            </div>
-                        </div>
-                        <h3 class="subsection-title" data-en="We may cancel an order if:" data-ru="Мы можем отменить заказ, если:">Мы можем отменить заказ, если:</h3>
-                        <ul class="terms-list">
-                            <li data-en="The product is unavailable or out of stock" data-ru="Товар недоступен или отсутствует на складе">
-                                <span data-en="The product is unavailable or out of stock" data-ru="Товар недоступен или отсутствует на складе">Товар недоступен или отсутствует на складе</span>
-                            </li>
-                            <li data-en="There is an error in pricing or product information" data-ru="Имеется ошибка в цене или информации о товаре">
-                                <span data-en="There is an error in pricing or product information" data-ru="Имеется ошибка в цене или информации о товаре">Имеется ошибка в цене или информации о товаре</span>
-                            </li>
-                            <li data-en="You provided incorrect or incomplete shipping information" data-ru="Вы предоставили неверную или неполную информацию о доставке">
-                                <span data-en="You provided incorrect or incomplete shipping information" data-ru="Вы предоставили неверную или неполную информацию о доставке">Вы предоставили неверную или неполную информацию о доставке</span>
-                            </li>
-                            <li data-en="We suspect fraudulent or unauthorized activity" data-ru="Мы подозреваем мошенническую или несанкционированную деятельность">
-                                <span data-en="We suspect fraudulent or unauthorized activity" data-ru="Мы подозреваем мошенническую или несанкционированную деятельность">Мы подозреваем мошенническую или несанкционированную деятельность</span>
-                            </li>
-                            <li data-en="Payment is not received or declined" data-ru="Оплата не получена или отклонена">
-                                <span data-en="Payment is not received or declined" data-ru="Оплата не получена или отклонена">Оплата не получена или отклонена</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
 
+    <div class="section-number">03</div>
+
+    <h2 class="section-title"
+    data-en="Orders"
+    data-ru="Заказы"
+    data-bg="Поръчки">
+    Orders
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="By placing an order on the Level Up Gaming website, you are submitting a request to purchase one or more products. All orders are subject to availability and acceptance by Level Up Gaming."
+        data-ru="Размещая заказ на сайте Level Up Gaming, вы отправляете запрос на покупку одного или нескольких товаров. Все заказы зависят от наличия товаров и подтверждения со стороны Level Up Gaming."
+        data-bg="Като направите поръчка на сайта Level Up Gaming, вие изпращате заявка за покупка на един или повече продукти. Всички поръчки зависят от наличността и потвърждението от страна на Level Up Gaming.">
+        By placing an order on the Level Up Gaming website, you are submitting a request to purchase one or more products. All orders are subject to availability and acceptance by Level Up Gaming.
+        </p>
+
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+
+            <div>
+
+                <h4
+                data-en="Order Confirmation"
+                data-ru="Подтверждение заказа"
+                data-bg="Потвърждение на поръчката">
+                Order Confirmation
+                </h4>
+
+                <p
+                data-en="After placing an order, you will receive an email confirming that we have received your order request. This email does not guarantee acceptance of the order, but confirms that the order has been received and is being processed."
+                data-ru="После оформления заказа вы получите электронное письмо, подтверждающее получение вашего заказа. Это письмо не означает автоматическое принятие заказа, а лишь подтверждает, что заказ получен и обрабатывается."
+                data-bg="След като направите поръчка, ще получите имейл, потвърждаващ получаването на вашата поръчка. Този имейл не гарантира приемането на поръчката, а само потвърждава, че тя е получена и се обработва.">
+                After placing an order, you will receive an email confirming that we have received your order request. This email does not guarantee acceptance of the order, but confirms that the order has been received and is being processed.
+                </p>
+
+            </div>
+        </div>
+
+        <h3 class="subsection-title"
+        data-en="An order may be cancelled if:"
+        data-ru="Заказ может быть отменён, если:"
+        data-bg="Поръчката може да бъде отменена, ако:">
+        An order may be cancelled if:
+        </h3>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="The product is unavailable or out of stock."
+            data-ru="Товар недоступен или отсутствует на складе."
+            data-bg="Продуктът не е наличен или е изчерпан.">
+            <span
+            data-en="The product is unavailable or out of stock."
+            data-ru="Товар недоступен или отсутствует на складе."
+            data-bg="Продуктът не е наличен или е изчерпан.">
+            The product is unavailable or out of stock.
+            </span>
+            </li>
+
+            <li
+            data-en="There is an error in the product price or product description."
+            data-ru="Обнаружена ошибка в цене или описании товара."
+            data-bg="Открита е грешка в цената или описанието на продукта.">
+            <span
+            data-en="There is an error in the product price or product description."
+            data-ru="Обнаружена ошибка в цене или описании товара."
+            data-bg="Открита е грешка в цената или описанието на продукта.">
+            There is an error in the product price or product description.
+            </span>
+            </li>
+
+            <li
+            data-en="The provided shipping information is incomplete or incorrect."
+            data-ru="Указана неполная или некорректная информация о доставке."
+            data-bg="Предоставената информация за доставка е непълна или неправилна.">
+            <span
+            data-en="The provided shipping information is incomplete or incorrect."
+            data-ru="Указана неполная или некорректная информация о доставке."
+            data-bg="Предоставената информация за доставка е непълна или неправилна.">
+            The provided shipping information is incomplete or incorrect.
+            </span>
+            </li>
+
+            <li
+            data-en="We suspect fraudulent, unauthorized, or illegal activity related to the order."
+            data-ru="Мы подозреваем мошенническую или несанкционированную активность."
+            data-bg="Подозираме измамна или неоторизирана дейност.">
+            <span
+            data-en="We suspect fraudulent, unauthorized, or illegal activity related to the order."
+            data-ru="Мы подозреваем мошенническую или несанкционированную активность."
+            data-bg="Подозираме измамна или неоторизирана дейност.">
+            We suspect fraudulent, unauthorized, or illegal activity related to the order.
+            </span>
+            </li>
+
+            <li
+            data-en="Payment cannot be successfully processed or is declined by the payment provider."
+            data-ru="Платеж не может быть обработан или отклонён платёжной системой."
+            data-bg="Плащането не може да бъде обработено или е отказано от платежния доставчик.">
+            <span
+            data-en="Payment cannot be successfully processed or is declined by the payment provider."
+            data-ru="Платеж не может быть обработан или отклонён платёжной системой."
+            data-bg="Плащането не може да бъде обработено или е отказано от платежния доставчик.">
+            Payment cannot be successfully processed or is declined by the payment provider.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
                 <!-- Section 4: Shipping -->
-                <section class="terms-section-item">
-                    <div class="section-number">04</div>
-                    <h2 class="section-title" data-en="Shipping & Delivery" data-ru="Доставка">Доставка</h2>
-                    <div class="section-content">
-                        <p data-en="We will make every effort to deliver your order within the estimated timeframe. However, delivery times are estimates and not guaranteed." data-ru="Мы приложим все усилия, чтобы доставить ваш заказ в предполагаемые сроки. Однако сроки доставки являются ориентировочными и не гарантируются.">
-                            Мы приложим все усилия, чтобы доставить ваш заказ в предполагаемые сроки. Однако сроки доставки являются ориентировочными и не гарантируются.
-                        </p>
-                        <div class="shipping-grid">
-                            <div class="shipping-card">
-                                <i class="fas fa-shipping-fast"></i>
-                                <h4 data-en="Standard Shipping" data-ru="Стандартная доставка">Стандартная доставка</h4>
-                                <p data-en="5-7 business days" data-ru="5-7 рабочих дней">5-7 рабочих дней</p>
-                            </div>
-                            <div class="shipping-card">
-                                <i class="fas fa-rocket"></i>
-                                <h4 data-en="Express Shipping" data-ru="Экспресс доставка">Экспресс доставка</h4>
-                                <p data-en="2-3 business days" data-ru="2-3 рабочих дня">2-3 рабочих дня</p>
-                            </div>
-                            <div class="shipping-card">
-                                <i class="fas fa-globe"></i>
-                                <h4 data-en="International" data-ru="Международная">Международная</h4>
-                                <p data-en="10-21 business days" data-ru="10-21 рабочих дней">10-21 рабочих дней</p>
-                            </div>
-                        </div>
-                        <ul class="terms-list">
-                            <li data-en="Shipping times are estimates and may vary" data-ru="Сроки доставки являются ориентировочными и могут варьироваться">
-                                <span data-en="Shipping times are estimates and may vary" data-ru="Сроки доставки являются ориентировочными и могут варьироваться">Сроки доставки являются ориентировочными и могут варьироваться</span>
-                            </li>
-                            <li data-en="You are responsible for providing accurate shipping information" data-ru="Вы несете ответственность за предоставление точной информации о доставке">
-                                <span data-en="You are responsible for providing accurate shipping information" data-ru="Вы несете ответственность за предоставление точной информации о доставке">Вы несете ответственность за предоставление точной информации о доставке</span>
-                            </li>
-                            <li data-en="Risk of loss passes to you upon delivery" data-ru="Риск утраты переходит к вам при доставке">
-                                <span data-en="Risk of loss passes to you upon delivery" data-ru="Риск утраты переходит к вам при доставке">Риск утраты переходит к вам при доставке</span>
-                            </li>
-                            <li data-en="Additional customs fees may apply for international orders" data-ru="Для международных заказов могут применяться дополнительные таможенные сборы">
-                                <span data-en="Additional customs fees may apply for international orders" data-ru="Для международных заказов могут применяться дополнительные таможенные сборы">Для международных заказов могут применяться дополнительные таможенные сборы</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
+
+    <div class="section-number">04</div>
+
+    <h2 class="section-title"
+    data-en="Shipping & Delivery"
+    data-ru="Доставка"
+    data-bg="Доставка">
+    Shipping & Delivery
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Level Up Gaming currently delivers orders within Bulgaria. We aim to process and ship orders as quickly as possible after successful payment confirmation."
+        data-ru="В настоящее время Level Up Gaming осуществляет доставку заказов только по территории Болгарии. Мы стараемся обрабатывать и отправлять заказы как можно быстрее после подтверждения оплаты."
+        data-bg="В момента Level Up Gaming доставя поръчки само на територията на България. Ние се стремим да обработваме и изпращаме поръчките възможно най-бързо след потвърждение на плащането.">
+        Level Up Gaming currently delivers orders within Bulgaria. We aim to process and ship orders as quickly as possible after successful payment confirmation.
+        </p>
+
+        <div class="shipping-grid">
+
+            <div class="shipping-card">
+                <i class="fas fa-shipping-fast"></i>
+
+                <h4
+                data-en="Standard Delivery"
+                data-ru="Стандартная доставка"
+                data-bg="Стандартна доставка">
+                Standard Delivery
+                </h4>
+
+                <p
+                data-en="3–7 business days"
+                data-ru="3–7 рабочих дней"
+                data-bg="3–7 работни дни">
+                3–7 business days
+                </p>
+
+            </div>
+
+            <div class="shipping-card">
+                <i class="fas fa-box"></i>
+
+                <h4
+                data-en="Order Processing"
+                data-ru="Обработка заказа"
+                data-bg="Обработка на поръчката">
+                Order Processing
+                </h4>
+
+                <p
+                data-en="1–2 business days"
+                data-ru="1–2 рабочих дня"
+                data-bg="1–2 работни дни">
+                1–2 business days
+                </p>
+
+            </div>
+
+        </div>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="Delivery times are estimated and may vary depending on the courier service or external factors."
+            data-ru="Сроки доставки являются ориентировочными и могут варьироваться в зависимости от курьерской службы или внешних факторов."
+            data-bg="Сроковете за доставка са приблизителни и могат да варират в зависимост от куриерската услуга или външни фактори.">
+            <span
+            data-en="Delivery times are estimated and may vary depending on the courier service or external factors."
+            data-ru="Сроки доставки являются ориентировочными и могут варьироваться в зависимости от курьерской службы или внешних факторов."
+            data-bg="Сроковете за доставка са приблизителни и могат да варират в зависимост от куриерската услуга или външни фактори.">
+            Delivery times are estimated and may vary depending on the courier service or external factors.
+            </span>
+            </li>
+
+            <li
+            data-en="Customers are responsible for providing accurate delivery information when placing an order."
+            data-ru="Покупатель несёт ответственность за предоставление точной информации о доставке при оформлении заказа."
+            data-bg="Клиентът носи отговорност за предоставяне на точна информация за доставка при направата на поръчка.">
+            <span
+            data-en="Customers are responsible for providing accurate delivery information when placing an order."
+            data-ru="Покупатель несёт ответственность за предоставление точной информации о доставке при оформлении заказа."
+            data-bg="Клиентът носи отговорност за предоставяне на точна информация за доставка при направата на поръчка.">
+            Customers are responsible for providing accurate delivery information when placing an order.
+            </span>
+            </li>
+
+            <li
+            data-en="Once the order has been handed over to the shipping provider, delivery times are controlled by the courier service."
+            data-ru="После передачи заказа службе доставки сроки доставки контролируются курьерской компанией."
+            data-bg="След като поръчката бъде предадена на куриерската компания, сроковете за доставка се контролират от нея.">
+            <span
+            data-en="Once the order has been handed over to the shipping provider, delivery times are controlled by the courier service."
+            data-ru="После передачи заказа службе доставки сроки доставки контролируются курьерской компанией."
+            data-bg="След като поръчката бъде предадена на куриерската компания, сроковете за доставка се контролират от нея.">
+            Once the order has been handed over to the shipping provider, delivery times are controlled by the courier service.
+            </span>
+            </li>
+
+            <li
+            data-en="Level Up Gaming is not responsible for delivery delays caused by circumstances beyond our control, including courier delays or force majeure events."
+            data-ru="Level Up Gaming не несёт ответственности за задержки доставки, вызванные обстоятельствами вне нашего контроля, включая задержки курьерских служб или форс-мажор."
+            data-bg="Level Up Gaming не носи отговорност за закъснения в доставката, причинени от обстоятелства извън нашия контрол, включително закъснения от страна на куриерските услуги или форсмажорни обстоятелства.">
+            <span
+            data-en="Level Up Gaming is not responsible for delivery delays caused by circumstances beyond our control, including courier delays or force majeure events."
+            data-ru="Level Up Gaming не несёт ответственности за задержки доставки, вызванные обстоятельствами вне нашего контроля, включая задержки курьерских служб или форс-мажор."
+            data-bg="Level Up Gaming не носи отговорност за закъснения в доставката, причинени от обстоятелства извън нашия контрол, включително закъснения от страна на куриерските услуги или форсмажорни обстоятелства.">
+            Level Up Gaming is not responsible for delivery delays caused by circumstances beyond our control, including courier delays or force majeure events.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
                 <!-- Section 5: Refunds & Returns -->
-                <section class="terms-section-item">
-                    <div class="section-number">05</div>
-                    <h2 class="section-title" data-en="Refunds & Returns" data-ru="Возвраты и возмещения">Возвраты и возмещения</h2>
-                    <div class="section-content">
-                        <p data-en="We want you to be completely satisfied with your purchase. If you are not satisfied, please review our Refund Policy for detailed information about returns and refunds." data-ru="Мы хотим, чтобы вы были полностью удовлетворены своей покупкой. Если вы не удовлетворены, пожалуйста, ознакомьтесь с нашей Политикой возврата для получения подробной информации о возвратах и возмещениях.">
-                            Мы хотим, чтобы вы были полностью удовлетворены своей покупкой. Если вы не удовлетворены, пожалуйста, ознакомьтесь с нашей Политикой возврата для получения подробной информации о возвратах и возмещениях.
-                        </p>
-                        <div class="refund-link-box">
-                            <i class="fas fa-undo"></i>
-                            <div>
-                                <h4 data-en="Detailed Refund Policy" data-ru="Подробная политика возврата">Подробная политика возврата</h4>
-                                <p data-en="For complete information about our return and refund process, please visit our dedicated Refund Policy page." data-ru="Для получения полной информации о нашем процессе возврата и возмещения, пожалуйста, посетите нашу специальную страницу Политики возврата.">
-                                    Для получения полной информации о нашем процессе возврата и возмещения, пожалуйста, посетите нашу специальную страницу Политики возврата.
-                                </p>
-                                <a href="refund.html" class="btn-primary">
-                                    <span data-en="View Refund Policy" data-ru="Смотреть политику возврата">Смотреть политику возврата</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <h3 class="subsection-title" data-en="Quick Overview:" data-ru="Краткий обзор:">Краткий обзор:</h3>
-                        <ul class="terms-list">
-                            <li data-en="30-day return policy on most products" data-ru="30-дневная политика возврата на большинство товаров">
-                                <span data-en="30-day return policy on most products" data-ru="30-дневная политика возврата на большинство товаров">30-дневная политика возврата на большинство товаров</span>
-                            </li>
-                            <li data-en="Products must be unused and in original packaging" data-ru="Товары должны быть неиспользованными и в оригинальной упаковке">
-                                <span data-en="Products must be unused and in original packaging" data-ru="Товары должны быть неиспользованными и в оригинальной упаковке">Товары должны быть неиспользованными и в оригинальной упаковке</span>
-                            </li>
-                            <li data-en="Refunds processed within 5-10 business days" data-ru="Возврат средств обрабатывается в течение 5-10 рабочих дней">
-                                <span data-en="Refunds processed within 5-10 business days" data-ru="Возврат средств обрабатывается в течение 5-10 рабочих дней">Возврат средств обрабатывается в течение 5-10 рабочих дней</span>
-                            </li>
-                            <li data-en="Customer responsible for return shipping costs" data-ru="Клиент несет ответственность за расходы на обратную доставку">
-                                <span data-en="Customer responsible for return shipping costs" data-ru="Клиент несет ответственность за расходы на обратную доставку">Клиент несет ответственность за расходы на обратную доставку</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
+
+    <div class="section-number">05</div>
+
+    <h2 class="section-title"
+    data-en="Refunds & Returns"
+    data-ru="Возвраты и возврат средств"
+    data-bg="Връщане и възстановяване">
+    Refunds & Returns
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="Level Up Gaming aims to ensure that customers are satisfied with their purchases. If you are not satisfied with your order, you may be eligible for a return or refund in accordance with our Refund Policy and applicable consumer protection laws."
+        data-ru="Level Up Gaming стремится обеспечить удовлетворенность клиентов покупками. Если вы не удовлетворены заказом, вы можете иметь право на возврат или возмещение в соответствии с нашей Политикой возврата и действующим законодательством о защите прав потребителей."
+        data-bg="Level Up Gaming се стреми клиентите да бъдат доволни от своите покупки. Ако не сте доволни от поръчката си, може да имате право на връщане или възстановяване на сумата съгласно нашата политика за връщане и приложимото законодателство за защита на потребителите.">
+        Level Up Gaming aims to ensure that customers are satisfied with their purchases. If you are not satisfied with your order, you may be eligible for a return or refund in accordance with our Refund Policy and applicable consumer protection laws.
+        </p>
+
+        <div class="refund-link-box">
+            <i class="fas fa-undo"></i>
+
+            <div>
+
+                <h4
+                data-en="Detailed Refund Policy"
+                data-ru="Подробная политика возврата"
+                data-bg="Подробна политика за връщане">
+                Detailed Refund Policy
+                </h4>
+
+                <p
+                data-en="For full details about our return and refund procedures, please visit our dedicated Refund Policy page."
+                data-ru="Для получения полной информации о процедурах возврата и возмещения посетите нашу страницу Политики возврата."
+                data-bg="За пълна информация относно процедурите за връщане и възстановяване на средства посетете страницата с нашата политика за връщане.">
+                For full details about our return and refund procedures, please visit our dedicated Refund Policy page.
+                </p>
+
+                <a href="refund.html" class="btn-primary">
+                    <span
+                    data-en="View Refund Policy"
+                    data-ru="Посмотреть политику возврата"
+                    data-bg="Вижте политиката за връщане">
+                    View Refund Policy
+                    </span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+        </div>
+
+        <h3 class="subsection-title"
+        data-en="Quick Overview:"
+        data-ru="Краткий обзор:"
+        data-bg="Кратък преглед:">
+        Quick Overview:
+        </h3>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="Customers in the European Union generally have the right to withdraw from a purchase within 14 days of receiving the product."
+            data-ru="Покупатели в Европейском союзе обычно имеют право отказаться от покупки в течение 14 дней после получения товара."
+            data-bg="Клиентите в Европейския съюз обикновено имат право да се откажат от покупка в рамките на 14 дни след получаване на продукта.">
+            <span
+            data-en="Customers in the European Union generally have the right to withdraw from a purchase within 14 days of receiving the product."
+            data-ru="Покупатели в Европейском союзе обычно имеют право отказаться от покупки в течение 14 дней после получения товара."
+            data-bg="Клиентите в Европейския съюз обикновено имат право да се откажат от покупка в рамките на 14 дни след получаване на продукта.">
+            Customers in the European Union generally have the right to withdraw from a purchase within 14 days of receiving the product.
+            </span>
+            </li>
+
+            <li
+            data-en="Returned products must be unused and returned in their original packaging unless the item is defective."
+            data-ru="Возвращаемые товары должны быть неиспользованными и возвращены в оригинальной упаковке, если товар не является дефектным."
+            data-bg="Върнатите продукти трябва да бъдат неизползвани и в оригиналната им опаковка, освен ако продуктът не е дефектен.">
+            <span
+            data-en="Returned products must be unused and returned in their original packaging unless the item is defective."
+            data-ru="Возвращаемые товары должны быть неиспользованными и возвращены в оригинальной упаковке, если товар не является дефектным."
+            data-bg="Върнатите продукти трябва да бъдат неизползвани и в оригиналната им опаковка, освен ако продуктът не е дефектен.">
+            Returned products must be unused and returned in their original packaging unless the item is defective.
+            </span>
+            </li>
+
+            <li
+            data-en="Refunds are processed after the returned product has been received and inspected."
+            data-ru="Возврат средств производится после получения и проверки возвращённого товара."
+            data-bg="Възстановяването на сумата се извършва след получаване и проверка на върнатия продукт.">
+            <span
+            data-en="Refunds are processed after the returned product has been received and inspected."
+            data-ru="Возврат средств производится после получения и проверки возвращённого товара."
+            data-bg="Възстановяването на сумата се извършва след получаване и проверка на върнатия продукт.">
+            Refunds are processed after the returned product has been received and inspected.
+            </span>
+            </li>
+
+            <li
+            data-en="Refunds will be issued using the same payment method used for the original purchase unless otherwise agreed."
+            data-ru="Возврат средств осуществляется тем же способом оплаты, который использовался при покупке, если не согласовано иное."
+            data-bg="Възстановяването на сумата се извършва чрез същия метод на плащане, използван при покупката, освен ако не е договорено друго.">
+            <span
+            data-en="Refunds will be issued using the same payment method used for the original purchase unless otherwise agreed."
+            data-ru="Возврат средств осуществляется тем же способом оплаты, который использовался при покупке, если не согласовано иное."
+            data-bg="Възстановяването на сумата се извършва чрез същия метод на плащане, използван при покупката, освен ако не е договорено друго.">
+            Refunds will be issued using the same payment method used for the original purchase unless otherwise agreed.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
                 <!-- Section 6: Limitation of Liability -->
-                <section class="terms-section-item">
-                    <div class="section-number">06</div>
-                    <h2 class="section-title" data-en="Limitation of Liability" data-ru="Ограничение ответственности">Ограничение ответственности</h2>
-                    <div class="section-content">
-                        <p data-en="To the maximum extent permitted by law, Level Up Gaming shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues." data-ru="В максимальной степени, разрешенной законом, Level Up Gaming не несет ответственности за любые косвенные, случайные, особые, последующие или штрафные убытки, или любую потерю прибыли или доходов.">
-                            В максимальной степени, разрешенной законом, Level Up Gaming не несет ответственности за любые косвенные, случайные, особые, последующие или штрафные убытки, или любую потерю прибыли или доходов.
-                        </p>
-                        <div class="liability-grid">
-                            <div class="liability-item">
-                                <i class="fas fa-shield-alt"></i>
-                                <h4 data-en="Service Availability" data-ru="Доступность сервиса">Доступность сервиса</h4>
-                                <p data-en="We do not guarantee uninterrupted service" data-ru="Мы не гарантируем бесперебойную работу сервиса">Мы не гарантируем бесперебойную работу сервиса</p>
-                            </div>
-                            <div class="liability-item">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <h4 data-en="Third-Party Links" data-ru="Сторонние ссылки">Сторонние ссылки</h4>
-                                <p data-en="Not responsible for external websites" data-ru="Не несем ответственности за внешние сайты">Не несем ответственности за внешние сайты</p>
-                            </div>
-                            <div class="liability-item">
-                                <i class="fas fa-file-contract"></i>
-                                <h4 data-en="Warranty Disclaimer" data-ru="Отказ от гарантий">Отказ от гарантий</h4>
-                                <p data-en="Products sold 'as is' where permitted" data-ru="Товары продаются 'как есть' где разрешено">Товары продаются "как есть" где разрешено</p>
-                            </div>
-                        </div>
-                        <ul class="terms-list">
-                            <li data-en="Our total liability is limited to the amount you paid for the product" data-ru="Наша общая ответственность ограничена суммой, которую вы заплатили за товар">
-                                <span data-en="Our total liability is limited to the amount you paid for the product" data-ru="Наша общая ответственность ограничена суммой, которую вы заплатили за товар">Наша общая ответственность ограничена суммой, которую вы заплатили за товар</span>
-                            </li>
-                            <li data-en="We are not liable for delays caused by circumstances beyond our control" data-ru="Мы не несем ответственности за задержки, вызванные обстоятельствами вне нашего контроля">
-                                <span data-en="We are not liable for delays caused by circumstances beyond our control" data-ru="Мы не несем ответственности за задержки, вызванные обстоятельствами вне нашего контроля">Мы не несем ответственности за задержки, вызванные обстоятельствами вне нашего контроля</span>
-                            </li>
-                            <li data-en="Product images and descriptions are for reference only" data-ru="Изображения и описания товаров приведены только для справки">
-                                <span data-en="Product images and descriptions are for reference only" data-ru="Изображения и описания товаров приведены только для справки">Изображения и описания товаров приведены только для справки</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
+
+    <div class="section-number">06</div>
+
+    <h2 class="section-title"
+    data-en="Limitation of Liability"
+    data-ru="Ограничение ответственности"
+    data-bg="Ограничаване на отговорността">
+    Limitation of Liability
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="To the extent permitted by applicable law, Level Up Gaming shall not be liable for indirect, incidental, or consequential damages resulting from the use of this website or the purchase of products through our online store."
+        data-ru="В пределах, разрешённых действующим законодательством, Level Up Gaming не несёт ответственности за косвенные или последующие убытки, возникающие в результате использования сайта или покупки товаров через наш интернет-магазин."
+        data-bg="В рамките на приложимото законодателство Level Up Gaming не носи отговорност за косвени или последващи щети, произтичащи от използването на сайта или покупката на продукти чрез нашия онлайн магазин.">
+        To the extent permitted by applicable law, Level Up Gaming shall not be liable for indirect, incidental, or consequential damages resulting from the use of this website or the purchase of products through our online store.
+        </p>
+
+        <div class="liability-grid">
+
+            <div class="liability-item">
+                <i class="fas fa-shield-alt"></i>
+
+                <h4
+                data-en="Service Availability"
+                data-ru="Доступность сервиса"
+                data-bg="Наличност на услугата">
+                Service Availability
+                </h4>
+
+                <p
+                data-en="We strive to keep our website available at all times, but we cannot guarantee uninterrupted access due to maintenance, technical issues, or circumstances beyond our control."
+                data-ru="Мы стремимся обеспечивать постоянную доступность сайта, однако не можем гарантировать бесперебойную работу из-за технического обслуживания, технических проблем или обстоятельств вне нашего контроля."
+                data-bg="Ние се стремим сайтът да бъде достъпен по всяко време, но не можем да гарантираме непрекъснат достъп поради поддръжка, технически проблеми или обстоятелства извън нашия контрол.">
+                We strive to keep our website available at all times, but we cannot guarantee uninterrupted access due to maintenance, technical issues, or circumstances beyond our control.
+                </p>
+
+            </div>
+
+            <div class="liability-item">
+                <i class="fas fa-exclamation-circle"></i>
+
+                <h4
+                data-en="External Links"
+                data-ru="Внешние ссылки"
+                data-bg="Външни връзки">
+                External Links
+                </h4>
+
+                <p
+                data-en="Our website may contain links to third-party websites. Level Up Gaming is not responsible for the content, policies, or practices of external websites."
+                data-ru="Наш сайт может содержать ссылки на сторонние ресурсы. Level Up Gaming не несёт ответственности за содержание, политики или практики сторонних сайтов."
+                data-bg="Нашият сайт може да съдържа връзки към външни уебсайтове. Level Up Gaming не носи отговорност за съдържанието или политиките на тези сайтове.">
+                Our website may contain links to third-party websites. Level Up Gaming is not responsible for the content, policies, or practices of external websites.
+                </p>
+
+            </div>
+
+            <div class="liability-item">
+                <i class="fas fa-box"></i>
+
+                <h4
+                data-en="Product Information"
+                data-ru="Информация о товарах"
+                data-bg="Информация за продуктите">
+                Product Information
+                </h4>
+
+                <p
+                data-en="We make every effort to ensure that product descriptions and images are accurate, but minor differences may occur due to manufacturing variations or screen display settings."
+                data-ru="Мы прилагаем все усилия, чтобы описания и изображения товаров были точными, однако возможны небольшие различия из-за производственных особенностей или настроек экрана."
+                data-bg="Полагаме всички усилия описанията и изображенията на продуктите да бъдат точни, но могат да възникнат малки разлики поради производствени особености или настройки на екрана.">
+                We make every effort to ensure that product descriptions and images are accurate, but minor differences may occur due to manufacturing variations or screen display settings.
+                </p>
+
+            </div>
+
+        </div>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="Nothing in these Terms limits consumer rights that cannot be excluded under applicable law."
+            data-ru="Ничто в настоящих условиях не ограничивает права потребителей, которые не могут быть исключены согласно действующему законодательству."
+            data-bg="Нищо в тези условия не ограничава правата на потребителите, които не могат да бъдат изключени съгласно приложимото законодателство.">
+            <span
+            data-en="Nothing in these Terms limits consumer rights that cannot be excluded under applicable law."
+            data-ru="Ничто в настоящих условиях не ограничивает права потребителей, которые не могут быть исключены согласно действующему законодательству."
+            data-bg="Нищо в тези условия не ограничава правата на потребителите, които не могат да бъдат изключени съгласно приложимото законодателство.">
+            Nothing in these Terms limits consumer rights that cannot be excluded under applicable law.
+            </span>
+            </li>
+
+            <li
+            data-en="Our liability for any claim related to a product purchase shall be limited to the amount paid for that product, where permitted by law."
+            data-ru="Наша ответственность по любым претензиям, связанным с покупкой товара, ограничивается суммой, уплаченной за этот товар, если это допускается законом."
+            data-bg="Нашата отговорност по всякакви претенции, свързани с покупка на продукт, е ограничена до сумата, платена за този продукт, когато това е позволено от закона.">
+            <span
+            data-en="Our liability for any claim related to a product purchase shall be limited to the amount paid for that product, where permitted by law."
+            data-ru="Наша ответственность по любым претензиям, связанным с покупкой товара, ограничивается суммой, уплаченной за этот товар, если это допускается законом."
+            data-bg="Нашата отговорност по всякакви претенции, свързани с покупка на продукт, е ограничена до сумата, платена за този продукт, когато това е позволено от закона.">
+            Our liability for any claim related to a product purchase shall be limited to the amount paid for that product, where permitted by law.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
                 <!-- Section 7: Governing Law -->
-                <section class="terms-section-item">
-                    <div class="section-number">07</div>
-                    <h2 class="section-title" data-en="Governing Law & Disputes" data-ru="Применимое право и споры">Применимое право и споры</h2>
-                    <div class="section-content">
-                        <p data-en="These Terms of Service shall be governed by and construed in accordance with the laws of the Russian Federation. Any disputes arising from these terms shall be resolved through arbitration or in the courts of Moscow, Russia." data-ru="Настоящие Условия использования регулируются и толкуются в соответствии с законодательством Российской Федерации. Любые споры, возникающие из этих условий, должны быть разрешены посредством арбитража или в судах Москвы, Россия.">
-                            Настоящие Условия использования регулируются и толкуются в соответствии с законодательством Российской Федерации. Любые споры, возникающие из этих условий, должны быть разрешены посредством арбитража или в судах Москвы, Россия.
-                        </p>
-                        <div class="law-box">
-                            <i class="fas fa-gavel"></i>
-                            <div>
-                                <h4 data-en="Dispute Resolution" data-ru="Разрешение споров">Разрешение споров</h4>
-                                <p data-en="We encourage customers to contact us first to resolve any disputes. Most concerns can be resolved quickly through direct communication with our support team." data-ru="Мы призываем клиентов сначала связаться с нами для разрешения любых споров. Большинство проблем можно быстро решить через прямое общение с нашей службой поддержки.">
-                                    Мы призываем клиентов сначала связаться с нами для разрешения любых споров. Большинство проблем можно быстро решить через прямое общение с нашей службой поддержки.
-                                </p>
-                            </div>
-                        </div>
-                        <ul class="terms-list">
-                            <li data-en="Governed by Russian Federation law" data-ru="Регулируется законодательством Российской Федерации">
-                                <span data-en="Governed by Russian Federation law" data-ru="Регулируется законодательством Российской Федерации">Регулируется законодательством Российской Федерации</span>
-                            </li>
-                            <li data-en="Disputes resolved in Moscow, Russia jurisdiction" data-ru="Споры разрешаются в юрисдикции Москвы, Россия">
-                                <span data-en="Disputes resolved in Moscow, Russia jurisdiction" data-ru="Споры разрешаются в юрисдикции Москвы, Россия">Споры разрешаются в юрисдикции Москвы, Россия</span>
-                            </li>
-                            <li data-en="Customers agree to attempt informal resolution first" data-ru="Клиенты соглашаются сначала попытаться неформально разрешить спор">
-                                <span data-en="Customers agree to attempt informal resolution first" data-ru="Клиенты соглашаются сначала попытаться неформально разрешить спор">Клиенты соглашаются сначала попытаться неформально разрешить спор</span>
-                            </li>
-                            <li data-en="Changes to terms are effective immediately upon posting" data-ru="Изменения в условиях вступают в силу немедленно после публикации">
-                                <span data-en="Changes to terms are effective immediately upon posting" data-ru="Изменения в условиях вступают в силу немедленно после публикации">Изменения в условиях вступают в силу немедленно после публикации</span>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+<section class="terms-section-item">
+
+    <div class="section-number">07</div>
+
+    <h2 class="section-title"
+    data-en="Governing Law & Dispute Resolution"
+    data-ru="Применимое право и разрешение споров"
+    data-bg="Приложимо право и разрешаване на спорове">
+    Governing Law & Dispute Resolution
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="These Terms of Service shall be governed by and interpreted in accordance with the laws of the Republic of Bulgaria and applicable European Union legislation."
+        data-ru="Настоящие Условия использования регулируются и толкуются в соответствии с законодательством Республики Болгария и применимым законодательством Европейского союза."
+        data-bg="Тези Общи условия се регулират и тълкуват съгласно законодателството на Република България и приложимото законодателство на Европейския съюз.">
+        These Terms of Service shall be governed by and interpreted in accordance with the laws of the Republic of Bulgaria and applicable European Union legislation.
+        </p>
+
+        <div class="law-box">
+            <i class="fas fa-gavel"></i>
+
+            <div>
+
+                <h4
+                data-en="Dispute Resolution"
+                data-ru="Разрешение споров"
+                data-bg="Разрешаване на спорове">
+                Dispute Resolution
+                </h4>
+
+                <p
+                data-en="If you have a complaint or dispute related to our services or products, we encourage you to contact us first so that we can attempt to resolve the issue quickly and fairly."
+                data-ru="Если у вас возникла жалоба или спор, связанный с нашими услугами или товарами, мы рекомендуем сначала связаться с нами, чтобы попытаться решить проблему быстро и справедливо."
+                data-bg="Ако имате оплакване или спор, свързан с нашите услуги или продукти, препоръчваме първо да се свържете с нас, за да се опитаме да разрешим проблема бързо и справедливо.">
+                If you have a complaint or dispute related to our services or products, we encourage you to contact us first so that we can attempt to resolve the issue quickly and fairly.
+                </p>
+
+            </div>
+        </div>
+
+        <ul class="terms-list">
+
+            <li
+            data-en="These Terms are governed by the laws of the Republic of Bulgaria."
+            data-ru="Настоящие условия регулируются законодательством Республики Болгария."
+            data-bg="Тези условия се регулират от законодателството на Република България.">
+            <span
+            data-en="These Terms are governed by the laws of the Republic of Bulgaria."
+            data-ru="Настоящие условия регулируются законодательством Республики Болгария."
+            data-bg="Тези условия се регулират от законодателството на Република България.">
+            These Terms are governed by the laws of the Republic of Bulgaria.
+            </span>
+            </li>
+
+            <li
+            data-en="Consumers in the European Union retain all rights granted under applicable consumer protection laws."
+            data-ru="Потребители в Европейском союзе сохраняют все права, предоставленные действующим законодательством о защите прав потребителей."
+            data-bg="Потребителите в Европейския съюз запазват всички права, предоставени от приложимото законодателство за защита на потребителите.">
+            <span
+            data-en="Consumers in the European Union retain all rights granted under applicable consumer protection laws."
+            data-ru="Потребители в Европейском союзе сохраняют все права, предоставленные действующим законодательством о защите прав потребителей."
+            data-bg="Потребителите в Европейския съюз запазват всички права, предоставени от приложимото законодателство за защита на потребителите.">
+            Consumers in the European Union retain all rights granted under applicable consumer protection laws.
+            </span>
+            </li>
+
+            <li
+            data-en="Disputes that cannot be resolved informally may be submitted to the competent courts of the Republic of Bulgaria."
+            data-ru="Споры, которые не могут быть урегулированы мирным путем, могут быть переданы в компетентные суды Республики Болгария."
+            data-bg="Спорове, които не могат да бъдат решени по взаимно съгласие, могат да бъдат отнесени до компетентните съдилища на Република България.">
+            <span
+            data-en="Disputes that cannot be resolved informally may be submitted to the competent courts of the Republic of Bulgaria."
+            data-ru="Споры, которые не могут быть урегулированы мирным путем, могут быть переданы в компетентные суды Республики Болгария."
+            data-bg="Спорове, които не могат да бъдат решени по взаимно съгласие, могат да бъдат отнесени до компетентните съдилища на Република България.">
+            Disputes that cannot be resolved informally may be submitted to the competent courts of the Republic of Bulgaria.
+            </span>
+            </li>
+
+            <li
+            data-en="Level Up Gaming reserves the right to update or modify these Terms of Service at any time. Updates will take effect after they are published on this website."
+            data-ru="Level Up Gaming оставляет за собой право обновлять или изменять настоящие Условия использования. Изменения вступают в силу после публикации на сайте."
+            data-bg="Level Up Gaming си запазва правото да актуализира или променя тези Общи условия. Промените влизат в сила след публикуването им на сайта.">
+            <span
+            data-en="Level Up Gaming reserves the right to update or modify these Terms of Service at any time. Updates will take effect after they are published on this website."
+            data-ru="Level Up Gaming оставляет за собой право обновлять или изменять настоящие Условия использования. Изменения вступают в силу после публикации на сайте."
+            data-bg="Level Up Gaming си запазва правото да актуализира или променя тези Общи условия. Промените влизат в сила след публикуването им на сайта.">
+            Level Up Gaming reserves the right to update or modify these Terms of Service at any time. Updates will take effect after they are published on this website.
+            </span>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
                 <!-- Section 8: Contact & Questions -->
-                <section class="terms-section-item">
-                    <div class="section-number">08</div>
-                    <h2 class="section-title" data-en="Questions & Contact" data-ru="Вопросы и контакты">Вопросы и контакты</h2>
-                    <div class="section-content">
-                        <p data-en="If you have any questions about these Terms of Service, please contact us using the information below." data-ru="Если у вас есть вопросы относительно настоящих Условий использования, пожалуйста, свяжитесь с нами, используя информацию ниже.">
-                            Если у вас есть вопросы относительно настоящих Условий использования, пожалуйста, свяжитесь с нами, используя информацию ниже.
-                        </p>
-                        <div class="contact-methods">
-                            <div class="contact-method">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <h4 data-en="Email Support" data-ru="Электронная почта">Электронная почта</h4>
-                                    <a href="mailto:legal@levelupgaming.com">legal@levelupgaming.com</a>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <h4 data-en="Phone" data-ru="Телефон">Телефон</h4>
-                                    <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-comments"></i>
-                                <div>
-                                    <h4 data-en="Live Chat" data-ru="Онлайн-чат">Онлайн-чат</h4>
-                                    <a href="contact.html" data-en="Contact Page" data-ru="Страница контактов">Страница контактов</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<section class="terms-section-item">
+
+    <div class="section-number">08</div>
+
+    <h2 class="section-title"
+    data-en="Questions & Contact"
+    data-ru="Вопросы и контакты"
+    data-bg="Въпроси и контакт">
+    Questions & Contact
+    </h2>
+
+    <div class="section-content">
+
+        <p
+        data-en="If you have any questions regarding these Terms of Service or our services, please contact our support team. We will do our best to respond as quickly as possible."
+        data-ru="Если у вас есть вопросы относительно настоящих Условий использования или наших услуг, пожалуйста, свяжитесь с нашей службой поддержки. Мы постараемся ответить как можно быстрее."
+        data-bg="Ако имате въпроси относно тези Общи условия или нашите услуги, моля свържете се с нашия екип за поддръжка. Ще се постараем да отговорим възможно най-бързо.">
+        If you have any questions regarding these Terms of Service or our services, please contact our support team. We will do our best to respond as quickly as possible.
+        </p>
+
+        <div class="contact-methods">
+
+            <div class="contact-method">
+
+                <i class="fas fa-envelope"></i>
+
+                <div>
+
+                    <h4
+                    data-en="Email Support"
+                    data-ru="Электронная почта"
+                    data-bg="Имейл поддръжка">
+                    Email Support
+                    </h4>
+
+                    <a href="mailto:support@levelupgaming.com">
+                    support@levelupgaming.com
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="contact-method">
+
+                <i class="fas fa-file-contract"></i>
+
+                <div>
+
+                    <h4
+                    data-en="Legal Inquiries"
+                    data-ru="Юридические вопросы"
+                    data-bg="Юридически въпроси">
+                    Legal Inquiries
+                    </h4>
+
+                    <a href="mailto:legal@levelupgaming.com">
+                    legal@levelupgaming.com
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="contact-method">
+
+                <i class="fas fa-comments"></i>
+
+                <div>
+
+                    <h4
+                    data-en="Customer Support"
+                    data-ru="Поддержка клиентов"
+                    data-bg="Клиентска поддръжка">
+                    Customer Support
+                    </h4>
+
+                    <a href="contact.html"
+                    data-en="Contact Page"
+                    data-ru="Страница контактов"
+                    data-bg="Страница за контакт">
+                    Contact Page
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
             </div>
 
             <!-- Related Links -->
-            <div class="related-links">
-                <h3 data-en="Related Policies" data-ru="Связанные политики">Связанные политики</h3>
-                <div class="links-grid">
-                    <a href="privacy.html" class="link-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h4 data-en="Privacy Policy" data-ru="Политика конфиденциальности">Политика конфиденциальности</h4>
-                        <p data-en="Learn how we protect your data" data-ru="Узнайте, как мы защищаем ваши данные">Узнайте, как мы защищаем ваши данные</p>
-                    </a>
-                    <a href="refund.html" class="link-card">
-                        <i class="fas fa-undo"></i>
-                        <h4 data-en="Refund Policy" data-ru="Политика возврата">Политика возврата</h4>
-                        <p data-en="Details about returns and refunds" data-ru="Детали о возвратах и возмещениях">Детали о возвратах и возмещениях</p>
-                    </a>
-                    <a href="contact.html" class="link-card">
-                        <i class="fas fa-headset"></i>
-                        <h4 data-en="Contact Support" data-ru="Связаться с поддержкой">Связаться с поддержкой</h4>
-                        <p data-en="Get help from our team" data-ru="Получите помощь от нашей команды">Получите помощь от нашей команды</p>
-                    </a>
-                </div>
-            </div>
+<div class="related-links">
+
+    <h3
+    data-en="Related Policies"
+    data-ru="Связанные политики"
+    data-bg="Свързани политики">
+    Related Policies
+    </h3>
+
+    <div class="links-grid">
+
+        <a href="privacy.html" class="link-card">
+
+            <i class="fas fa-shield-alt"></i>
+
+            <h4
+            data-en="Privacy Policy"
+            data-ru="Политика конфиденциальности"
+            data-bg="Политика за поверителност">
+            Privacy Policy
+            </h4>
+
+            <p
+            data-en="Learn how we protect and process your personal data."
+            data-ru="Узнайте, как мы защищаем и обрабатываем ваши персональные данные."
+            data-bg="Научете как защитаваме и обработваме вашите лични данни.">
+            Learn how we protect and process your personal data.
+            </p>
+
+        </a>
+
+        <a href="refund.html" class="link-card">
+
+            <i class="fas fa-undo"></i>
+
+            <h4
+            data-en="Refund Policy"
+            data-ru="Политика возврата"
+            data-bg="Политика за връщане">
+            Refund Policy
+            </h4>
+
+            <p
+            data-en="Learn about returns, refunds and your consumer rights."
+            data-ru="Узнайте о возвратах, возмещениях и ваших правах потребителя."
+            data-bg="Научете повече за връщанията, възстановяванията и правата на потребителите.">
+            Learn about returns, refunds and your consumer rights.
+            </p>
+
+        </a>
+
+        <a href="contact.html" class="link-card">
+
+            <i class="fas fa-headset"></i>
+
+            <h4
+            data-en="Contact Support"
+            data-ru="Связаться с поддержкой"
+            data-bg="Свържете се с поддръжката">
+            Contact Support
+            </h4>
+
+            <p
+            data-en="Contact our team if you need help or have questions."
+            data-ru="Свяжитесь с нашей командой, если вам нужна помощь или есть вопросы."
+            data-bg="Свържете се с нашия екип, ако имате нужда от помощ или имате въпроси.">
+            Contact our team if you need help or have questions.
+            </p>
+
+        </a>
+
+    </div>
+
+</div>
 
             <!-- Back to Top -->
-            <div class="back-to-top">
-                <a href="#" class="btn-primary">
-                    <i class="fas fa-arrow-up"></i>
-                    <span data-en="Back to Top" data-ru="Наверх">Наверх</span>
-                </a>
-            </div>
+<div class="back-to-top">
+    <a href="#" class="btn-primary">
+        <i class="fas fa-arrow-up"></i>
+        <span
+        data-en="Back to Top"
+        data-ru="Наверх"
+        data-bg="Нагоре">
+        Back to Top
+        </span>
+    </a>
+</div>
         </div>
     </main>
 
@@ -451,31 +1047,31 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">О Level Up</h4>
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">About Level Up</h4>
                     <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень." data-bg="Премиални игрови аксесоари за шампиони, които искат да повишат нивото на своята игра.">
-                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                        Premium gaming accessories for champions who want to level up their game.
                     </p>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Быстрые ссылки</h4>
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Главная</a></li>
-                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Магазин</a></li>
-                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">О нас</a></li>
-                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Контакты</a></li>
+                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Home</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Shop</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">About Us</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Contact</a></li>
                         
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Обслуживание клиентов</h4>
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Customer Service</h4>
                     <ul class="footer-links">
-                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Поддержка</a></li>
-                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Возвраты</a></li>
-                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Политика конфиденциальности</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Support</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Returns</a></li>
+                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Следите за нами</h4>
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Follow Us</h4>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -486,7 +1082,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">Все права защищены.</span></p>
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">All rights reserved.</span></p>
             </div>
         </div>
     </footer>

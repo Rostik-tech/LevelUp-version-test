@@ -5,19 +5,63 @@ export default (sequelize) => {
   return sequelize.define(
     "Product",
     {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Product name cannot be empty"
-          },
-          len: {
-            args: [2, 255],
-            msg: "Product name must be between 2 and 255 characters"
-          }
-        }
-      },
+      /* =========================
+   MULTI LANGUAGE FIELDS
+========================= */
+
+name_en: {
+  type: DataTypes.STRING,
+  allowNull: false,
+  validate: {
+    notEmpty: {
+      msg: "English product name cannot be empty"
+    },
+    len: {
+      args: [2, 255],
+      msg: "Product name must be between 2 and 255 characters"
+    }
+  }
+},
+
+name_ru: {
+  type: DataTypes.STRING,
+  allowNull: true
+},
+
+name_bg: {
+  type: DataTypes.STRING,
+  allowNull: true
+},
+
+shortDescription_en: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
+
+shortDescription_ru: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
+
+shortDescription_bg: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
+
+longDescription_en: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
+
+longDescription_ru: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
+
+longDescription_bg: {
+  type: DataTypes.TEXT,
+  allowNull: true
+},
 
       slug: {
         type: DataTypes.STRING,
@@ -94,21 +138,7 @@ export default (sequelize) => {
         }
       },
 
-      shortDescription: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-        validate: {
-          len: {
-            args: [0, 500],
-            msg: "Short description too long"
-          }
-        }
-      },
-
-      longDescription: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
+      
 
       specs: {
         type: DataTypes.JSONB,
