@@ -354,6 +354,43 @@ router.put(
 
     const data = { ...req.body };
 
+    /* ==============================
+   AUTO TRANSLATE IF EN CHANGED
+============================== */
+
+let translations = null;
+
+const enChanged =
+  (data.name_en && data.name_en !== product.name_en) ||
+  (data.shortDescription_en && data.shortDescription_en !== product.shortDescription_en) ||
+  (data.longDescription_en && data.longDescription_en !== product.longDescription_en);
+
+if (enChanged) {
+  try {
+    translations = await translateProduct({
+      name_en: data.name_en || product.name_en,
+      shortDescription_en: data.shortDescription_en || product.shortDescription_en,
+      longDescription_en: data.longDescription_en || product.longDescription_en
+    });
+
+    console.log("UPDATE TRANSLATIONS:", translations);
+
+  } catch (err) {
+    console.error("UPDATE TRANSLATION ERROR:", err.message);
+  }
+}
+
+if (translations) {
+  data.name_ru = translations.name_ru;
+  data.name_bg = translations.name_bg;
+
+  data.shortDescription_ru = translations.shortDescription_ru;
+  data.shortDescription_bg = translations.shortDescription_bg;
+
+  data.longDescription_ru = translations.longDescription_ru;
+  data.longDescription_bg = translations.longDescription_bg;
+}
+
     // Парсим sizes если приходит строкой
 if (data.sizes && typeof data.sizes === "string") {
   try {
