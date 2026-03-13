@@ -32,6 +32,7 @@ import PaymentModel from "./payment.js";
 import RefundModel from "./refund.js";
 import ReviewModel from "./review.js";
 import InvoiceModel from "./Invoice.js";
+import TranslationCacheModel from "./translationCache.js";
 
 /* ======================
    INIT MODELS
@@ -45,6 +46,7 @@ export const Payment = PaymentModel(sequelize);
 export const Refund = RefundModel(sequelize);
 export const Review = ReviewModel(sequelize);
 export const Invoice = InvoiceModel(sequelize);
+export const TranslationCache = TranslationCacheModel(sequelize);
 
 /* ======================
    RELATIONS
