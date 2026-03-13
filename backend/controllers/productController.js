@@ -50,7 +50,7 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
 
-    const { rarity } = req.query;
+    const { rarity, lang = "en" } = req.query;
 
     const where = {
       isActive: true
@@ -60,44 +60,40 @@ export const getProducts = async (req, res) => {
       where.rarity = rarity;
     }
 
-    const { lang = "en" } = req.query;
+    const products = await Product.findAll({
+      where,
+      order: [["createdAt", "DESC"]]
+    });
 
-const products = await Product.findAll({
-  where,
-  order: [["createdAt", "DESC"]]
-});
+    const localizedProducts = products.map(p => {
 
-const localizedProducts = products.map(p => {
+      const name =
+        lang === "ru"
+          ? p.name_ru
+          : lang === "bg"
+          ? p.name_bg
+          : p.name_en;
 
-  const name =
-    lang === "ru"
-      ? p.name_ru
-      : lang === "bg"
-      ? p.name_bg
-      : p.name_en;
+      const shortDescription =
+        lang === "ru"
+          ? p.shortDescription_ru
+          : lang === "bg"
+          ? p.shortDescription_bg
+          : p.shortDescription_en;
 
-  const shortDescription =
-    lang === "ru"
-      ? p.shortDescription_ru
-      : lang === "bg"
-      ? p.shortDescription_bg
-      : p.shortDescription_en;
+      return {
+        id: p.id,
+        name,
+        slug: p.slug,
+        price: p.price,
+        currency: p.currency,
+        shortDescription,
+        images: p.images,
+        rarity: p.rarity
+      };
+    });
 
-  return {
-    id: p.id,
-    name,
-    slug: p.slug,
-    price: p.price,
-    currency: p.currency,
-    shortDescription,
-    images: p.images,
-    rarity: p.rarity
-  };
-});
-
-return res.json(localizedProducts);
-
-    return res.json(products);
+    return res.json(localizedProducts);
 
   } catch (err) {
     console.error("GET PRODUCTS ERROR:", err.message);
