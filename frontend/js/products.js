@@ -27,7 +27,11 @@ async function loadProduct() {
     }
 
     try {
-        const response = await fetch(`${API_BASE}/products/slug/${slug}`);
+        const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+const response = await fetch(
+    `${API_BASE}/products/slug/${slug}?lang=${lang}`
+);
 
         if (!response.ok) {
             console.error("Product not found");
@@ -101,7 +105,10 @@ function renderProduct(product) {
     const descEl = document.getElementById("productDescription");
     if (descEl) {
         descEl.textContent =
-            product.longDescription || product.shortDescription || "";
+    product.description ||
+    product.longDescription ||
+    product.shortDescription ||
+    "";
     }
 
     // ===== BREADCRUMB =====
@@ -248,10 +255,7 @@ function addToCart() {
     } else {
         cart.items.push({
             id: currentProduct.id,
-            name: {
-                ru: currentProduct.name,
-                en: currentProduct.name
-            },
+            name: currentProduct.name,
             price: Number(currentProduct.price),
             quantity: 1,
             size: selectedSize,
@@ -516,3 +520,5 @@ document.querySelectorAll(".star-rating-selector i").forEach(star => {
     });
 
 });
+
+window.loadProduct = loadProduct;

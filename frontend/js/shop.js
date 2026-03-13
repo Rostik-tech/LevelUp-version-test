@@ -21,7 +21,9 @@ async function loadProducts() {
     if (!container) return;
 
     try {
-        const response = await fetch(`${API_BASE}/products`);
+        const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+        const response = await fetch(`${API_BASE}/products?lang=${lang}`);
         const products = await response.json();
 
         allProducts = Array.isArray(products) ? products : [];
@@ -142,3 +144,5 @@ function initFilters(){
     });
 
 }
+
+window.loadProducts = loadProducts;

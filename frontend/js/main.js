@@ -34,8 +34,8 @@ function initLanguage() {
     if (currentLangEl) {
         currentLangEl.textContent = currentLanguage.toUpperCase();
     }
+        updatePageLanguage();
 
-    updatePageLanguage();
 
     if (langBtn && langMenu) {
         langBtn.addEventListener('click', function (e) {
@@ -48,13 +48,25 @@ function initLanguage() {
         option.addEventListener('click', function () {
             const lang = option.dataset.lang;
             if (lang !== currentLanguage) {
-                currentLanguage = lang;
-                localStorage.setItem('language', lang);
-                if (currentLangEl) {
-                    currentLangEl.textContent = lang.toUpperCase();
-                }
-                updatePageLanguage();
-            }
+
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+
+    if (currentLangEl) {
+        currentLangEl.textContent = lang.toUpperCase();
+    }
+
+    updatePageLanguage();
+
+    // 🔥 обновляем данные страницы
+    if (window.loadProducts) {
+        window.loadProducts();
+    }
+
+    if (window.loadProduct) {
+        window.loadProduct();
+    }
+}
             if (langMenu) langMenu.classList.remove('active');
         });
     });
