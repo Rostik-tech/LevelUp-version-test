@@ -710,7 +710,9 @@ function openEditProductModal(product) {
 
     <div class="product-grid">
 
-      <input id="ep_name" value="${product.name || ""}" placeholder="Name"/>
+      <input id="ep_name_en" value="${product.name_en || ""}" placeholder="Name (EN)"/>
+      <input id="ep_name_ru" value="${product.name_ru || ""}" placeholder="Name (RU)"/>
+      <input id="ep_name_bg" value="${product.name_bg || ""}" placeholder="Name (BG)"/>
 
       <input id="ep_slug" value="${product.slug || ""}" placeholder="Slug"/>
 
@@ -749,15 +751,43 @@ function openEditProductModal(product) {
 
     <div class="product-descriptions">
 
-      <textarea id="ep_short" placeholder="Short description">
-${product.shortDescription || ""}
-      </textarea>
+  <div class="lang-column">
+    <h4>EN</h4>
 
-      <textarea id="ep_long" placeholder="Long description">
-${product.longDescription || ""}
-      </textarea>
+    <textarea id="ep_short_en" placeholder="Short description">
+${product.shortDescription_en || ""}
+    </textarea>
 
-    </div>
+    <textarea id="ep_long_en" placeholder="Long description">
+${product.longDescription_en || ""}
+    </textarea>
+  </div>
+
+  <div class="lang-column">
+    <h4>RU</h4>
+
+    <textarea id="ep_short_ru" placeholder="Short description RU">
+${product.shortDescription_ru || ""}
+    </textarea>
+
+    <textarea id="ep_long_ru" placeholder="Long description RU">
+${product.longDescription_ru || ""}
+    </textarea>
+  </div>
+
+  <div class="lang-column">
+    <h4>BG</h4>
+
+    <textarea id="ep_short_bg" placeholder="Short description BG">
+${product.shortDescription_bg || ""}
+    </textarea>
+
+    <textarea id="ep_long_bg" placeholder="Long description BG">
+${product.longDescription_bg || ""}
+    </textarea>
+  </div>
+
+</div>
 
   </div>
 
@@ -832,9 +862,10 @@ ${product.longDescription || ""}
 
   /* AUTO SLUG */
 
-  const nameInput = document.getElementById("ep_name");
-  const slugInput = document.getElementById("ep_slug");
+  const nameInput = document.getElementById("ep_name_en");
+const slugInput = document.getElementById("ep_slug");
 
+if (nameInput) {
   nameInput.addEventListener("input", () => {
 
     slugInput.value = nameInput.value
@@ -843,11 +874,12 @@ ${product.longDescription || ""}
       .replace(/(^-|-$)/g,"");
 
   });
+}
 
   /* IMAGE PREVIEW */
 
   const imageInput = document.getElementById("ep_images");
-  const imageGrid = document.getElementById("imageGrid");
+  const imageGrid = document.querySelector(".image-grid");;
 
   imageInput.addEventListener("change", () => {
 
@@ -909,7 +941,9 @@ ${product.longDescription || ""}
 
       const formData = new FormData();
 
-      formData.append("name_en", document.getElementById("ep_name").value);
+      formData.append("name_en", document.getElementById("ep_name_en").value);
+      formData.append("name_ru", document.getElementById("ep_name_ru").value);
+      formData.append("name_bg", document.getElementById("ep_name_bg").value);
       formData.append("slug", document.getElementById("ep_slug").value);
       formData.append("brand", document.getElementById("ep_brand").value);
       formData.append("rarity", document.getElementById("ep_rarity").value);
@@ -918,14 +952,34 @@ ${product.longDescription || ""}
       formData.append("currency", "USD");
 
       formData.append(
-      "shortDescription_en",
-      document.getElementById("ep_short").value
-      );
+"shortDescription_en",
+document.getElementById("ep_short_en").value
+);
+
+formData.append(
+"shortDescription_ru",
+document.getElementById("ep_short_ru").value
+);
+
+formData.append(
+"shortDescription_bg",
+document.getElementById("ep_short_bg").value
+);
 
       formData.append(
-        "longDescription_en",
-        document.getElementById("ep_long").value
-      );
+"longDescription_en",
+document.getElementById("ep_long_en").value
+);
+
+formData.append(
+"longDescription_ru",
+document.getElementById("ep_long_ru").value
+);
+
+formData.append(
+"longDescription_bg",
+document.getElementById("ep_long_bg").value
+);
 
       formData.append(
         "sizes",
@@ -988,3 +1042,5 @@ ${product.longDescription || ""}
   await loadOrders(currentPage);
 
 })();
+
+const imageGrid = document.getElementById("imageGrid");
