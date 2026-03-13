@@ -98,22 +98,28 @@ function renderProduct(product) {
     }
 
     // ===== TITLE =====
-    const titleEl = document.getElementById("productTitle");
-    if (titleEl) titleEl.textContent = product.name;
+    const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
-    // ===== DESCRIPTION =====
-    const descEl = document.getElementById("productDescription");
-    if (descEl) {
-        descEl.textContent =
-    product.description ||
-    product.longDescription ||
-    product.shortDescription ||
+const title =
+    product[`name_${lang}`] ||
+    product.name_en ||
     "";
-    }
 
-    // ===== BREADCRUMB =====
-    const breadcrumbEl = document.getElementById("breadcrumbProduct");
-    if (breadcrumbEl) breadcrumbEl.textContent = product.name;
+const description =
+    product[`longDescription_${lang}`] ||
+    product.longDescription_en ||
+    product[`shortDescription_${lang}`] ||
+    product.shortDescription_en ||
+    "";
+
+const titleEl = document.getElementById("productTitle");
+if (titleEl) titleEl.textContent = title;
+
+const descEl = document.getElementById("productDescription");
+if (descEl) descEl.textContent = description;
+
+const breadcrumbEl = document.getElementById("breadcrumbProduct");
+if (breadcrumbEl) breadcrumbEl.textContent = title;
 
     // ===== PRICE =====
     const priceEl = document.getElementById("productPrice");
@@ -255,7 +261,7 @@ function addToCart() {
     } else {
         cart.items.push({
             id: currentProduct.id,
-            name: currentProduct.name,
+            name: currentProduct.name_en,
             price: Number(currentProduct.price),
             quantity: 1,
             size: selectedSize,

@@ -471,7 +471,7 @@ async function loadProducts(page = 1) {
           ${products.map(product => `
             <tr>
               <td>${product.id}</td>
-              <td>${product.name}</td>
+              <td>${product.name_en}</td>
               <td>$${product.price}</td>
               <td>${product.stock}</td>
               <td>${product.isActive ? "Active" : "Inactive"}</td>
@@ -655,15 +655,15 @@ rarity.addEventListener("change", () => {
 
       const formData = new FormData();
 
-      formData.append("name", document.getElementById("p_name").value);
+      formData.append("name_en", document.getElementById("p_name").value);
       formData.append("slug", document.getElementById("p_slug").value);
       formData.append("brand", document.getElementById("p_brand").value);
       formData.append("rarity", document.getElementById("p_rarity").value);
       formData.append("price", document.getElementById("p_price").value);
       formData.append("currency", "USD");
 
-      formData.append("shortDescription", document.getElementById("p_short").value);
-      formData.append("longDescription", document.getElementById("p_long").value);
+      formData.append("shortDescription_en", document.getElementById("p_short").value);
+      formData.append("longDescription_en", document.getElementById("p_long").value);
 
       formData.append("sizes", document.getElementById("p_sizes").value);
 
@@ -909,7 +909,7 @@ ${product.longDescription || ""}
 
       const formData = new FormData();
 
-      formData.append("name", document.getElementById("ep_name").value);
+      formData.append("name_en", document.getElementById("ep_name").value);
       formData.append("slug", document.getElementById("ep_slug").value);
       formData.append("brand", document.getElementById("ep_brand").value);
       formData.append("rarity", document.getElementById("ep_rarity").value);
@@ -918,12 +918,12 @@ ${product.longDescription || ""}
       formData.append("currency", "USD");
 
       formData.append(
-        "shortDescription",
-        document.getElementById("ep_short").value
+      "shortDescription_en",
+      document.getElementById("ep_short").value
       );
 
       formData.append(
-        "longDescription",
+        "longDescription_en",
         document.getElementById("ep_long").value
       );
 
