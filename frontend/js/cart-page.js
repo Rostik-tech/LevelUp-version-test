@@ -45,7 +45,7 @@ function displayCart() {
 
     container.innerHTML = cart.items.map(item => {
 
-        const name = item.name?.[lang] || item.name?.ru || "Product";
+        const name = item.name || "Product";
 
         // 🔥 КОНВЕРТАЦИЯ + ФОРМАТ
         const convertedPrice = window.convertPrice(Number(item.price));
@@ -66,31 +66,38 @@ function displayCart() {
 
                 <div class="cart-item-details">
                     <h3 class="cart-item-name">${name}</h3>
+
+                        ${item.size ? `
+                    <p class="cart-item-size">
+                        Size: ${item.size}
+                    </p>
+                    ` : ""}
+
                     <p class="cart-item-price">${formattedPrice}</p>
 
                     <div class="quantity-control">
 
-                        <button 
-                            class="qty-btn"
-                            onclick="changeQuantity(${item.id}, -1)">
-                            <i class="fas fa-minus"></i>
-                        </button>
+                       <button 
+    class="qty-btn"
+    onclick="changeQuantity(${item.id}, '${item.size}', -1)">
+    <i class="fa-solid fa-minus"></i>
+</button>
 
                         <span class="quantity-value">
                             ${item.quantity}
                         </span>
 
                         <button 
-                            class="qty-btn"
-                            onclick="changeQuantity(${item.id}, 1)">
-                            <i class="fas fa-plus"></i>
-                        </button>
+    class="qty-btn"
+    onclick="changeQuantity(${item.id}, '${item.size}', 1)">
+    <i class="fa-solid fa-plus"></i>
+</button>
 
                     </div>
 
                     <button 
                         class="btn btn-outline remove-btn"
-                        onclick="removeFromCart(${item.id})"
+                        onclick="removeFromCart(${item.id}, '${item.size}')"
                         data-en="Remove"
                         data-ru="Удалить">
                         <i class="fas fa-trash"></i>
@@ -130,11 +137,13 @@ function updateCartSummary() {
         window.formatPrice(total);
 }
 
-function changeQuantity(productId, change) {
+function changeQuantity(productId, size, change) {
     const cart = window.cart;
     if (!cart) return;
 
-    const item = cart.items.find(i => i.id === productId);
+    const item = cart.items.find(
+    i => i.id === productId && i.size === size
+    );
     if (!item) return;
 
     const newQuantity = item.quantity + change;
@@ -150,7 +159,7 @@ function changeQuantity(productId, change) {
     }
 }
 
-function removeFromCart(productId) {
+function removeFromCart(productId, size) {
     const cart = window.cart;
     if (!cart) return;
 
@@ -159,7 +168,9 @@ function removeFromCart(productId) {
         : "Удалить товар из корзины?";
 
     if (confirm(confirmText)) {
-        cart.items = cart.items.filter(i => i.id !== productId);
+        cart.items = cart.items.filter(
+        i => !(i.id === productId && i.size === size)
+        );
         cart.saveCart();
         cart.updateCartCount();
         displayCart();

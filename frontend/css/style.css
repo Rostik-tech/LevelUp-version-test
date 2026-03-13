@@ -916,3 +916,9 @@ font-size:14px;
 .cookie-link:hover{
 text-decoration:underline;
 }
+
+.cart-item-size{
+font-size:13px;
+opacity:0.7;
+margin:4px 0 6px 0;
+}
