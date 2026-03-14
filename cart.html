@@ -1,10 +1,14 @@
-// cart.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart - Level Up Gaming</title>
+    <title
+    data-en="Shopping Cart - Level Up Gaming"
+    data-ru="Корзина — Level Up Gaming"
+    data-bg="Количка — Level Up Gaming">
+    Shopping Cart - Level Up Gaming
+    </title>
 
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/cart.css">
@@ -64,42 +68,42 @@
             </a>
 
            <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
             <div class="nav-actions">
 
                 <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация" data-bg="Регистрация">Register</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="Вход">Login</a>
                     </div>
 
                 <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">My Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -107,7 +111,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -119,7 +123,7 @@
                     <div class="switcher currency-switcher">
                         <button class="switcher-btn" id="currencyBtn">
                             <i class="fas fa-dollar-sign"></i>
-                            <span id="currentCurrency">USD</span>
+                            <span id="currentCurrency">EUR</span>
                         </button>
                         <div class="switcher-menu" id="currencyMenu">
                             <button class="switcher-option" data-currency="usd">USD</button>
@@ -147,15 +151,17 @@
             <span 
                 class="gradient-text"
                 data-en="Shopping Cart"
-                data-ru="Корзина Покупок">
-                Корзина Покупок
+                data-ru="Корзина Покупок"
+                data-bg="Количка">
+                Shopping Cart
             </span>
         </h1>
         <p 
             class="page-subtitle"
             data-en="Review your items before checkout"
-            data-ru="Проверьте товары перед оформлением">
-            Проверьте товары перед оформлением
+            data-ru="Проверьте товары перед оформлением"
+            data-bg="Прегледайте продуктите преди поръчка">
+            Review your items before checkout
         </p>
     </div>
 </section>
@@ -168,30 +174,31 @@
 
             <div class="cart-summary">
                 <h2 class="summary-title"
-                    data-en="Order Summary"
-                    data-ru="Итого">
-                    Итого
+                data-en="Order Summary"
+                data-ru="Сводка заказа"
+                data-bg="Обобщение на поръчката">
+                    Order Summary
                 </h2>
 
                 <div class="summary-row">
-                    <span data-en="Subtotal" data-ru="Подытог">Подытог</span>
+                    <span data-en="Subtotal" data-ru="Подытог" data-bg="Междинна сума">Subtotal</span>
                     <span id="subtotal">$0.00</span>
                 </div>
 
                 <div class="summary-row">
-                    <span data-en="Shipping" data-ru="Доставка">Доставка</span>
-                    <span data-en="Free" data-ru="Бесплатно">Бесплатно</span>
+                    <span data-en="Shipping" data-ru="Доставка" data-bg="Доставка">Shipping </span>
+                    <span data-en="Free" data-ru="Бесплатно" data-bg="Безплатно">Free</span>
                 </div>
 
                 <div class="summary-row">
-                    <span data-en="Tax" data-ru="Налог">Налог</span>
+                    <span data-en="Tax" data-ru="Налог" data-bg="Данък">Tax</span>
                     <span id="tax">$0.00</span>
                 </div>
 
                 <div class="summary-divider"></div>
 
                 <div class="summary-total">
-                    <span data-en="Total" data-ru="Итого">Итого</span>
+                    <span data-en="Total" data-ru="Итого" data-bg="Общо">Total</span>
                     <span id="total">$0.00</span>
                 </div>
 
@@ -199,16 +206,18 @@
                     class="btn btn-primary btn-large btn-block"
                     id="checkoutBtn"
                     data-en="Checkout with PayPal"
-                    data-ru="Оформить через PayPal">
-                    Оформить через PayPal
+                    data-ru="Оформить через PayPal"
+                    data-bg="Плащане чрез PayPal">
+                    Checkout with PayPal
                 </button>
 
                 <a 
                     href="shop.html"
                     class="btn btn-outline btn-block"
                     data-en="Continue Shopping"
-                    data-ru="Продолжить покупки">
-                    Продолжить покупки
+                    data-ru="Продолжить покупки"
+                    data-bg="Продължи пазаруването">
+                    Continue Shopping
                 </a>
             </div>
 
@@ -218,7 +227,15 @@
 
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2026 Level Up Gaming Accessories. Все права защищены.</p>
+        <p>
+&copy; 2026 Level Up Gaming Accessories.
+<span
+data-en="All rights reserved."
+data-ru="Все права защищены."
+data-bg="Всички права запазени.">
+All rights reserved.
+</span>
+</p>
     </div>
 </footer>
 
