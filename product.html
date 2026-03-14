@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Reviews - Level Up Gaming</title>
+    <title
+    data-en="Product Reviews - Level Up Gaming"
+    data-ru="Отзывы о товаре — Level Up Gaming"
+    data-bg="Отзиви за продукта — Level Up Gaming">
+    Product Reviews - Level Up Gaming
+    </title>
     
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -70,43 +75,43 @@
 
                 <!-- Navigation Menu -->
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
                 <!-- Right Side Buttons -->
                 <div class="nav-actions">
                     <!-- Auth Buttons (shown when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация" data-bg="Регистрация">Register</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="Вход">Login</a>
                     </div>
 
                     <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">My Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -115,7 +120,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -128,7 +133,7 @@
                     <div class="switcher currency-switcher">
                         <button class="switcher-btn" id="currencyBtn">
                             <i class="fas fa-dollar-sign"></i>
-                            <span id="currentCurrency">USD</span>
+                            <span id="currentCurrency">EUR</span>
                         </button>
                         <div class="switcher-menu" id="currencyMenu">
                             <button class="switcher-option" data-currency="usd">USD</button>
@@ -158,9 +163,9 @@
         <div class="container">
             <!-- Breadcrumb -->
             <nav class="breadcrumb">
-                <a href="index.html" data-en="Home" data-ru="Главная">Главная</a>
+                <a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Home</a>
                 <i class="fas fa-chevron-right"></i>
-                <a href="shop.html" data-en="Shop" data-ru="Магазин">Магазин</a>
+                <a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Shop</a>
                 <i class="fas fa-chevron-right"></i>
                 <span id="breadcrumbProduct">Product</span>
             </nav>
@@ -177,7 +182,12 @@
              alt="Product">
 
         <div class="product-badge" id="productBadge" style="display: none;">
-            <span>NEW</span>
+            <span
+            data-en="NEW"
+            data-ru="НОВИНКА"
+            data-bg="НОВО">
+            NEW
+            </span>
         </div>
     </div>
 
@@ -199,7 +209,7 @@
                             <span id="headerRating">4.3</span> / 5
                         </span>
                         <span class="reviews-count">
-                            (<span id="headerReviewsCount">0</span> <span data-en="reviews" data-ru="отзывов">отзывов</span>)
+                            (<span id="headerReviewsCount">0</span> <span data-en="reviews" data-ru="отзывов" data-bg="отзивa">reviews</span>)
                         </span>
                     </div>
 
@@ -211,13 +221,13 @@
 
                     <!-- Description -->
                     <div class="product-description">
-                        <h3 data-en="Description" data-ru="Описание">Описание</h3>
+                        <h3 data-en="Description" data-ru="Описание" data-bg="Описание">Description</h3>
                         <p id="productDescription">Product description will be loaded here...</p>
                     </div>
 
                     <!-- Size Selector -->
 <div class="product-sizes" id="productSizes" style="display: none;">
-    <h3 data-en="Select Size" data-ru="Выберите Размер">Выберите Размер</h3>
+    <h3 data-en="Select Size" data-ru="Выберите Размер" data-bg="Изберете Размер">Select Size</h3>
     <div class="size-options" id="sizeOptions"></div>
 </div>
 
@@ -225,7 +235,7 @@
                     <div class="product-actions">
                         <button class="btn btn-primary btn-large" id="addToCartBtn">
                             <i class="fas fa-shopping-cart"></i>
-                            <span data-en="Add to Cart" data-ru="Добавить в Корзину">Добавить в Корзину</span>
+                            <span data-en="Add to Cart" data-ru="Добавить в Корзину" data-bg="Добави в Количката">Add to Cart</span>
                         </button>
                     </div>
                 </div>
@@ -235,7 +245,7 @@
             <div class="reviews-section">
                 <h2 class="section-title">
                     <i class="fas fa-star"></i>
-                    <span data-en="Customer Reviews" data-ru="Отзывы Покупателей">Отзывы Покупателей</span>
+                    <span data-en="Customer Reviews" data-ru="Отзывы Покупателей" data-bg="Отзиви от Клиенти">Customer Reviews</span>
                 </h2>
 
                 <!-- Rating Summary -->
@@ -245,9 +255,9 @@
                             <span class="rating-number" id="avgRating">0.0</span>
                             <div class="stars large" id="summaryStars">★★★★★</div>
                             <p class="rating-subtitle">
-                                <span data-en="Based on" data-ru="На основе">На основе</span>
+                                <span data-en="Based on" data-ru="На основе" data-bg="Въз основа на">Based on</span>
                                 <span id="totalReviews">0</span>
-                                <span data-en="reviews" data-ru="отзывов">отзывов</span>
+                                <span data-en="reviews" data-ru="отзывов" data-bg="отзиви">reviews</span>
                             </p>
                         </div>
 
@@ -293,21 +303,21 @@
 
                 <!-- Write Review Form -->
                 <div class="write-review-form" id="reviewForm">
-                    <h3 data-en="Write a Review" data-ru="Написать Отзыв">Написать Отзыв</h3>
+                    <h3 data-en="Write a Review" data-ru="Написать Отзыв" data-bg="Напиши Отзив">Write a Review</h3>
                     
                     <!-- Not Purchased Message -->
                     <div class="alert alert-warning" id="notPurchasedMsg" style="display: none;">
                         <i class="fas fa-info-circle"></i>
-                        <span data-en="You must purchase this product to leave a review." data-ru="Вы должны купить этот товар, чтобы оставить отзыв.">
-                            Вы должны купить этот товар, чтобы оставить отзыв.
+                        <span data-en="You must purchase this product to leave a review." data-ru="Вы должны купить этот товар, чтобы оставить отзыв." data-bg="Трябва да закупите този продукт, за да оставите отзив.">
+                            You must purchase this product to leave a review.
                         </span>
                     </div>
 
                     <!-- Success Message -->
                     <div class="alert alert-success" id="reviewSuccessMsg" style="display: none;">
                         <i class="fas fa-check-circle"></i>
-                        <span data-en="Review submitted for moderation." data-ru="Отзыв отправлен на модерацию.">
-                            Отзыв отправлен на модерацию.
+                        <span data-en="Review submitted for moderation." data-ru="Отзыв отправлен на модерацию." data-bg="Отзивът е изпратен за модерация.">
+                            Review submitted for moderation.
                         </span>
                     </div>
 
@@ -315,7 +325,7 @@
                     <form id="reviewFormElement" class="review-form">
                         <!-- Star Rating Selector -->
                         <div class="form-group">
-                            <label data-en="Your Rating" data-ru="Ваша Оценка">Ваша Оценка</label>
+                            <label data-en="Your Rating" data-ru="Ваша Оценка" data-bg="Вашата Оценка">Your Rating</label>
                             <div class="star-rating-selector">
                                 <i class="fas fa-star" data-rating="1"></i>
                                 <i class="fas fa-star" data-rating="2"></i>
@@ -328,14 +338,14 @@
 
                         <!-- Review Text -->
                         <div class="form-group">
-                            <label data-en="Your Review" data-ru="Ваш Отзыв">Ваш Отзыв</label>
-                            <textarea id="reviewText" rows="5" placeholder="Write your review..." required data-en-placeholder="Write your review..." data-ru-placeholder="Напишите ваш отзыв..."></textarea>
+                            <label data-en="Your Review" data-ru="Ваш Отзыв" data-bg="Вашият Отзив">Your Review</label>
+                            <textarea id="reviewText" rows="5" placeholder="Write your review..." required data-en-placeholder="Write your review..." data-ru-placeholder="Напишите ваш отзыв..." data-bg-placeholder="Напишете вашият отзив..."></textarea>
                         </div>
 
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-paper-plane"></i>
-                            <span data-en="Submit Review" data-ru="Отправить Отзыв">Отправить Отзыв</span>
+                            <span data-en="Submit Review" data-ru="Отправить Отзыв" data-bg="Изпрати Отзив">Submit Review</span>
                         </button>
                     </form>
                 </div>
@@ -348,8 +358,8 @@
                 <!-- No Reviews Message -->
                 <div class="no-reviews" id="noReviews" style="display: none;">
                     <i class="fas fa-comments"></i>
-                    <p data-en="No reviews yet. Be the first to review!" data-ru="Пока нет отзывов. Станьте первым!">
-                        Пока нет отзывов. Станьте первым!
+                    <p data-en="No reviews yet. Be the first to review!" data-ru="Пока нет отзывов. Станьте первым!" data-bg="Все още няма отзиви. Бъдете първият, който ще остави отзив!">
+                        No reviews yet. Be the first to review!
                     </p>
                 </div>
             </div>
