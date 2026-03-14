@@ -154,7 +154,7 @@ router.get(
         `
         SELECT
           pr.id,
-          pr.name,
+          pr.name_en AS name,
           SUM(oi.quantity) AS units,
           SUM(oi.quantity * oi.price) AS revenue
         FROM "OrderItems" oi
@@ -162,7 +162,7 @@ router.get(
         JOIN "Products" pr ON pr.id = oi."ProductId"
         WHERE o."createdAt" BETWEEN :from AND :to
         AND o.status IN ('PAID','PROCESSING','SHIPPED','DELIVERED','PARTIALLY_REFUNDED','REFUNDED')
-        GROUP BY pr.id
+        GROUP BY pr.id, pr.name_en
         ORDER BY revenue DESC
         LIMIT 10
         `,
