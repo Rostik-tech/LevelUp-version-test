@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Level Up Gaming</title>
+    <title
+    data-en="Checkout - Level Up Gaming"
+    data-ru="Оформление заказа — Level Up Gaming"
+    data-bg="Поръчка — Level Up Gaming">
+    Checkout - Level Up Gaming
+    </title>
 
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/checkout.css">
@@ -64,43 +69,43 @@
 
                 <!-- Navigation Menu -->
                 <ul class="nav-menu" id="navMenu">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">ГЛАВНАЯ</a></li>
-                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">МАГАЗИН</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">О НАС</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">КОНТАКТЫ</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
                 </ul>
 
                 <!-- Right Side Buttons -->
                 <div class="nav-actions">
                     <!-- Auth Buttons (shown when not logged in) -->
                     <div class="auth-buttons" id="authButtons">
-                        <a href="register.html" class="btn btn-primary" data-en="Registration" data-ru="Регистрация" data-bg="РЕГИСТРАЦИЯ">Регистрация</a>
-                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="ВХОД">Вход</a>
+                        <a href="register.html" class="btn btn-primary" data-en="Register" data-ru="Регистрация" data-bg="Регистрация">Register</a>
+                        <a href="login.html" class="btn btn-primary" data-en="Login" data-ru="Вход" data-bg="Вход">Login</a>
                     </div>
 
                     <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
                         <button class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
-                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Профиль</span>
+                            <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user-circle"></i>
-                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">Мой профиль</span>
+                                <span data-en="My Profile" data-ru="Мой профиль" data-bg="Моят профил">My Profile</span>
                             </a>
                             <a href="orders.html" class="dropdown-item">
                                 <i class="fas fa-box"></i>
-                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">Мои заказы</span>
+                                <span data-en="My Orders" data-ru="Мои заказы" data-bg="Моите поръчки">My Orders</span>
                             </a>
                             <a href="my-invoices.html" class="dropdown-item">
                                 <i class="fas fa-file-invoice"></i>
-                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">Мои счета</span>
+                                <span data-en="My Invoices" data-ru="Мои счета" data-bg="Моите фактури">My Invoices</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item" id="logoutBtn">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Выйти</span>
+                                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
                             </a>
                         </div>
                     </div>
@@ -109,7 +114,7 @@
                     <div class="switcher language-switcher">
                         <button class="switcher-btn" id="langBtn">
                             <i class="fas fa-globe"></i>
-                            <span id="currentLang">RU</span>
+                            <span id="currentLang">EN</span>
                         </button>
                         <div class="switcher-menu" id="langMenu">
                             <button class="switcher-option" data-lang="ru">RU</button>
@@ -140,8 +145,9 @@
         <h1 class="page-title">
             <span class="gradient-text"
                   data-en="Checkout"
-                  data-ru="Оформление заказа">
-                Оформление заказа
+                  data-ru="Оформление заказа"
+                  data-bg="Поръчка">
+                Checkout
             </span>
         </h1>
     </div>
@@ -157,50 +163,96 @@
 
                     <h2 class="section-title"
                         data-en="Shipping Information"
-                        data-ru="Информация о доставке">
-                        Информация о доставке
+                        data-ru="Информация о доставке"
+                        data-bg="Информация за доставка">
+                        Shipping Information
                     </h2>
 
                     <div class="form-grid">
 
                         <div class="form-group">
-                            <label>ФИО</label>
+                            <label
+                            data-en="Full Name"
+                            data-ru="Полное имя"
+                            data-bg="Име и фамилия">
+                                Full Name
+                            </label>
                             <input type="text" id="fullName" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Телефон</label>
+                            <label
+data-en="Phone"
+data-ru="Телефон"
+data-bg="Телефон">
+Phone
+</label>
                             <input type="tel" id="phone" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Страна</label>
+                            <label
+data-en="Country"
+data-ru="Страна"
+data-bg="Държава">
+Country
+</label>
                             <input type="text" id="country" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Город</label>
+                            <label
+data-en="City"
+data-ru="Город"
+data-bg="Град">
+City
+</label>
                             <input type="text" id="city" required>
                         </div>
 
                         <div class="form-group full-width">
-                            <label>Адрес</label>
+                            <label
+data-en="Address"
+data-ru="Адрес"
+data-bg="Адрес">
+Address
+</label>
                             <input type="text" id="address" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Почтовый индекс</label>
+                            <label
+data-en="Postal Code"
+data-ru="Почтовый индекс"
+data-bg="Пощенски код">
+Postal Code
+</label>
                             <input type="text" id="postalCode" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Квартира</label>
+                            <label
+data-en="Apartment"
+data-ru="Квартира"
+data-bg="Апартамент">
+Apartment
+</label>
                             <input type="text" id="apartment">
                         </div>
 
                         <div class="form-group full-width">
-                            <label>Комментарий к заказу</label>
-                            <textarea id="orderNotes"></textarea>
+                            <label
+data-en="Order Notes"
+data-ru="Комментарий к заказу"
+data-bg="Бележка към поръчката">
+Order Notes
+</label>
+                            <textarea
+id="orderNotes"
+data-en-placeholder="Optional note for your order"
+data-ru-placeholder="Комментарий к заказу (необязательно)"
+data-bg-placeholder="Бележка към поръчката (по желание)">
+</textarea>
                         </div>
 
                     </div>
@@ -211,24 +263,42 @@
             <!-- RIGHT -->
             <div class="order-summary">
 
-                <h2 class="section-title">
-                    Сводка заказа
-                </h2>
+                <h2 class="section-title"
+data-en="Order Summary"
+data-ru="Сводка заказа"
+data-bg="Обобщение на поръчката">
+Order Summary
+</h2>
 
                 <div id="summaryItems" class="summary-items"></div>
 
                 <div class="summary-line">
-                    <span>Подытог</span>
+                    <span
+data-en="Subtotal"
+data-ru="Подытог"
+data-bg="Междинна сума">
+Subtotal
+</span>
                     <span id="subtotalAmount">$0.00</span>
                 </div>
 
                 <div class="summary-line">
-                    <span>Налог (10%)</span>
+                    <span
+data-en="Tax (10%)"
+data-ru="Налог (10%)"
+data-bg="Данък (10%)">
+Tax (10%)
+</span>
                     <span id="taxAmount">$0.00</span>
                 </div>
 
                 <div class="summary-total">
-                    <span>Итого</span>
+                    <span
+data-en="Total"
+data-ru="Итого"
+data-bg="Общо">
+Total
+</span>
                     <span id="totalAmount">$0.00</span>
                 </div>
 
@@ -239,13 +309,21 @@
                     class="btn btn-primary btn-large btn-block checkout-btn"
                     form="checkoutForm">
                     <i class="fab fa-paypal"></i>
-                    <span>Оплатить через PayPal</span>
+                    <span
+data-en="Pay with PayPal"
+data-ru="Оплатить через PayPal"
+data-bg="Плащане чрез PayPal">
+Pay with PayPal
+</span>
                 </button>
 
                 <a href="cart.html"
-                   class="btn btn-outline btn-block">
-                    Вернуться в корзину
-                </a>
+class="btn btn-outline btn-block"
+data-en="Back to Cart"
+data-ru="Вернуться в корзину"
+data-bg="Обратно към количката">
+Back to Cart
+</a>
 
             </div>
 
@@ -256,8 +334,14 @@
 <footer class="footer">
     <div class="container">
         <p>
-            © 2026 Level Up Gaming — Все права защищены.
-        </p>
+© 2026 Level Up Gaming —
+<span
+data-en="All rights reserved."
+data-ru="Все права защищены."
+data-bg="Всички права запазени.">
+All rights reserved.
+</span>
+</p>
     </div>
 </footer>
 
