@@ -1,6 +1,7 @@
 // controllers/productController.js
 
 import { Product } from "../models/index.js";
+import { convertUsdToEur } from "../services/currencyService.js";
 
 /* ============================
    CREATE PRODUCT
@@ -50,7 +51,8 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
 
-    const { rarity, lang = "en" } = req.query;
+    const { rarity, lang = "en", currency = "USD" } = req.query;
+    const selectedCurrency = currency.toUpperCase();
 
     const where = {
       isActive: true
@@ -65,33 +67,44 @@ export const getProducts = async (req, res) => {
       order: [["createdAt", "DESC"]]
     });
 
-    const localizedProducts = products.map(p => {
+    const localizedProducts = await Promise.all(
+      products.map(async (p) => {
 
-      const name =
-        lang === "ru"
-          ? p.name_ru
-          : lang === "bg"
-          ? p.name_bg
-          : p.name_en;
+        const name =
+          lang === "ru"
+            ? p.name_ru
+            : lang === "bg"
+            ? p.name_bg
+            : p.name_en;
 
-      const shortDescription =
-        lang === "ru"
-          ? p.shortDescription_ru
-          : lang === "bg"
-          ? p.shortDescription_bg
-          : p.shortDescription_en;
+        const shortDescription =
+          lang === "ru"
+            ? p.shortDescription_ru
+            : lang === "bg"
+            ? p.shortDescription_bg
+            : p.shortDescription_en;
 
-      return {
-        id: p.id,
-        name,
-        slug: p.slug,
-        price: p.price,
-        currency: p.currency,
-        shortDescription,
-        images: p.images,
-        rarity: p.rarity
-      };
-    });
+        let price = Number(p.price);
+        let productCurrency = "USD";
+
+        if (selectedCurrency === "EUR"){
+          price = await convertUsdToEur(price);
+          productCurrency = "EUR";
+        }
+
+        return {
+          id: p.id,
+          name,
+          slug: p.slug,
+          price,
+          currency: productCurrency,
+          shortDescription,
+          images: p.images,
+          rarity: p.rarity
+        };
+
+      })
+    );
 
     return res.json(localizedProducts);
 
