@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="My Invoices - Level Up Gaming" data-ru="Мои счета - Level Up Gaming">Мои счета - Level Up Gaming</title>
+    <title
+    data-en="My Invoices - Level Up Gaming"
+    data-ru="Мои счета - Level Up Gaming"
+    data-bg="Моите фактури - Level Up Gaming">
+    My Invoices - Level Up Gaming
+    </title>
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/my-invoices.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -43,7 +48,7 @@
             <a href="privacy.html" class="cookie-link"
             data-en="Learn more"
             data-ru="Подробнее"
-            data-bg="Повече информация">
+            data-bg="Научи повече">
             Learn more
             </a>
 
@@ -145,27 +150,38 @@
         <div class="container">
             <!-- Page Header -->
             <div class="page-header">
-                <h1 class="page-title" data-en="My Invoices" data-ru="Мои счета">Мои счета</h1>
-                <p class="page-subtitle" data-en="View and download all your invoices" data-ru="Просмотр и загрузка всех ваших счетов">Просмотр и загрузка всех ваших счетов</p>
+                <h1 class="page-title"
+data-en="My Invoices"
+data-ru="Мои счета"
+data-bg="Моите фактури">
+My Invoices
+</h1>
+                <p class="page-subtitle" data-en="View and download all your invoices" data-ru="Просмотр и загрузка всех ваших счетов" data-bg="Преглед и изтегляне на всички ваши фактури">
+                    View and download all your invoices
+                </p>
             </div>
 
             <!-- Filters (Optional - можно добавить позже) -->
             <div class="filters-section" style="display: none;">
                 <div class="filter-group">
-                    <label data-en="Date Range" data-ru="Период">Период</label>
+                    <label data-en="Date Range" data-ru="Период" data-bg="Период">
+                        Date Range
+                    </label>
                     <select id="dateRangeFilter">
-                        <option value="all" data-en="All Time" data-ru="Все время">Все время</option>
-                        <option value="30" data-en="Last 30 Days" data-ru="Последние 30 дней">Последние 30 дней</option>
-                        <option value="90" data-en="Last 90 Days" data-ru="Последние 90 дней">Последние 90 дней</option>
-                        <option value="365" data-en="Last Year" data-ru="Последний год">Последний год</option>
+                        <option value="all" data-en="All Time" data-ru="Все время" data-bg="Всички времена">All Time</option>
+                        <option value="30" data-en="Last 30 Days" data-ru="Последние 30 дней" data-bg="Последни 30 дни">Last 30 Days</option>
+                        <option value="90" data-en="Last 90 Days" data-ru="Последние 90 дней" data-bg="Последни 90 дни">Last 90 Days</option>
+                        <option value="365" data-en="Last Year" data-ru="Последний год" data-bg="Предходна година">Last Year</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label data-en="Status" data-ru="Статус">Статус</label>
+                    <label data-en="Status" data-ru="Статус" data-bg="Статус">
+                        Status
+                    </label>
                     <select id="statusFilter">
-                        <option value="all" data-en="All Statuses" data-ru="Все статусы">Все статусы</option>
-                        <option value="paid" data-en="Paid" data-ru="Оплачено">Оплачено</option>
-                        <option value="refunded" data-en="Refunded" data-ru="Возвращено">Возвращено</option>
+                        <option value="all" data-en="All Statuses" data-ru="Все статусы" data-bg="Всички статуси">All Statuses</option>
+                        <option value="paid" data-en="Paid" data-ru="Оплачено" data-bg="Платено">Paid</option>
+                        <option value="refunded" data-en="Refunded" data-ru="Возвращено" data-bg="Върнато">Refunded</option>
                     </select>
                 </div>
             </div>
@@ -175,23 +191,23 @@
                 <!-- Loading State -->
                 <div id="loadingState" class="state-container">
                     <div class="loader"></div>
-                    <p data-en="Loading invoices..." data-ru="Загрузка счетов...">Загрузка счетов...</p>
+                    <p data-en="Loading invoices..." data-ru="Загрузка счетов..." data-bg="Зареждане на фактури...">Loading invoices...</p>
                 </div>
 
                 <!-- Error State -->
                 <div id="errorState" class="state-container" style="display: none;">
                     <i class="fas fa-exclamation-circle"></i>
-                    <h3 data-en="Error Loading Invoices" data-ru="Ошибка загрузки счетов">Ошибка загрузки счетов</h3>
-                    <p id="errorMessage" data-en="Something went wrong. Please try again." data-ru="Что-то пошло не так. Пожалуйста, попробуйте снова.">Что-то пошло не так. Пожалуйста, попробуйте снова.</p>
-                    <button class="btn-primary" id="retryBtn" data-en="Retry" data-ru="Повторить">Повторить</button>
+                    <h3 data-en="Error Loading Invoices" data-ru="Ошибка загрузки счетов" data-bg="Грешка при зареждане на фактурите">Error Loading Invoices</h3>
+                    <p id="errorMessage" data-en="Something went wrong. Please try again." data-ru="Что-то пошло не так. Пожалуйста, попробуйте снова." data-bg="Нещо се обърка. Моля опитайте отново.">Something went wrong. Please try again.</p>
+                    <button class="btn-primary" id="retryBtn" data-en="Retry" data-ru="Повторить" data-bg="Опитай отново">Retry</button>
                 </div>
 
                 <!-- Empty State -->
                 <div id="emptyState" class="state-container" style="display: none;">
                     <i class="fas fa-file-invoice"></i>
-                    <h3 data-en="No Invoices Yet" data-ru="Пока нет счетов">Пока нет счетов</h3>
-                    <p data-en="You haven't made any purchases yet." data-ru="Вы еще не совершили ни одной покупки.">Вы еще не совершили ни одной покупки.</p>
-                    <a href="shop.html" class="btn-primary" data-en="Start Shopping" data-ru="Начать покупки">Начать покупки</a>
+                    <h3 data-en="No Invoices Yet" data-ru="Пока нет счетов" data-bg="Все още няма фактури">No Invoices Yet</h3>
+                    <p data-en="You haven't made any purchases yet." data-ru="Вы еще не совершили ни одной покупки." data-bg="Все още не сте направили никакви покупки.">You haven't made any purchases yet.</p>
+                    <a href="shop.html" class="btn-primary" data-en="Start Shopping" data-ru="Начать покупки" data-bg="Започни пазаруването">Start Shopping</a>
                 </div>
 
                 <!-- Invoices Table -->
@@ -200,12 +216,12 @@
                         <table class="invoices-table">
                             <thead>
                                 <tr>
-                                    <th data-en="Invoice #" data-ru="Счет №">Счет №</th>
-                                    <th data-en="Order #" data-ru="Заказ №">Заказ №</th>
-                                    <th data-en="Date" data-ru="Дата">Дата</th>
-                                    <th data-en="Total" data-ru="Сумма">Сумма</th>
-                                    <th data-en="Status" data-ru="Статус">Статус</th>
-                                    <th data-en="Action" data-ru="Действие">Действие</th>
+                                    <th data-en="Invoice #" data-ru="Счет №" data-bg="Фактура №">Invoice #</th>
+                                    <th data-en="Order #" data-ru="Заказ №" data-bg="Поръчка №">Order #</th>
+                                    <th data-en="Date" data-ru="Дата" data-bg="Дата">Date</th>
+                                    <th data-en="Total" data-ru="Сумма" data-bg="Общо">Total</th>
+                                    <th data-en="Status" data-ru="Статус" data-bg="Статус">Status</th>
+                                    <th data-en="Action" data-ru="Действие" data-bg="Действие">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="invoicesTableBody">
@@ -223,32 +239,32 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">О Level Up</h4>
+                    <h4 class="footer-title" data-en="About Level Up" data-ru="О Level Up" data-bg="За Level Up">About Level Up</h4>
                     <p class="footer-text" data-en="Premium gaming accessories for champions who want to level up their game." data-ru="Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень." data-bg="Премиални игрови аксесоари за шампиони, които искат да повишат нивото на своята игра.">
-                        Премиальные игровые аксессуары для чемпионов, которые хотят поднять свою игру на новый уровень.
+                        Premium gaming accessories for champions who want to level up their game.
                     </p>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Быстрые ссылки</h4>
+                    <h4 class="footer-title" data-en="Quick Links" data-ru="Быстрые ссылки" data-bg="Бързи връзки">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Главная</a></li>
-                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Магазин</a></li>
-                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">О нас</a></li>
-                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Контакты</a></li>
+                        <li><a href="index.html" data-en="Home" data-ru="Главная" data-bg="Начало">Home</a></li>
+                        <li><a href="shop.html" data-en="Shop" data-ru="Магазин" data-bg="Магазин">Shop</a></li>
+                        <li><a href="about.html" data-en="About Us" data-ru="О нас" data-bg="За нас">About Us</a></li>
+                        <li><a href="contact.html" data-en="Contact" data-ru="Контакты" data-bg="Контакти">Contact</a></li>
                         
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Обслуживание клиентов</h4>
+                    <h4 class="footer-title" data-en="Customer Service" data-ru="Обслуживание клиентов" data-bg="Клиентска поддръжка">Customer Service</h4>
                     <ul class="footer-links">
-                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Условия использования</a></li>
-                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Поддержка</a></li>
-                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Возвраты</a></li>
-                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Политика конфиденциальности</a></li>
+                        <li><a href="terms.html" data-en="Terms of Service" data-ru="Условия использования" data-bg="Условия за използване">Terms of Service</a></li>
+                        <li><a href="contact.html" data-en="Support" data-ru="Поддержка" data-bg="Поддръжка">Support</a></li>
+                        <li><a href="refund-policy.html" data-en="Returns" data-ru="Возвраты" data-bg="Връщания">Returns</a></li>
+                        <li><a href="privacy.html" data-en="Privacy Policy" data-ru="Политика конфиденциальности" data-bg="Политика за поверителност">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Следите за нами</h4>
+                    <h4 class="footer-title" data-en="Follow Us" data-ru="Следите за нами" data-bg="Последвайте ни">Follow Us</h4>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -259,7 +275,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">Все права защищены.</span></p>
+                <p>&copy; 2026 Level Up Gaming Accessories. <span data-en="All rights reserved." data-ru="Все права защищены." data-bg="Всички права запазени.">All rights reserved.</span></p>
             </div>
         </div>
     </footer>
