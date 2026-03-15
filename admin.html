@@ -3,7 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel - Level Up Gaming</title>
+    <title
+    data-en="Admin Panel - Level Up Gaming"
+    data-ru="Админ панель - Level Up Gaming"
+    data-bg="Администраторски панел - Level Up Gaming">
+    Admin Panel - Level Up Gaming
+    </title>
 
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/admin.css">
@@ -61,8 +66,8 @@
             </a>
 
             <h1 class="admin-title">
-                <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель">
-                    Админ Панель
+                <span class="gradient-text" data-en="Admin Panel" data-ru="Админ Панель" data-bg="Администраторски панел">
+                    Admin Panel
                 </span>
             </h1>
 
@@ -80,12 +85,12 @@
            
             <a href="admin-analytics.html" class="btn btn-primary admin-analytics-btn">
     <i class="fas fa-chart-line"></i>
-    <span data-en="Analytics" data-ru="Аналитика">Аналитика</span>
+    <span data-en="Analytics" data-ru="Аналитика" data-bg="Аналитика">Analytics</span>
 </a>
 
             <button class="btn btn-outline" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i>
-                <span data-en="Logout" data-ru="Выйти">Выйти</span>
+                <span data-en="Logout" data-ru="Выйти" data-bg="Изход">Logout</span>
             </button>
         </div>
     </div>
@@ -99,22 +104,26 @@
                 <nav class="admin-menu">
                     <a href="#dashboard" class="admin-menu-link active">
                         <i class="fas fa-chart-line"></i>
-                        <span data-en="Dashboard" data-ru="Панель управления">
-                            Панель управления
+                        <span data-en="Dashboard" data-ru="Панель управления" data-bg="Табло за управление">
+                            Dashboard
                         </span>
                     </a>
                     <a href="#products" class="admin-menu-link">
                         <i class="fas fa-box"></i>
-                        <span data-en="Products" data-ru="Товары">Товары</span>
+                        <span data-en="Products" data-ru="Товары" data-bg="Продукти">
+                            Products
+                        </span>
                     </a>
                     <a href="#orders" class="admin-menu-link">
                         <i class="fas fa-shopping-cart"></i>
-                        <span data-en="Orders" data-ru="Заказы">Заказы</span>
+                        <span data-en="Orders" data-ru="Заказы" data-bg="Поръчки">
+                            Orders
+                        </span>
                     </a>
                     <a href="#users" class="admin-menu-link">
                         <i class="fas fa-users"></i>
-                        <span data-en="Users" data-ru="Пользователи">
-                            Пользователи
+                        <span data-en="Users" data-ru="Пользователи" data-bg="Потребители">
+                            Users
                         </span>
                     </a>
                     
@@ -125,18 +134,22 @@
 
                 <h2 class="admin-welcome"
                     data-en="Welcome to Admin Panel"
-                    data-ru="Добро пожаловать в админ-панель">
-                    Добро пожаловать в админ-панель
+                    data-ru="Добро пожаловать в админ-панель"
+                    data-bg="Добре дошли в администраторския панел">
+                    Welcome to Admin Panel
                 </h2>
 
                 <p data-en="Access is restricted to administrators only."
-                   data-ru="Доступ разрешён только администраторам.">
-                   Доступ разрешён только администраторам.
+                   data-ru="Доступ разрешён только администраторам."
+                   data-bg="Достъпът е разрешен само за администратори.">
+                   Access is restricted to administrators only.
                 </p>
 
                 <!-- ORDERS SECTION -->
                 <div id="ordersSection" style="margin-top:40px;">
-                    <h3 data-en="Orders" data-ru="Заказы">Заказы</h3>
+                    <h3 data-en="Orders" data-ru="Заказы" data-bg="Поръчки">
+                        Orders
+                    </h3>
                     <div id="ordersList"></div>
                 </div>
 
