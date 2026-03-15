@@ -93,6 +93,7 @@ function initCurrency() {
     const currencyOptions = document.querySelectorAll('.currency-switcher .switcher-option');
 
     const currentCurrencyEl = document.getElementById('currentCurrency');
+
     if (currentCurrencyEl) {
         currentCurrencyEl.textContent = currentCurrency.toUpperCase();
     }
@@ -107,37 +108,58 @@ function initCurrency() {
     }
 
     currencyOptions.forEach(function (option) {
-    option.addEventListener('click', function () {
-        const currency = option.dataset.currency;
 
-        if (currency !== currentCurrency) {
-            currentCurrency = currency;
-            localStorage.setItem('currency', currency);
+        option.addEventListener('click', function () {
 
-            if (currentCurrencyEl) {
-                currentCurrencyEl.textContent = currency.toUpperCase();
+            const currency = option.dataset.currency;
+
+            if (currency !== currentCurrency) {
+
+                currentCurrency = currency;
+                localStorage.setItem('currency', currency);
+
+                if (currentCurrencyEl) {
+                    currentCurrencyEl.textContent = currency.toUpperCase();
+                }
+
+                updatePagePrices();
+
+                // 🔥 ОБНОВЛЯЕМ ТОВАРЫ В SHOP
+                if (window.loadProducts) {
+                    window.loadProducts();
+                }
+
+                // 🔥 ОБНОВЛЯЕМ СТРАНИЦУ ТОВАРА
+                if (window.loadProduct) {
+                    window.loadProduct();
+                }
+
+                // 🔥 ОБНОВЛЯЕМ КОРЗИНУ
+                if (window.displayCart) {
+                    window.displayCart();
+                }
+
+                if (window.updateCartSummary) {
+                    window.updateCartSummary();
+                }
+
             }
 
-            updatePagePrices();
-
-            // 🔥 ДОБАВЬ ВОТ ЭТО
-            if (window.displayCart) {
-                window.displayCart();
+            if (currencyMenu) {
+                currencyMenu.classList.remove('active');
             }
 
-            if (window.updateCartSummary) {
-                window.updateCartSummary();
-            }
-        }
+        });
 
-        if (currencyMenu) currencyMenu.classList.remove('active');
     });
-});
 }
 
 function updatePagePrices() {
+
     const priceElements = document.querySelectorAll('[data-base-price]');
+
     priceElements.forEach(function (element) {
+
         let basePrice = parseFloat(
             element.dataset.basePrice ||
             element.textContent.replace(/[^0-9.]/g, '')
@@ -148,8 +170,11 @@ function updatePagePrices() {
         }
 
         const convertedPrice = convertPrice(basePrice);
+
         element.textContent = formatPrice(convertedPrice);
+
     });
+
 }
 
 function convertPrice(priceInUSD) {
@@ -157,8 +182,11 @@ function convertPrice(priceInUSD) {
 }
 
 function formatPrice(price) {
+
     const symbol = currentCurrency === 'usd' ? '$' : '€';
+
     return symbol + price.toFixed(2);
+
 }
 
 // ========================================

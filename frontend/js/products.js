@@ -29,8 +29,10 @@ async function loadProduct() {
     try {
         const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
+const currency = window.currentCurrency ? window.currentCurrency() : "USD";
+
 const response = await fetch(
-    `${API_BASE}/products/slug/${slug}?lang=${lang}`
+    `${API_BASE}/products/slug/${slug}?lang=${lang}&currency=${currency}`
 );
 
         if (!response.ok) {
