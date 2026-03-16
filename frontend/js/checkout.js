@@ -39,14 +39,14 @@ async function displayOrderSummary() {
 
     if (!summaryItems || !cart) return;
 
-    const currency = window.currentCurrency ? window.currentCurrency() : "usd";
+    
     const lang = window.currentLanguage ? window.currentLanguage() : "ru";
 
     const ids = cart.items.map(i => i.id).join(",");
 
     const response = await fetch(
-        `http://localhost:5000/api/products?ids=${ids}&currency=${currency}`
-    );
+    `http://localhost:5000/api/products?ids=${ids}`
+        );
 
     const products = await response.json();
 
@@ -95,7 +95,7 @@ function updateOrderTotals() {
     cart.items.forEach(item => {
 
         const product = products.find(p => p.id === item.id);
-        const price = product ? product.price : item.price;
+        const price = product ? Number(product.price) : Number(item.price || 0);
 
         subtotal += Number(price) * Number(item.quantity);
 
@@ -103,7 +103,7 @@ function updateOrderTotals() {
 
     const format = window.formatPrice
         ? window.formatPrice
-        : (p) => `$${p.toFixed(2)}`;
+        : (p) => `€${p.toFixed(2)}`;
 
     document.getElementById("subtotalAmount").textContent =
         format(subtotal);

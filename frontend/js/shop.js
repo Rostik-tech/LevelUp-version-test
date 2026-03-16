@@ -22,10 +22,10 @@ async function loadProducts() {
 
     try {
         const lang = window.currentLanguage ? window.currentLanguage() : "en";
-        const currency = window.currentCurrency ? window.currentCurrency() : "USD";
+        
 
         const response = await fetch(
-            `${API_BASE}/products?lang=${lang}&currency=${currency}`
+         `${API_BASE}/products?lang=${lang}`
         );
 
         const products = await response.json();
@@ -100,7 +100,7 @@ ${product.rarity}
 
             <div class="product-footer">
                 <span class="product-price">
-                    ${product.currency === "EUR" ? "€" : "$"}${Number(product.price).toFixed(2)}
+                    €${Number(product.price).toFixed(2)}
                 </span>
 
                 <button class="btn btn-primary"

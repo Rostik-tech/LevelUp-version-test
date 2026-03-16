@@ -29,11 +29,9 @@ async function loadProduct() {
     try {
         const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
-        const currency = window.currentCurrency ? window.currentCurrency().toUpperCase() : "USD";
-
-const response = await fetch(
-    `${API_BASE}/products/slug/${slug}?lang=${lang}&currency=${currency}`
-);
+        const response = await fetch(
+        `${API_BASE}/products/slug/${slug}?lang=${lang}`
+        );
 
         if (!response.ok) {
             console.error("Product not found");
@@ -130,9 +128,7 @@ if (priceEl) {
 
     const numericPrice = Number(product.price);
 
-    const symbol = product.currency === "EUR" ? "€" : "$";
-
-    priceEl.textContent = `${symbol}${numericPrice.toFixed(2)}`;
+    priceEl.textContent = `€${numericPrice.toFixed(2)}`;
 
 }
 
@@ -260,14 +256,14 @@ function addToCart() {
         existing.quantity += 1;
     } else {
         cart.items.push({
-            id: currentProduct.id,
-            name: currentProduct.name_en,
-            price: Number(currentProduct.price),
-            quantity: 1,
-            size: selectedSize,
-            image: currentProduct.images?.[0]
-    ? `http://localhost:5000${currentProduct.images[0]}`
-    : null
+    id: currentProduct.id,
+    name: currentProduct.name_en,
+    price: Number(currentProduct.price),
+    quantity: 1,
+    size: selectedSize,
+    image: currentProduct.images?.[0]
+        ? `http://localhost:5000${currentProduct.images[0]}`
+        : null
         });
     }
 

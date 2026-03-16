@@ -15,7 +15,7 @@ async function displayCart() {
     if (!container) return;
 
     const cart = window.cart;
-    const currency = window.currentCurrency ? window.currentCurrency() : "usd";
+    
     const lang = window.currentLanguage ? window.currentLanguage() : "ru";
 
     if (!cart || cart.items.length === 0) {
@@ -47,7 +47,7 @@ const ids = cart.items.map(i => i.id).join(",");
 
 // запрашиваем цены из backend
 const response = await fetch(
-    `http://localhost:5000/api/products?ids=${ids}&currency=${currency}`
+    `http://localhost:5000/api/products?ids=${ids}`
 );
 
     const products = await response.json();
@@ -56,7 +56,7 @@ const response = await fetch(
 
         const name = item.name || "Product";
         const product = products.find(p => p.id === item.id);
-        const price = product ? product.price : item.price;
+        const price = product ? Number(product.price) : Number(item.price || 0);
 
         // 🔥 КОНВЕРТАЦИЯ + ФОРМАТ
         const formattedPrice = window.formatPrice(Number(price));
@@ -167,8 +167,8 @@ function changeQuantity(productId, size, change) {
     const newQuantity = item.quantity + change;
 
     if (newQuantity <= 0) {
-        removeFromCart(productId);
-    } else {
+    removeFromCart(productId, size);
+}   else {
         item.quantity = newQuantity;
         cart.saveCart();
         cart.updateCartCount();
