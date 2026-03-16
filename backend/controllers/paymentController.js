@@ -73,7 +73,7 @@ export const createOrder = async (req, res) => {
           {
             reference_id: dbOrder.id.toString(),
             amount: {
-              currency_code: "USD",
+              currency_code: "EUR",
               value: dbOrder.totalPrice.toFixed(2),
             },
           },

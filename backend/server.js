@@ -15,7 +15,7 @@ import usersRoutes from "./routes/users.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import reviewRoutes from "./routes/reviews.js";
 import contactRoutes from "./routes/contact.js";
-import currencyRouter from "./routes/currency.js";
+
 
 import { sequelize } from "./models/index.js";
 import { authenticateToken } from "./middleware/authMiddleware.js";
@@ -105,7 +105,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
-app.use("/api/currency", currencyRouter);
+
 
 
 /* =====================

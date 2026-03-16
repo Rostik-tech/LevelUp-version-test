@@ -126,20 +126,6 @@ longDescription_bg: {
         }
       },
 
-      currency: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: "USD",
-        validate: {
-          isIn: {
-            args: [["USD", "EUR"]],
-            msg: "Unsupported currency"
-          }
-        }
-      },
-
-      
-
       specs: {
         type: DataTypes.JSONB,
         allowNull: true,

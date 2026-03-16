@@ -25,7 +25,7 @@ export default (sequelize) => {
       currency: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        defaultValue: "USD",
+        defaultValue: "EUR",
       },
 
       paypalOrderId: {

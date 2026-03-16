@@ -25,7 +25,7 @@ export const createInvoiceForOrder = async (order) => {
       invoiceNumber: generateInvoiceNumber(order.id),
       customerEmail: user.email,
       totalAmount: Number(order.totalPrice),
-      currency: "USD",
+      currency: "EUR",
     });
 
     const fullItems = await OrderItem.findAll({

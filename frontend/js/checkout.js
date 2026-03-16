@@ -3,7 +3,7 @@ import { getToken } from "./auth.js";
 
 const API_BASE = "http://localhost:5000/api";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
 
     if (!token) {
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    displayOrderSummary();
+    await displayOrderSummary();
     updateOrderTotals();
 
     const form = document.getElementById("checkoutForm");
@@ -32,43 +32,52 @@ document.addEventListener("DOMContentLoaded", () => {
 // Render summary
 // ========================================
 
-function displayOrderSummary() {
+async function displayOrderSummary() {
+
     const summaryItems = document.getElementById("summaryItems");
     const cart = window.cart;
+
     if (!summaryItems || !cart) return;
 
-    const lang = window.currentLanguage
-        ? window.currentLanguage()
-        : "ru";
+    const currency = window.currentCurrency ? window.currentCurrency() : "usd";
+    const lang = window.currentLanguage ? window.currentLanguage() : "ru";
+
+    const ids = cart.items.map(i => i.id).join(",");
+
+    const response = await fetch(
+        `http://localhost:5000/api/products?ids=${ids}&currency=${currency}`
+    );
+
+    const products = await response.json();
+
+    window.checkoutProducts = products;
 
     summaryItems.innerHTML = cart.items
         .map((item) => {
+
+            const product = products.find(p => p.id === item.id);
+            const price = product ? product.price : item.price;
+
             const name =
                 item.name?.[lang] ||
-                item.name?.ru ||
                 item.name ||
                 "Product";
 
-            const price = item.price;
+            const formatted = window.formatPrice(price);
 
-const formatted = window.formatPrice
-    ? window.formatPrice(price)
-    : `$${price.toFixed(2)}`;
-
-return `
-    <div class="summary-item">
-        <div class="summary-item-name">
-            ${name}
-        </div>
-        <div>
-            ${item.quantity} × ${formatted}
-        </div>
-    </div>
-`;
+            return `
+                <div class="summary-item">
+                    <div class="summary-item-name">
+                        ${name}
+                    </div>
+                    <div>
+                        ${item.quantity} × ${formatted}
+                    </div>
+                </div>
+            `;
         })
         .join("");
 }
-
 
 // ========================================
 // Totals
@@ -77,11 +86,20 @@ return `
 function updateOrderTotals() {
 
     const cart = window.cart;
+    const products = window.checkoutProducts || [];
+
     if (!cart) return;
 
-    const subtotal = cart.getTotal();
+    let subtotal = 0;
 
-    const total = subtotal;
+    cart.items.forEach(item => {
+
+        const product = products.find(p => p.id === item.id);
+        const price = product ? product.price : item.price;
+
+        subtotal += Number(price) * Number(item.quantity);
+
+    });
 
     const format = window.formatPrice
         ? window.formatPrice
@@ -91,11 +109,10 @@ function updateOrderTotals() {
         format(subtotal);
 
     document.getElementById("taxAmount").textContent =
-        format(tax);
+        format(0);
 
     document.getElementById("totalAmount").textContent =
-        format(total);
-
+        format(subtotal);
 }
 
 

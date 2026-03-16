@@ -1,7 +1,7 @@
 // controllers/productController.js
 
 import { Product } from "../models/index.js";
-import { convertUsdToEur } from "../services/currencyService.js";
+
 
 /* ============================
    CREATE PRODUCT
@@ -51,8 +51,8 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
 
-    const { rarity, lang = "en", currency = "USD" } = req.query;
-    const selectedCurrency = currency.toUpperCase();
+    const { rarity, lang = "en" } = req.query;
+    
 
     const where = {
       isActive: true
@@ -84,20 +84,13 @@ export const getProducts = async (req, res) => {
             ? p.shortDescription_bg
             : p.shortDescription_en;
 
-        let price = Number(p.price);
-        let productCurrency = "USD";
-
-        if (selectedCurrency === "EUR"){
-          price = await convertUsdToEur(price);
-          productCurrency = "EUR";
-        }
-
+        const price = Number(p.price);
         return {
           id: p.id,
           name,
           slug: p.slug,
           price,
-          currency: productCurrency,
+          currency: "EUR",
           shortDescription,
           images: p.images,
           rarity: p.rarity
@@ -149,7 +142,7 @@ export const getProductBySlug = async (req, res) => {
   try {
 
     const { slug } = req.params;
-    const { lang = "en", currency = "USD" } = req.query;
+    const { lang = "en" } = req.query;
 
     const product = await Product.findOne({
       where: { slug, isActive: true }
@@ -180,20 +173,14 @@ export const getProductBySlug = async (req, res) => {
         ? product.longDescription_bg
         : product.longDescription_en;
 
-    let price = Number(product.price);
-    let productCurrency = "USD";
-
-    if (currency === "EUR") {
-      price = await convertUsdToEur(price);
-      productCurrency = "EUR";
-    }
+    const price = Number(product.price);
 
     return res.json({
       id: product.id,
       name,
       slug: product.slug,
       price,
-      currency: productCurrency,
+      currency: "EUR",
       shortDescription,
       longDescription,
       images: product.images,
