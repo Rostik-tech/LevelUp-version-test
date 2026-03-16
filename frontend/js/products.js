@@ -29,7 +29,7 @@ async function loadProduct() {
     try {
         const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
-const currency = window.currentCurrency ? window.currentCurrency() : "USD";
+        const currency = window.currentCurrency ? window.currentCurrency().toUpperCase() : "USD";
 
 const response = await fetch(
     `${API_BASE}/products/slug/${slug}?lang=${lang}&currency=${currency}`
@@ -109,9 +109,9 @@ const title =
 
 const description =
     product[`longDescription_${lang}`] ||
-    product.longDescription_en ||
+    product.longDescription ||
     product[`shortDescription_${lang}`] ||
-    product.shortDescription_en ||
+    product.shortDescription ||
     "";
 
 const titleEl = document.getElementById("productTitle");
@@ -124,19 +124,17 @@ const breadcrumbEl = document.getElementById("breadcrumbProduct");
 if (breadcrumbEl) breadcrumbEl.textContent = title;
 
     // ===== PRICE =====
-    const priceEl = document.getElementById("productPrice");
+const priceEl = document.getElementById("productPrice");
 
-    if (priceEl) {
-        const numericPrice = Number(product.price);
-        priceEl.dataset.basePrice = numericPrice;
+if (priceEl) {
 
-        if (window.convertPrice && window.formatPrice) {
-            const converted = window.convertPrice(numericPrice);
-            priceEl.textContent = window.formatPrice(converted);
-        } else {
-            priceEl.textContent = `$${numericPrice.toFixed(2)}`;
-        }
-    }
+    const numericPrice = Number(product.price);
+
+    const symbol = product.currency === "EUR" ? "€" : "$";
+
+    priceEl.textContent = `${symbol}${numericPrice.toFixed(2)}`;
+
+}
 
     // ===== SIZES =====
     renderSizes(product);

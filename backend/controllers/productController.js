@@ -145,8 +145,11 @@ export const getProductById = async (req, res) => {
    GET PRODUCT BY SLUG
 ============================ */
 export const getProductBySlug = async (req, res) => {
+
   try {
+
     const { slug } = req.params;
+    const { lang = "en", currency = "USD" } = req.query;
 
     const product = await Product.findOne({
       where: { slug, isActive: true }
@@ -156,12 +159,55 @@ export const getProductBySlug = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    return res.json(product);
+    const name =
+      lang === "ru"
+        ? product.name_ru
+        : lang === "bg"
+        ? product.name_bg
+        : product.name_en;
+
+    const shortDescription =
+      lang === "ru"
+        ? product.shortDescription_ru
+        : lang === "bg"
+        ? product.shortDescription_bg
+        : product.shortDescription_en;
+
+    const longDescription =
+      lang === "ru"
+        ? product.longDescription_ru
+        : lang === "bg"
+        ? product.longDescription_bg
+        : product.longDescription_en;
+
+    let price = Number(product.price);
+    let productCurrency = "USD";
+
+    if (currency === "EUR") {
+      price = await convertUsdToEur(price);
+      productCurrency = "EUR";
+    }
+
+    return res.json({
+      id: product.id,
+      name,
+      slug: product.slug,
+      price,
+      currency: productCurrency,
+      shortDescription,
+      longDescription,
+      images: product.images,
+      rarity: product.rarity,
+      sizes: product.sizes
+    });
 
   } catch (err) {
+
     console.error("GET PRODUCT BY SLUG ERROR:", err.message);
     return res.status(500).json({ message: "Server error" });
+
   }
+
 };
 
 

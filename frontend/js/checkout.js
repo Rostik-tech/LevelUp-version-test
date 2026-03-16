@@ -49,16 +49,24 @@ function displayOrderSummary() {
                 item.name ||
                 "Product";
 
-            return `
-                <div class="summary-item">
-                    <div class="summary-item-name">
-                        ${name}
-                    </div>
-                    <div>
-                        ${item.quantity} × $${item.price.toFixed(2)}
-                    </div>
-                </div>
-            `;
+            const price = window.convertPrice
+    ? window.convertPrice(item.price)
+    : item.price;
+
+const formatted = window.formatPrice
+    ? window.formatPrice(price)
+    : `$${price.toFixed(2)}`;
+
+return `
+    <div class="summary-item">
+        <div class="summary-item-name">
+            ${name}
+        </div>
+        <div>
+            ${item.quantity} × ${formatted}
+        </div>
+    </div>
+`;
         })
         .join("");
 }
@@ -69,11 +77,20 @@ function displayOrderSummary() {
 // ========================================
 
 function updateOrderTotals() {
+
     const cart = window.cart;
     if (!cart) return;
 
-    const subtotal = cart.getTotal();
-    const tax = subtotal * 0.1;
+    const subtotalUSD = cart.getTotal();
+
+    const subtotal = window.convertPrice
+        ? window.convertPrice(subtotalUSD)
+        : subtotalUSD;
+
+    const tax = window.convertPrice
+        ? window.convertPrice(subtotalUSD * 0.1)
+        : subtotalUSD * 0.1;
+
     const total = subtotal + tax;
 
     const format = window.formatPrice
@@ -88,6 +105,7 @@ function updateOrderTotals() {
 
     document.getElementById("totalAmount").textContent =
         format(total);
+
 }
 
 

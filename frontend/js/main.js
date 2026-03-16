@@ -156,7 +156,7 @@ function initCurrency() {
 
 function updatePagePrices() {
 
-    const priceElements = document.querySelectorAll('[data-base-price]');
+    const priceElements = document.querySelectorAll('[data-base-price]:not([data-no-convert])');
 
     priceElements.forEach(function (element) {
 
