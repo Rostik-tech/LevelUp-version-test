@@ -2,20 +2,20 @@
 // Cart Page - Clean UI + JWT + i18n (FIXED CURRENCY)
 // ========================================
 
-document.addEventListener("DOMContentLoaded", function () {
-    displayCart();
-    updateCartSummary();
+document.addEventListener("DOMContentLoaded", async function () {
+    await displayCart();
 
     document
         .getElementById("checkoutBtn")
         ?.addEventListener("click", handleCheckout);
 });
 
-function displayCart() {
+async function displayCart() {
     const container = document.getElementById("cartItems");
     if (!container) return;
 
     const cart = window.cart;
+    const currency = window.currentCurrency ? window.currentCurrency() : "usd";
     const lang = window.currentLanguage ? window.currentLanguage() : "ru";
 
     if (!cart || cart.items.length === 0) {
@@ -42,19 +42,27 @@ function displayCart() {
         triggerLanguageUpdate();
         return;
     }
+// получаем все id товаров
+const ids = cart.items.map(i => i.id).join(",");
 
+// запрашиваем цены из backend
+const response = await fetch(
+    `http://localhost:5000/api/products?ids=${ids}&currency=${currency}`
+);
+
+    const products = await response.json();
+    window.cartProducts = products;
     container.innerHTML = cart.items.map(item => {
 
         const name = item.name || "Product";
+        const product = products.find(p => p.id === item.id);
+        const price = product ? product.price : item.price;
 
         // 🔥 КОНВЕРТАЦИЯ + ФОРМАТ
-        const convertedPrice = window.convertPrice(Number(item.price));
-        const formattedPrice = window.formatPrice(convertedPrice);
+        const formattedPrice = window.formatPrice(Number(price));
 
-        const convertedTotal = window.convertPrice(
-            Number(item.price) * Number(item.quantity)
-        );
-        const formattedTotal = window.formatPrice(convertedTotal);
+const total = Number(price) * Number(item.quantity);
+const formattedTotal = window.formatPrice(total);
 
         return `
             <div class="cart-item">
@@ -115,26 +123,36 @@ function displayCart() {
     }).join("");
 
     triggerLanguageUpdate();
+    updateCartSummary();
 }
 
 function updateCartSummary() {
+
     const cart = window.cart;
+    const products = window.cartProducts || [];
+
     if (!cart) return;
 
-    const subtotalUSD = cart.getTotal();
+    let subtotal = 0;
 
-    const subtotal = window.convertPrice(subtotalUSD);
-    const tax = window.convertPrice(subtotalUSD * 0.1);
-    const total = window.convertPrice(subtotalUSD * 1.1);
+    cart.items.forEach(item => {
+
+        const product = products.find(p => p.id === item.id);
+        const price = product ? product.price : item.price;
+
+        subtotal += Number(price) * Number(item.quantity);
+
+    });
 
     document.getElementById("subtotal").textContent =
         window.formatPrice(subtotal);
 
-    document.getElementById("tax").textContent =
-        window.formatPrice(tax);
-
     document.getElementById("total").textContent =
-        window.formatPrice(total);
+        window.formatPrice(subtotal);
+
+    const taxEl = document.getElementById("tax");
+    if (taxEl) taxEl.textContent = window.formatPrice(0);
+
 }
 
 function changeQuantity(productId, size, change) {
@@ -210,3 +228,5 @@ function triggerLanguageUpdate() {
 
 window.changeQuantity = changeQuantity;
 window.removeFromCart = removeFromCart;
+window.displayCart = displayCart;
+window.updateCartSummary = updateCartSummary;

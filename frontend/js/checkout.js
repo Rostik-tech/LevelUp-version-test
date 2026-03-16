@@ -49,9 +49,7 @@ function displayOrderSummary() {
                 item.name ||
                 "Product";
 
-            const price = window.convertPrice
-    ? window.convertPrice(item.price)
-    : item.price;
+            const price = item.price;
 
 const formatted = window.formatPrice
     ? window.formatPrice(price)
@@ -81,17 +79,9 @@ function updateOrderTotals() {
     const cart = window.cart;
     if (!cart) return;
 
-    const subtotalUSD = cart.getTotal();
+    const subtotal = cart.getTotal();
 
-    const subtotal = window.convertPrice
-        ? window.convertPrice(subtotalUSD)
-        : subtotalUSD;
-
-    const tax = window.convertPrice
-        ? window.convertPrice(subtotalUSD * 0.1)
-        : subtotalUSD * 0.1;
-
-    const total = subtotal + tax;
+    const total = subtotal;
 
     const format = window.formatPrice
         ? window.formatPrice
