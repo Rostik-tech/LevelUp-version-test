@@ -3,19 +3,13 @@
 // JWT Version (Stable)
 // ========================================
 
-// ===== Language and Currency State =====
+// ===== Language State =====
 let currentLanguage = localStorage.getItem('language') || 'ru';
-let currentCurrency = localStorage.getItem('currency') || 'usd';
 
-const exchangeRates = {
-    usd: 1,
-    eur: 0.92
-};
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function () {
     initLanguage();
-    initCurrency();
     initAuth();
     initMobileMenu();
     initDropdowns();
@@ -84,110 +78,9 @@ function updatePageLanguage() {
     });
 }
 
-// ========================================
-// ===== Currency Switching =====
-// ========================================
-function initCurrency() {
-    const currencyBtn = document.getElementById('currencyBtn');
-    const currencyMenu = document.getElementById('currencyMenu');
-    const currencyOptions = document.querySelectorAll('.currency-switcher .switcher-option');
 
-    const currentCurrencyEl = document.getElementById('currentCurrency');
 
-    if (currentCurrencyEl) {
-        currentCurrencyEl.textContent = currentCurrency.toUpperCase();
-    }
 
-    updatePagePrices();
-
-    if (currencyBtn && currencyMenu) {
-        currencyBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            currencyMenu.classList.toggle('active');
-        });
-    }
-
-    currencyOptions.forEach(function (option) {
-
-        option.addEventListener('click', function () {
-
-            const currency = option.dataset.currency;
-
-            if (currency !== currentCurrency) {
-
-                currentCurrency = currency;
-                localStorage.setItem('currency', currency);
-
-                if (currentCurrencyEl) {
-                    currentCurrencyEl.textContent = currency.toUpperCase();
-                }
-
-                updatePagePrices();
-
-                // 🔥 ОБНОВЛЯЕМ ТОВАРЫ В SHOP
-                if (window.loadProducts) {
-                    window.loadProducts();
-                }
-
-                // 🔥 ОБНОВЛЯЕМ СТРАНИЦУ ТОВАРА
-                if (window.loadProduct) {
-                    window.loadProduct();
-                }
-
-                // 🔥 ОБНОВЛЯЕМ КОРЗИНУ
-                if (window.displayCart) {
-                    window.displayCart();
-                }
-
-                if (window.updateCartSummary) {
-                    window.updateCartSummary();
-                }
-
-            }
-
-            if (currencyMenu) {
-                currencyMenu.classList.remove('active');
-            }
-
-        });
-
-    });
-}
-
-function updatePagePrices() {
-
-    const priceElements = document.querySelectorAll('[data-base-price]:not([data-no-convert])');
-
-    priceElements.forEach(function (element) {
-
-        let basePrice = parseFloat(
-            element.dataset.basePrice ||
-            element.textContent.replace(/[^0-9.]/g, '')
-        );
-
-        if (!element.dataset.basePrice) {
-            element.dataset.basePrice = basePrice;
-        }
-
-        const convertedPrice = convertPrice(basePrice);
-
-        element.textContent = formatPrice(convertedPrice);
-
-    });
-
-}
-
-function convertPrice(priceInUSD) {
-    return priceInUSD * exchangeRates[currentCurrency];
-}
-
-function formatPrice(price) {
-
-    const symbol = currentCurrency === 'usd' ? '$' : '€';
-
-    return symbol + price.toFixed(2);
-
-}
 
 // ========================================
 // ===== Authentication (JWT) =====
@@ -298,6 +191,9 @@ function initStarsBackground() {
     }
 }
 
+function formatPrice(price) {
+    return `$${Number(price).toFixed(2)}`;
+}
 // ========================================
 // ===== Cart =====
 // ========================================
@@ -337,9 +233,8 @@ window.cart = new ShoppingCart();
 window.logout = logout;
 window.getCurrentUser = getCurrentUser;
 window.formatPrice = formatPrice;
-window.convertPrice = convertPrice;
 window.currentLanguage = function () { return currentLanguage; };
-window.currentCurrency = function () { return currentCurrency; };
+
 // ========================================
 // ===== Access Control Layer =====
 // ========================================
