@@ -29,10 +29,8 @@ async function loadProduct() {
     try {
         const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
-        const currency = window.currentCurrency ? window.currentCurrency().toUpperCase() : "USD";
-
-const response = await fetch(
-    `${API_BASE}/products/slug/${slug}?lang=${lang}&currency=${currency}`
+        const response = await fetch(
+    `${API_BASE}/products/slug/${slug}?lang=${lang}`
 );
 
         if (!response.ok) {
@@ -128,11 +126,9 @@ const priceEl = document.getElementById("productPrice");
 
 if (priceEl) {
 
-    const numericPrice = Number(product.price);
+   
 
-    const symbol = product.currency === "EUR" ? "€" : "$";
-
-    priceEl.textContent = `${symbol}${numericPrice.toFixed(2)}`;
+    priceEl.textContent = window.formatPrice(Number(product.price));
 
 }
 
