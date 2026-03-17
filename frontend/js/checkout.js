@@ -11,9 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const cart = window.cart;
-
-    if (!cart || cart.items.length === 0) {
+    if (!checkoutData || checkoutData.items.length === 0) { 
         showEmptyCheckout();
         return;
     }
@@ -94,14 +92,14 @@ function updateOrderTotals() {
 async function handleCheckout(e) {
     e.preventDefault();
 
-    const cart = window.cart;
+    
     const token = getToken();
     const button = document.getElementById("paypalButton");
 
-    if (!cart || cart.items.length === 0) {
-        alert("Корзина пуста");
-        return;
-    }
+    if (!checkoutData || checkoutData.items.length === 0) {
+    alert("Корзина пуста");
+    return;
+}
 
     button.disabled = true;
     button.innerHTML = "Обработка...";
@@ -125,10 +123,10 @@ async function handleCheckout(e) {
                 Authorization: "Bearer " + token
             },
             body: JSON.stringify({
-                items: cart.items.map((item) => ({
-                    productId: item.id,
-                    quantity: item.quantity
-                })),
+                items: checkoutData.items.map((item) => ({
+    productId: item.id,
+    quantity: item.quantity
+})),
                 ...shippingData
             })
         });
