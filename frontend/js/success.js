@@ -123,15 +123,10 @@ function clearCart() {
 // ========================================
 
 function displayOrderDetails(order) {
-    const currency = localStorage.getItem("currency") || "usd";
-    const currencySymbol = currency === "usd" ? "$" : "€";
-    const exchangeRate = currency === "eur" ? 0.92 : 1;
-
     const orderNumber = `#ORD-${String(order.id).substring(0, 8).toUpperCase()}`;
     document.querySelector(".order-number").textContent = orderNumber;
 
-    const totalAmount = (order.totalPrice * exchangeRate).toFixed(2);
-    document.querySelector(".total-amount").textContent = `${currencySymbol}${totalAmount}`;
+    document.querySelector(".total-amount").textContent = formatPrice(order.totalPrice);
 
     document.querySelector(".payment-method").textContent = "PayPal";
 }
