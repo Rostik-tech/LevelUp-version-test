@@ -27,10 +27,9 @@ async function loadProduct() {
     }
 
     try {
-        const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
         const response = await fetch(
-    `${API_BASE}/products/slug/${slug}?lang=${lang}`
+    `${API_BASE}/products/slug/${slug}`
 );
 
         if (!response.ok) {
@@ -98,17 +97,12 @@ function renderProduct(product) {
     }
 
     // ===== TITLE =====
-    const lang = window.currentLanguage ? window.currentLanguage() : "en";
+    
 
-const title =
-    product[`name_${lang}`] ||
-    product.name_en ||
-    "";
+const title = product.name || "";
 
 const description =
-    product[`longDescription_${lang}`] ||
     product.longDescription ||
-    product[`shortDescription_${lang}`] ||
     product.shortDescription ||
     "";
 
@@ -257,7 +251,7 @@ function addToCart() {
     } else {
         cart.items.push({
             id: currentProduct.id,
-            name: currentProduct.name_en,
+            name: currentProduct.name,
             price: Number(currentProduct.price),
             quantity: 1,
             size: selectedSize,
