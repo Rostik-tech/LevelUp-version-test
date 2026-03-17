@@ -14,6 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
   initMobileMenu();
   initDropdowns();
   initStarsBackground();
+
+  // 🔥 ДОБАВИТЬ
+  if (window.cart && window.cart.updateCartCount) {
+    window.cart.updateCartCount();
+  }
 });
 
 // ========================================
@@ -335,3 +340,8 @@ window.requireGuest = requireGuest;
 window.requireUser = requireUser;
 window.requireAdmin = requireAdmin;
 window.updatePageLanguage = updatePageLanguage;
+window.addEventListener("storage", () => {
+  if (window.cart && window.cart.updateCartCount) {
+    window.cart.updateCartCount();
+  }
+});
