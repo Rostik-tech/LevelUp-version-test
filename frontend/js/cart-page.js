@@ -217,6 +217,33 @@ function handleCheckout() {
         return;
     }
 
+    // 🔥 ДОБАВЬ ЭТО
+    const products = window.cartProducts || [];
+
+    let items = cart.items.map(item => {
+        const product = products.find(p => p.id === item.id);
+        const price = product ? product.price : item.price;
+
+        return {
+            ...item,
+            price: Number(price) // уже в нужной валюте
+        };
+    });
+
+    let total = 0;
+    items.forEach(i => {
+        total += i.price * i.quantity;
+    });
+
+    const checkoutData = {
+        items,
+        total,
+        currency: window.currentCurrency ? window.currentCurrency() : "usd"
+    };
+
+    localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+
+    // 👉 переход
     window.location.href = "checkout.html";
 }
 

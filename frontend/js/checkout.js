@@ -1,6 +1,6 @@
 //  checkout.js
 import { getToken } from "./auth.js";
-
+const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
 const API_BASE = "http://localhost:5000/api";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -34,14 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function displayOrderSummary() {
     const summaryItems = document.getElementById("summaryItems");
-    const cart = window.cart;
-    if (!summaryItems || !cart) return;
+    if (!summaryItems || !checkoutData) return;
 
     const lang = window.currentLanguage
         ? window.currentLanguage()
         : "ru";
 
-    summaryItems.innerHTML = cart.items
+    summaryItems.innerHTML = checkoutData.items
         .map((item) => {
             const name =
                 item.name?.[lang] ||
@@ -49,22 +48,18 @@ function displayOrderSummary() {
                 item.name ||
                 "Product";
 
-            const price = item.price;
+            const formatted = window.formatPrice(item.price);
 
-const formatted = window.formatPrice
-    ? window.formatPrice(price)
-    : `$${price.toFixed(2)}`;
-
-return `
-    <div class="summary-item">
-        <div class="summary-item-name">
-            ${name}
-        </div>
-        <div>
-            ${item.quantity} × ${formatted}
-        </div>
-    </div>
-`;
+            return `
+                <div class="summary-item">
+                    <div class="summary-item-name">
+                        ${name}
+                    </div>
+                    <div>
+                        ${item.quantity} × ${formatted}
+                    </div>
+                </div>
+            `;
         })
         .join("");
 }
@@ -75,27 +70,20 @@ return `
 // ========================================
 
 function updateOrderTotals() {
+    if (!checkoutData) return;
 
-    const cart = window.cart;
-    if (!cart) return;
-
-    const subtotal = cart.getTotal();
-
+    const subtotal = checkoutData.total;
+    const tax = 0;
     const total = subtotal;
 
-    const format = window.formatPrice
-        ? window.formatPrice
-        : (p) => `$${p.toFixed(2)}`;
-
     document.getElementById("subtotalAmount").textContent =
-        format(subtotal);
+        window.formatPrice(subtotal);
 
     document.getElementById("taxAmount").textContent =
-        format(tax);
+        window.formatPrice(tax);
 
     document.getElementById("totalAmount").textContent =
-        format(total);
-
+        window.formatPrice(total);
 }
 
 
