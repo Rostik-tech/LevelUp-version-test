@@ -2,6 +2,48 @@
 // Cart Page - Clean UI + JWT + i18n (FIXED CURRENCY)
 // ========================================
 
+function formatPriceSafe(value) {
+    if (window.formatPrice) {
+        return window.formatPrice(value);
+    }
+
+    return new Intl.NumberFormat("de-DE", {
+        style: "currency",
+        currency: "EUR"
+    }).format(value);
+}
+
+function getCartItems() {
+    try {
+        const raw = localStorage.getItem("cartItems");
+
+        // 🔥 если ключ вообще существует → используем ТОЛЬКО его
+        if (raw !== null) {
+            const data = JSON.parse(raw);
+            return Array.isArray(data) ? data : [];
+        }
+
+        // 🔥 fallback ТОЛЬКО если localStorage вообще нет
+        if (window.cart && Array.isArray(window.cart.items)) {
+            return window.cart.items;
+        }
+
+        if (Array.isArray(window.cart)) {
+            return window.cart;
+        }
+
+        return [];
+
+    } catch (e) {
+        console.error("Cart parse error:", e);
+        return [];
+    }
+}
+
+function saveCartItems(items) {
+    localStorage.setItem("cartItems", JSON.stringify(items));
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     await displayCart();
 
@@ -14,11 +56,11 @@ async function displayCart() {
     const container = document.getElementById("cartItems");
     if (!container) return;
 
-    const cart = window.cart;
+    const cartItems = getCartItems();
     
     const lang = window.currentLanguage ? window.currentLanguage() : "ru";
 
-    if (!cart || cart.items.length === 0) {
+    if (!cartItems.length) {
         container.innerHTML = `
             <div class="empty-cart">
                 <div class="empty-cart-icon">
@@ -43,26 +85,38 @@ async function displayCart() {
         return;
     }
 // получаем все id товаров
-const ids = cart.items.map(i => i.id).join(",");
+const ids = cartItems.map(i => i.id).join(",");
 
 // запрашиваем цены из backend
-const response = await fetch(
-    `http://localhost:5000/api/products?ids=${ids}`
-);
+let products = [];
 
-    const products = await response.json();
+try {
+    const response = await fetch(`http://localhost:5000/api/products`);
+
+if (!response.ok) {
+    throw new Error("API error");
+}
+
+const data = await response.json();
+products = Array.isArray(data) ? data : [];
+
+} catch (e) {
+    console.error("Failed to load products:", e);
+}
     window.cartProducts = products;
-    container.innerHTML = cart.items.map(item => {
+    container.innerHTML = cartItems.map(item => {
 
         const name = item.name || "Product";
-        const product = products.find(p => p.id === item.id);
-        const price = product ? Number(product.price) : Number(item.price || 0);
+        const product = products.find(p => String(p.id) === String(item.id));
+        const price = product && product.price != null
+    ? Number(product.price)
+    : Number(item.price || 0);
 
         // 🔥 КОНВЕРТАЦИЯ + ФОРМАТ
-        const formattedPrice = window.formatPrice(Number(price));
+        const formattedPrice = window.formatPriceSafe(Number(price));
 
 const total = Number(price) * Number(item.quantity);
-const formattedTotal = window.formatPrice(total);
+const formattedTotal = window.formatPriceSafe(total);
 
         return `
             <div class="cart-item">
@@ -128,78 +182,82 @@ const formattedTotal = window.formatPrice(total);
 
 function updateCartSummary() {
 
-    const cart = window.cart;
-    const products = window.cartProducts || [];
+    const cartItems = getCartItems();
+const products = window.cartProducts || [];
 
-    if (!cart) return;
+if (!cartItems.length) return;
 
-    let subtotal = 0;
+let subtotal = 0;
 
-    cart.items.forEach(item => {
+cartItems.forEach(item => {
 
-        const product = products.find(p => p.id === item.id);
+        const product = products.find(p => String(p.id) === String(item.id));
         const price = product ? product.price : item.price;
 
         subtotal += Number(price) * Number(item.quantity);
 
     });
 
-    document.getElementById("subtotal").textContent =
-        window.formatPrice(subtotal);
+    const subtotalEl = document.getElementById("subtotal");
+if (subtotalEl) {
+    subtotalEl.textContent = window.formatPriceSafe(subtotal);
+}
 
-    document.getElementById("total").textContent =
-        window.formatPrice(subtotal);
+const totalEl = document.getElementById("total");
+if (totalEl) {
+    totalEl.textContent = window.formatPriceSafe(subtotal);
+}
 
     const taxEl = document.getElementById("tax");
-    if (taxEl) taxEl.textContent = window.formatPrice(0);
+    if (taxEl) taxEl.textContent = window.formatPriceSafe(0);
 
 }
 
 function changeQuantity(productId, size, change) {
-    const cart = window.cart;
-    if (!cart) return;
+    const cartItems = getCartItems();
+    if (!cartItems.length) return;
 
-    const item = cart.items.find(
+   const item = cartItems.find(
     i => i.id === productId && i.size === size
-    );
-    if (!item) return;
+);
 
-    const newQuantity = item.quantity + change;
+if (!item) return;
+
+const newQuantity = Number(item.quantity) + change;
 
     if (newQuantity <= 0) {
     removeFromCart(productId, size);
 }   else {
         item.quantity = newQuantity;
-        cart.saveCart();
-        cart.updateCartCount();
+        saveCartItems(cartItems);
         displayCart();
         updateCartSummary();
     }
 }
 
 function removeFromCart(productId, size) {
-    const cart = window.cart;
-    if (!cart) return;
+    const cartItems = getCartItems();
+    if (!cartItems.length) return;
 
     const confirmText = window.currentLanguage && window.currentLanguage() === "en"
         ? "Remove item from cart?"
         : "Удалить товар из корзины?";
 
     if (confirm(confirmText)) {
-        cart.items = cart.items.filter(
-        i => !(i.id === productId && i.size === size)
-        );
-        cart.saveCart();
-        cart.updateCartCount();
+        const updatedCart = cartItems.filter(
+    i => !(i.id === productId && i.size === size)
+);
+
+saveCartItems(updatedCart);
         displayCart();
         updateCartSummary();
     }
 }
 
 function handleCheckout() {
-    const cart = window.cart;
+    const cartItems = getCartItems();
 
-    if (!cart || cart.items.length === 0) {
+    if (!cartItems.length) {
         alert(
             window.currentLanguage && window.currentLanguage() === "en"
                 ? "Cart is empty!"
@@ -225,7 +283,7 @@ function triggerLanguageUpdate() {
         window.updatePageLanguage();
     }
 }
-
+window.formatPriceSafe = formatPriceSafe;
 window.changeQuantity = changeQuantity;
 window.removeFromCart = removeFromCart;
 window.displayCart = displayCart;

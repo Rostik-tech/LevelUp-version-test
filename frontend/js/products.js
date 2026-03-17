@@ -244,31 +244,41 @@ async function validateProduct() {
 // Add To Cart
 // ========================
 function addToCart() {
-    const cart = window.cart;
-    if (!cart) return;
 
-    const existing = cart.items.find(i =>
-        i.id === currentProduct.id &&
-        i.size === selectedSize
+    // 1. Берём корзину из localStorage
+    let cart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+
+    // 2. Ищем существующий товар
+    const existing = cart.find(i =>
+        String(i.id) === String(currentProduct.id) &&
+        String(i.size) === String(selectedSize)
     );
 
     if (existing) {
         existing.quantity += 1;
     } else {
-        cart.items.push({
-    id: currentProduct.id,
-    name: currentProduct.name_en,
-    price: Number(currentProduct.price),
-    quantity: 1,
-    size: selectedSize,
-    image: currentProduct.images?.[0]
-        ? `http://localhost:5000${currentProduct.images[0]}`
-        : null
+        cart.push({
+            id: currentProduct.id,
+            name: currentProduct.name_en,
+            price: Number(currentProduct.price),
+            quantity: 1,
+            size: selectedSize,
+            image: currentProduct.images?.[0]
+                ? `http://localhost:5000${currentProduct.images[0]}`
+                : null
         });
     }
 
-    cart.saveCart();
-    cart.updateCartCount();
+    // 3. СОХРАНЯЕМ В localStorage
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+
+    // 4. СИНХРОНИЗАЦИЯ С window.cart (ВАЖНО для иконки)
+    if (window.cart && Array.isArray(window.cart.items)) {
+        window.cart.items = cart;
+        if (window.cart.updateCartCount) {
+            window.cart.updateCartCount();
+        }
+    }
 
     alert("Товар добавлен в корзину");
 }

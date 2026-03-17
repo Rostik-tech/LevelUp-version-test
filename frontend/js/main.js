@@ -194,13 +194,13 @@ function initStarsBackground() {
 // ========================================
 class ShoppingCart {
   constructor() {
-    this.items = JSON.parse(localStorage.getItem("cart")) || [];
-    this.updateCartCount();
-  }
+  this.items = JSON.parse(localStorage.getItem("cartItems") || "[]");
+  this.updateCartCount();
+}
 
   saveCart() {
-    localStorage.setItem("cart", JSON.stringify(this.items));
-  }
+  localStorage.setItem("cartItems", JSON.stringify(this.items));
+}
 
   getTotal() {
     return this.items.reduce(function (t, i) {
@@ -215,15 +215,18 @@ class ShoppingCart {
   }
 
   updateCartCount() {
-    const el = document.getElementById("cartCount");
+    const cart = JSON.parse(localStorage.getItem("cartItems") || "[]");
 
-    if (el) {
-      const count = this.getItemCount();
+    const total = cart.reduce((sum, item) => {
+        return sum + Number(item.quantity || 0);
+    }, 0);
 
-      el.textContent = count;
-      el.style.display = count > 0 ? "flex" : "none";
+    const badge = document.querySelector(".cart-count");
+
+    if (badge) {
+        badge.textContent = total;
     }
-  }
+}
 }
 
 // ========================================
