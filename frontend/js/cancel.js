@@ -28,7 +28,7 @@ function logCancelledPayment() {
     cancelHistory.push(cancelLog);
     localStorage.setItem('cancelHistory', JSON.stringify(cancelHistory));
     
-    console.log('Payment cancelled:', cancelLog);
+    
 }
 
 // Check Cart Status
@@ -76,19 +76,17 @@ function updateCartInfo() {
     
     const itemCount = cart.items.length;
     const totalAmount = cart.getTotal();
-    const currency = localStorage.getItem('currency') || 'usd';
-    const currencySymbol = currency === 'usd' ? '$' : '€';
-    const exchangeRate = currency === 'eur' ? 0.92 : 1;
+    
     
     // Update info message with cart details
     const infoMessage = document.querySelector('.info-message');
     if (infoMessage) {
-        const formattedTotal = (totalAmount * exchangeRate).toFixed(2);
+        const formattedTotal = window.formatPrice(totalAmount);
         infoMessage.innerHTML = `
             <i class="fas fa-info-circle"></i>
-            <span data-en="Your order has not been processed. ${itemCount} items (${currencySymbol}${formattedTotal}) remain in your cart." 
-                  data-ru="Ваш заказ не был обработан. ${itemCount} товар(ов) (${currencySymbol}${formattedTotal}) остались в корзине.">
-                Ваш заказ не был обработан. ${itemCount} товар(ов) (${currencySymbol}${formattedTotal}) остались в корзине.
+            <span data-en="Your order has not been processed. ${itemCount} items (${formattedTotal}) remain in your cart." 
+                  data-ru="Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.">
+                Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.
             </span>
         `;
     }
@@ -163,21 +161,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const tryAgainBtn = document.querySelector('a[href="checkout.html"]');
     if (tryAgainBtn) {
         tryAgainBtn.addEventListener('click', function() {
-            console.log('User clicked: Try Again');
+            
         });
     }
     
     const backToCartBtn = document.querySelector('a[href="cart.html"]');
     if (backToCartBtn) {
         backToCartBtn.addEventListener('click', function() {
-            console.log('User clicked: Back to Cart');
+            
         });
     }
     
     const continueShoppingBtn = document.querySelector('a[href="shop.html"]');
     if (continueShoppingBtn) {
         continueShoppingBtn.addEventListener('click', function() {
-            console.log('User clicked: Continue Shopping');
+            
         });
     }
 });

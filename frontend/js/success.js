@@ -114,7 +114,7 @@ function enableInvoiceDownload(invoiceNumber) {
 
 function clearCart() {
     localStorage.removeItem("cart");
-    
+    localStorage.removeItem("checkoutData"); // 🔥 ДОБАВЬ
 }
 
 // ========================================
