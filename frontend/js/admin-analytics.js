@@ -10,7 +10,7 @@ const state = {
     status: "ALL",
     from: null,
     to: null,
-    currency: localStorage.getItem("currency") || "usd",
+    
     isLoading: false
 };
 
@@ -29,6 +29,12 @@ function init() {
     startAutoRefresh();
 }
 
+function formatPrice(price) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR"
+  }).format(price || 0);
+}
 // ========================================
 // EVENTS
 // ========================================
@@ -177,10 +183,11 @@ async function loadAnalytics() {
 
         const data = await apiRequest(`/admin/analytics?${query.toString()}`);
 
-        if (!data?.dailyData) {
+        
+            if (!data || !Array.isArray(data.dailyData)) {
             showError();
             return;
-        }
+                }
 
         displayKPIs(data);
         displayChart(data.dailyData);
@@ -201,15 +208,11 @@ async function loadAnalytics() {
 // ========================================
 
 function displayKPIs(data) {
-    const currency = state.currency;
-    const symbol = currency === "usd" ? "$" : "€";
-    const rate = currency === "eur" ? 0.92 : 1;
-
-    setText("totalRevenue", `${symbol}${(data.totalRevenue * rate).toFixed(2)}`);
-    setText("netRevenue", `${symbol}${(data.netRevenue * rate).toFixed(2)}`);
+    setText("totalRevenue", formatPrice(data.totalRevenue));
+    setText("netRevenue", formatPrice(data.netRevenue));
     setText("totalOrders", data.orders);
     setText("refundRate", `${Number(data.refundRate || 0).toFixed(2)}%`);
-    setText("avgOrderValue", `${symbol}${(data.avgOrderValue * rate).toFixed(2)}`);
+    setText("avgOrderValue", formatPrice(data.avgOrderValue));
     setText("totalCustomers", data.customers);
 
     if (data.comparison) {
@@ -271,8 +274,7 @@ function displayChart(dailyData) {
         revenueChart = null;
     }
 
-    const currency = state.currency;
-    const rate = currency === "eur" ? 0.92 : 1;
+    
 
     revenueChart = new Chart(ctx, {
         type: "line",
@@ -283,7 +285,7 @@ function displayChart(dailyData) {
             datasets: [
                 {
                     label: "Revenue",
-                    data: dailyData.map(d => Number(d.revenue) * rate),
+                    data: dailyData.map(d => Number(d.revenue)),
                     borderColor: "#00f0ff",
                     backgroundColor: "rgba(0,240,255,0.1)",
                     tension: 0.4,
@@ -321,9 +323,7 @@ function displayChart(dailyData) {
 
 function displayTopProducts(products) {
 
-    const currency = state.currency;
-    const rate = currency === "eur" ? 0.92 : 1;
-    const symbol = currency === "usd" ? "$" : "€";
+    
     const tbody = document.getElementById("productsTableBody");
     if (!tbody) return;
 
@@ -338,7 +338,7 @@ function displayTopProducts(products) {
             <td>${i + 1}</td>
             <td>${p.name}</td>
             <td>${p.units}</td>
-            <td>${symbol}${(Number(p.revenue) * rate).toFixed(2)}</td>
+            <td>${formatPrice(p.revenue)}</td>
             <td>
                 <button class="btn btn-outline btn-sm"
                     onclick="viewProduct('${p.id}')">
@@ -368,7 +368,7 @@ function exportData() {
     revenueChart.data.labels.forEach((label, index) => {
         const revenue = revenueChart.data.datasets[0].data[index];
         const orders = revenueChart.data.datasets[1].data[index];
-        rows.push([label, revenue, orders]);
+        rows.push([label, revenue.toFixed(2), orders]);
     });
 
     const csvContent = rows.map(r => r.join(",")).join("\n");

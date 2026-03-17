@@ -31,6 +31,12 @@ async function verifyAdmin() {
   }
 }
 
+function formatPrice(price) {
+  return new Intl.NumberFormat("en-IE", {
+    style: "currency",
+    currency: "EUR"
+  }).format(price || 0);
+}
 /* =========================
    LOAD ORDERS
 ========================= */
@@ -106,13 +112,13 @@ function renderOrders(container, response) {
        value="${filters.to}" />
 <input type="number"
        id="minTotal"
-       placeholder="Min $"
+       placeholder="Min €"
        step="0.01"
        value="${filters.minTotal}" />
 
 <input type="number"
        id="maxTotal"
-       placeholder="Max $"
+       placeholder="Max €"
        step="0.01"
        value="${filters.maxTotal}" />
   <button class="btn btn-primary" id="applyFiltersBtn">
@@ -135,17 +141,16 @@ function renderOrders(container, response) {
       </thead>
       <tbody>
         ${orders.map(order => {
-          const remaining = (
+          const remaining = 
   Number(order.totalPrice) -
-  Number(order.refundedAmount || 0)
-).toFixed(2);
+  Number(order.refundedAmount || 0);
 
           return `
             <tr>
               <td>${order.id}</td>
               <td>${order.User?.email || "-"}</td>
-              <td>$${Number(order.totalPrice).toFixed(2)}</td>
-              <td>$${Number(order.refundedAmount || 0).toFixed(2)}</td>
+              <td>${formatPrice(order.totalPrice)}</td>
+              <td>${formatPrice(order.refundedAmount)}</td>
               <td>
               ${renderStatusDropdown(order)}
               </td>
@@ -338,7 +343,7 @@ function renderRefundButton(order, remaining) {
 
       <button class="btn btn-outline refund-btn"
               data-id="${order.id}"
-              data-remaining="${remaining}"
+              data-remaining="${remaining.toFixed(2)}"
               ${disabled}>
         Refund
       </button>
@@ -371,12 +376,12 @@ function openRefundModal(orderId, remaining) {
     <div class="refund-modal-content">
       <h3>Refund Order #${orderId}</h3>
 
-      <p>Remaining amount: $${remaining}</p>
+      <p>Remaining amount: ${formatPrice(remaining)}</p>
 
       <input type="number" 
              id="refundAmount"
              placeholder="Enter amount"
-             max="${remaining}"
+             max="${remaining.toFixed(2)}"
              min="0.01"
              step="0.01" />
 
@@ -395,9 +400,17 @@ function openRefundModal(orderId, remaining) {
   `;
 
   document.body.appendChild(modal);
+  modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.remove();
+    document.body.style.overflow = "";
+  }
+});
+  document.body.style.overflow = "hidden";
 
   document.getElementById("cancelRefund").onclick = () => {
     modal.remove();
+document.body.style.overflow = "";
   };
 
   document.getElementById("confirmRefund").onclick = async () => {
@@ -406,10 +419,10 @@ function openRefundModal(orderId, remaining) {
 
     const amount = parseFloat(amountInput.value);
 
-    if (!amount || amount <= 0) {
-      alert("Invalid amount");
-      return;
-    }
+    if (isNaN(amount) || amount <= 0) {
+  alert("Invalid amount");
+  return;
+}
 
     if (amount > remaining) {
       alert("Amount exceeds remaining balance");
@@ -426,6 +439,7 @@ function openRefundModal(orderId, remaining) {
       });
 
       modal.remove();
+document.body.style.overflow = "";
       await loadOrders(currentPage);
 
     } catch (err) {
@@ -472,7 +486,7 @@ async function loadProducts(page = 1) {
             <tr>
               <td>${product.id}</td>
               <td>${product.name_en}</td>
-              <td>$${product.price}</td>
+              <td>${formatPrice(product.price)}</td>
               <td>${product.stock}</td>
               <td>${product.isActive ? "Active" : "Inactive"}</td>
 
@@ -625,10 +639,26 @@ placeholder='Sizes (JSON) e.g. [{"size":"XL","stock":5}]'
   `;
 
   document.body.appendChild(modal);
+  modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.remove();
+    document.body.style.overflow = "";
+  }
+});
+  document.body.style.overflow = "hidden";
 
 /* RARITY GLOW */
 
 const rarity = document.getElementById("p_rarity");
+const nameInput = document.getElementById("p_name");
+const slugInput = document.getElementById("p_slug");
+
+nameInput.addEventListener("input", () => {
+  slugInput.value = nameInput.value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/(^-|-$)/g,"");
+});
 
 rarity.addEventListener("change", () => {
 
@@ -647,6 +677,7 @@ rarity.addEventListener("change", () => {
 
   document.getElementById("cancelCreate").onclick = () => {
     modal.remove();
+document.body.style.overflow = "";
   };
 
   document.getElementById("confirmCreate").onclick = async () => {
@@ -659,8 +690,15 @@ rarity.addEventListener("change", () => {
       formData.append("slug", document.getElementById("p_slug").value);
       formData.append("brand", document.getElementById("p_brand").value);
       formData.append("rarity", document.getElementById("p_rarity").value);
-      formData.append("price", document.getElementById("p_price").value);
-      formData.append("currency", "USD");
+      const price = parseFloat(document.getElementById("p_price").value);
+
+if (isNaN(price) || price <= 0){
+  alert("Invalid price");
+  return;
+}
+
+formData.append("price", price);
+      
 
       formData.append("shortDescription_en", document.getElementById("p_short").value);
       formData.append("longDescription_en", document.getElementById("p_long").value);
@@ -679,6 +717,7 @@ rarity.addEventListener("change", () => {
       });
 
       modal.remove();
+document.body.style.overflow = "";
 
       await loadProducts(currentPage);
 
@@ -841,6 +880,13 @@ ${product.longDescription_bg || ""}
   `;
 
   document.body.appendChild(modal);
+  modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.remove();
+    document.body.style.overflow = "";
+  }
+});
+  document.body.style.overflow = "hidden";
 
   let images = [...(product.images || [])];
 
@@ -931,6 +977,7 @@ if (nameInput) {
 
   document.getElementById("cancelEdit").onclick = () => {
     modal.remove();
+document.body.style.overflow = "";
   };
 
   /* UPDATE */
@@ -947,9 +994,16 @@ if (nameInput) {
       formData.append("slug", document.getElementById("ep_slug").value);
       formData.append("brand", document.getElementById("ep_brand").value);
       formData.append("rarity", document.getElementById("ep_rarity").value);
-      formData.append("price", document.getElementById("ep_price").value);
+      const price = parseFloat(document.getElementById("ep_price").value);
 
-      formData.append("currency", "USD");
+if (isNaN(price) || price <= 0) {
+  alert("Invalid price");
+  return;
+}
+
+formData.append("price", price);
+
+      
 
       formData.append(
 "shortDescription_en",
@@ -1000,6 +1054,7 @@ document.getElementById("ep_long_bg").value
       });
 
       modal.remove();
+document.body.style.overflow = "";
 
       await loadProducts(currentPage);
 
@@ -1043,4 +1098,3 @@ document.getElementById("ep_long_bg").value
 
 })();
 
-const imageGrid = document.getElementById("imageGrid");

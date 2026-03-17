@@ -322,3 +322,8 @@
         font-size: 13px;
     }
 }
+
+.no-click {
+  pointer-events: none;
+  cursor: default;
+}

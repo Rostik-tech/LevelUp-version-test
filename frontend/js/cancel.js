@@ -2,13 +2,9 @@
 // Cancel Page Script
 // ========================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Log that payment was canceled
-    logCancelledPayment();
-    
-    // Check if cart still has items
-    checkCartStatus();
-});
+function getCartItems() {
+    return JSON.parse(localStorage.getItem("cartItems") || "[]");
+}
 
 // Log Cancelled Payment
 function logCancelledPayment() {
@@ -16,15 +12,27 @@ function logCancelledPayment() {
     const reason = urlParams.get('reason') || 'user_cancelled';
     
     // Log to localStorage for analytics
-    const cancelLog = {
-        timestamp: new Date().toISOString(),
-        reason: reason,
-        cartItems: window.cart ? window.cart.items.length : 0,
-        cartTotal: window.cart ? window.cart.getTotal() : 0
-    };
+    const cartItems = getCartItems();
+
+const cancelLog = {
+    timestamp: new Date().toISOString(),
+    reason: reason,
+    cartItems: cartItems.reduce((sum, item) => {
+    return sum + Number(item.quantity);
+}, 0),
+    cartTotal: cartItems.reduce((sum, item) => {
+        return sum + (Number(item.price) * Number(item.quantity));
+    }, 0)
+};
     
     // Store cancel log
-    const cancelHistory = JSON.parse(localStorage.getItem('cancelHistory') || '[]');
+    let cancelHistory;
+
+try {
+    cancelHistory = JSON.parse(localStorage.getItem('cancelHistory')) || [];
+} catch {
+    cancelHistory = [];
+}
     cancelHistory.push(cancelLog);
     localStorage.setItem('cancelHistory', JSON.stringify(cancelHistory));
     
@@ -33,13 +41,11 @@ function logCancelledPayment() {
 
 // Check Cart Status
 function checkCartStatus() {
-    const cart = window.cart;
-    
-    if (!cart || cart.items.length === 0) {
-        // Cart is empty - show different message
+    const cartItems = getCartItems();
+
+    if (!cartItems.length) {
         showEmptyCartMessage();
     } else {
-        // Cart has items - show normal cancel message
         updateCartInfo();
     }
 }
@@ -71,24 +77,33 @@ function showEmptyCartMessage() {
 
 // Update Cart Info
 function updateCartInfo() {
-    const cart = window.cart;
-    if (!cart) return;
-    
-    const itemCount = cart.items.length;
-    const totalAmount = cart.getTotal();
-    const currency = localStorage.getItem('currency') || 'usd';
-    const currencySymbol = currency === 'usd' ? '$' : '€';
-    const exchangeRate = currency === 'eur' ? 0.92 : 1;
-    
-    // Update info message with cart details
+    const cartItems = getCartItems();
+
+    if (!cartItems.length) return;
+
+    const itemCount = cartItems.reduce((sum, item) => {
+    return sum + Number(item.quantity);
+}, 0);
+
+    const totalAmount = cartItems.reduce((sum, item) => {
+        return sum + (Number(item.price) * Number(item.quantity));
+    }, 0);
+
     const infoMessage = document.querySelector('.info-message');
+
     if (infoMessage) {
-        const formattedTotal = (totalAmount * exchangeRate).toFixed(2);
+        const formattedTotal = new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR"
+}).format(totalAmount);
+
+const itemText = itemCount === 1 ? "item" : "items";
+
         infoMessage.innerHTML = `
             <i class="fas fa-info-circle"></i>
-            <span data-en="Your order has not been processed. ${itemCount} items (${currencySymbol}${formattedTotal}) remain in your cart." 
-                  data-ru="Ваш заказ не был обработан. ${itemCount} товар(ов) (${currencySymbol}${formattedTotal}) остались в корзине.">
-                Ваш заказ не был обработан. ${itemCount} товар(ов) (${currencySymbol}${formattedTotal}) остались в корзине.
+            <span data-en="Your order has not been processed. ${itemCount} ${itemText} (${formattedTotal}) remain in your cart." 
+                  data-ru="Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.">
+                Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.
             </span>
         `;
     }
@@ -159,24 +174,27 @@ document.addEventListener('languageChanged', function() {
 
 // Add event listeners to buttons
 document.addEventListener('DOMContentLoaded', function() {
-    // Track button clicks for analytics
+    logCancelledPayment();
+    checkCartStatus();
+
+    // Track buttons
     const tryAgainBtn = document.querySelector('a[href="checkout.html"]');
     if (tryAgainBtn) {
-        tryAgainBtn.addEventListener('click', function() {
+        tryAgainBtn.addEventListener('click', () => {
             console.log('User clicked: Try Again');
         });
     }
-    
+
     const backToCartBtn = document.querySelector('a[href="cart.html"]');
     if (backToCartBtn) {
-        backToCartBtn.addEventListener('click', function() {
+        backToCartBtn.addEventListener('click', () => {
             console.log('User clicked: Back to Cart');
         });
     }
-    
+
     const continueShoppingBtn = document.querySelector('a[href="shop.html"]');
     if (continueShoppingBtn) {
-        continueShoppingBtn.addEventListener('click', function() {
+        continueShoppingBtn.addEventListener('click', () => {
             console.log('User clicked: Continue Shopping');
         });
     }
