@@ -1031,3 +1031,64 @@ margin:4px 0 6px 0;
     }
 
 }
+.mobile-profile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mobile-profile {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 0, 255, 0.2);
+        align-items: center;
+        width: 100%;
+    }
+
+    .mobile-profile .nav-link {
+        width: 80%;
+    }
+
+    .mobile-profile .nav-link {
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 12px 20px;
+    width: 80%;
+    text-align: center;
+    transition: all 0.2s ease;
+    }
+
+    .mobile-profile .nav-link:hover {
+        background: rgba(255, 0, 255, 0.1);
+        border-color: rgba(255, 0, 255, 0.3);
+    }
+
+    .mobile-profile .nav-link i {
+        margin-right: 8px;
+    }
+
+    #logoutBtnMobile {
+    color: #ff4d4d;
+    }
+
+    #logoutBtnMobile:hover {
+        background: rgba(255, 0, 0, 0.1);
+        border-color: rgba(255, 0, 0, 0.3);
+    }
+
+    .mobile-profile {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 0, 255, 0.3);
+    }
+
+    .mobile-profile {
+        background: rgba(255, 0, 255, 0.03);
+        border-radius: 12px;
+        padding: 20px 10px;
+    }
+
+}
