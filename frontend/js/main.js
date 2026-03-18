@@ -88,25 +88,35 @@ function updatePageLanguage() {
 function initAuth() {
     const authButtons = document.getElementById('authButtons');
     const profileDropdown = document.getElementById('profileDropdown');
+    const mobileProfile = document.getElementById('mobileProfile');
     const logoutBtn = document.getElementById('logoutBtn');
+    const logoutBtnMobile = document.getElementById('logoutBtnMobile');
+
+    if (logoutBtnMobile) {
+    logoutBtnMobile.addEventListener('click', function (e) {
+        e.preventDefault();
+        logout();
+    });
+}
 
     const token = localStorage.getItem('token');
 
     if (token) {
-        if (authButtons) authButtons.style.display = 'none';
-        if (profileDropdown) profileDropdown.style.display = 'block';
+    if (authButtons) authButtons.style.display = 'none';
+    if (profileDropdown) profileDropdown.style.display = 'block';
+    if (mobileProfile) mobileProfile.style.display = 'block'; // 🔥 ДОБАВЬ
 
-        // Получаем payload из JWT
-        const payload = getTokenPayload();
+    const payload = getTokenPayload();
 
-        if (payload) {
-            injectAdminButton(payload);
-        }
-
-    } else {
-        if (authButtons) authButtons.style.display = 'flex';
-        if (profileDropdown) profileDropdown.style.display = 'none';
+    if (payload) {
+        injectAdminButton(payload);
     }
+
+} else {
+    if (authButtons) authButtons.style.display = 'flex';
+    if (profileDropdown) profileDropdown.style.display = 'none';
+    if (mobileProfile) mobileProfile.style.display = 'none'; // 🔥 ДОБАВЬ
+}
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function (e) {
@@ -136,15 +146,38 @@ function getCurrentUser() {
 // ===== Mobile Menu =====
 // ========================================
 function initMobileMenu() {
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navMenu = document.getElementById('navMenu');
+    const toggle = document.getElementById('mobileMenuToggle');
+    const menu = document.getElementById('navMenu');
+    const overlay = document.getElementById('menuOverlay');
 
-    if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', function () {
-            navMenu.classList.toggle('active');
-            mobileMenuToggle.classList.toggle('active');
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener('click', function () {
+        menu.classList.toggle('active');
+        toggle.classList.toggle('active');
+
+        if (overlay) {
+            overlay.classList.toggle('active');
+        }
+    });
+
+    // закрытие по клику вне меню
+    if (overlay) {
+        overlay.addEventListener('click', function () {
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+            overlay.classList.remove('active');
         });
     }
+
+    // закрытие при клике на ссылку
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+        });
+    });
 }
 
 // ========================================

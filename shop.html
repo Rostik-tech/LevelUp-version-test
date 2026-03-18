@@ -9,6 +9,7 @@
     data-bg="Магазин — Level Up Gaming Accessories">
     Shop - Level Up Gaming Accessories
     </title>
+    <meta name="description" content="Premium gaming accessories shop. High-quality gaming gear and mousepads.">
     <link rel="stylesheet" href="frontend/css/style.css">
     <link rel="stylesheet" href="frontend/css/shop.css">
     
@@ -31,14 +32,14 @@
 
         <div class="cookie-buttons">
 
-            <button id="acceptCookies" class="btn btn-primary"
+            <button type="button" id="acceptCookies" class="btn btn-primary"
             data-en="Accept"
             data-ru="Принять"
             data-bg="Приемам">
             Accept
             </button>
 
-            <button id="declineCookies" class="btn btn-secondary"
+            <button type="button"    id="declineCookies" class="btn btn-secondary"
             data-en="Decline"
             data-ru="Отклонить"
             data-bg="Отказ">
@@ -61,18 +62,57 @@
     <div class="stars-background" id="starsBackground"></div>
 
     <header class="header">
+        <div class="menu-overlay" id="menuOverlay"></div>
         <div class="container">
             <nav class="navbar">
 
                 <a href="index.html" class="logo">
-                    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
-            </a>
+    <img src="frontend/images/logo.svg" alt="Level Up Logo" class="logo-img">
+</a>
 
             <ul class="nav-menu" id="navMenu">
                     <li class="nav-item"><a href="index.html" class="nav-link" data-en="HOME" data-ru="ГЛАВНАЯ" data-bg="НАЧАЛО">HOME</a></li>
                     <li class="nav-item"><a href="shop.html" class="nav-link active" data-en="SHOP" data-ru="МАГАЗИН" data-bg="МАГАЗИН">SHOP</a></li>
                     <li class="nav-item"><a href="about.html" class="nav-link" data-en="ABOUT US" data-ru="О НАС" data-bg="ЗА НАС">ABOUT US</a></li>
                     <li class="nav-item"><a href="contact.html" class="nav-link" data-en="CONTACT" data-ru="КОНТАКТЫ" data-bg="КОНТАКТИ">CONTACT</a></li>
+                <li class="nav-item mobile-profile" id="mobileProfile" style="display:none;">
+
+    <div class="mobile-profile-title"
+    data-en="Account"
+    data-ru="Аккаунт"
+    data-bg="Акаунт">
+        Account
+    </div>
+
+    <a href="profile.html" class="nav-link"
+    data-en="Profile"
+    data-ru="Профиль"
+    data-bg="Профил">
+        <i class="fas fa-user"></i> Profile
+    </a>
+
+    <a href="orders.html" class="nav-link"
+    data-en="My Orders"
+    data-ru="Мои заказы"
+    data-bg="Моите поръчки">
+        <i class="fas fa-box"></i> My Orders
+    </a>
+
+    <a href="my-invoices.html" class="nav-link"
+    data-en="My Invoices"
+    data-ru="Мои счета"
+    data-bg="Моите фактури">
+        <i class="fas fa-file-invoice"></i> My Invoices
+    </a>
+
+    <a href="#" class="nav-link logout" id="logoutBtnMobile"
+    data-en="Logout"
+    data-ru="Выйти"
+    data-bg="Изход">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+
+</li>
                 </ul>
 
             <div class="nav-actions">
@@ -84,7 +124,7 @@
 
                 <!-- Profile Button (shown when logged in) -->
                     <div class="profile-dropdown" id="profileDropdown" style="display: none;">
-                        <button class="btn btn-profile" id="profileBtn">
+                        <button  class="btn btn-profile" id="profileBtn">
                             <i class="fas fa-user"></i>
                             <span data-en="Profile" data-ru="Профиль" data-bg="Профил">Profile</span>
                         </button>
@@ -110,18 +150,18 @@
                     </div>
 
                 <div class="switcher language-switcher">
-                    <button class="switcher-btn" id="langBtn">
+                    <button  class="switcher-btn" id="langBtn">
                         <i class="fas fa-globe"></i>
                         <span id="currentLang">EN</span>
                     </button>
                     <div class="switcher-menu" id="langMenu">
-                        <button class="switcher-option" data-lang="ru">RU</button>
-                        <button class="switcher-option" data-lang="en">EN</button>
-                        <button class="switcher-option" data-lang="bg">BG</button>
+                        <button  class="switcher-option" data-lang="ru">RU</button>
+                        <button  class="switcher-option" data-lang="en">EN</button>
+                        <button  class="switcher-option" data-lang="bg">BG</button>
                     </div>
                 </div>
 
-                <div class="currency-fixed">
+                <div class="currency-fixed" role="button">
     <i class="fas fa-dollar-sign"></i>
     <span>USD</span>
 </div>
@@ -131,6 +171,12 @@
                     <span class="cart-count" id="cartCount">0</span>
                 </a>
 
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
             </div>
         </nav>
     </div>
@@ -138,12 +184,13 @@
 
 <section class="page-header">
     <div class="container">
-        <h1>
+        <h1 class="page-title">
             <span data-en="Gaming Shop" data-ru="Магазин Игровых Аксессуаров" data-bg="Магазин за гейминг аксесоари">
                 Gaming Shop
             </span>
         </h1>
-        <p data-en="Level up your setup with premium gaming gear"
+        <p class="page-subtitle" 
+            data-en="Level up your setup with premium gaming gear"
            data-ru="Повысьте уровень своей настройки с помощью премиальных игровых аксессуаров"
            data-bg="Подобри своя гейминг сетъп с премиални гейминг аксесоари">
             Level up your setup with premium gaming gear
@@ -153,37 +200,37 @@
 
 <section class="shop-section">
     <div class="container">
-        <div class="shop-filters">
+        <div class="shop-filters" id="filters">
 
-    <button class="filter-btn active" data-rarity="ALL"
+    <button type="button" class="filter-btn active" data-rarity="ALL"
         data-en="All"
         data-ru="Все"
         data-bg="Всички">
         All
         </button>
 
-    <button class="filter-btn" data-rarity="CLASSIC"
+    <button  type="button" class="filter-btn" data-rarity="CLASSIC"
         data-en="Classic"
         data-ru="Классические"
         data-bg="Класически">
         Classic
     </button>
 
-    <button class="filter-btn" data-rarity="RARE"
+    <button type="button" class="filter-btn" data-rarity="RARE"
         data-en="Rare"
         data-ru="Редкие"
         data-bg="Редки">
         Rare
     </button>
 
-    <button class="filter-btn" data-rarity="EPIC"
+    <button type="button" class="filter-btn" data-rarity="EPIC"
         data-en="Epic"
         data-ru="Эпические"
         data-bg="Епични">
         Epic
     </button>
 
-    <button class="filter-btn" data-rarity="MYTHIC"
+    <button type="button" class="filter-btn" data-rarity="MYTHIC"
         data-en="Mythic"
         data-ru="Мифические"
         data-bg="Митични">
@@ -191,7 +238,13 @@
     </button>
 
 </div>
-        <div class="products-grid" id="productsContainer">
+        <noscript>
+    <p style="text-align:center; color:#888;">
+        Enable JavaScript to view products
+    </p>
+</noscript>
+
+<div class="products-grid" id="productsContainer">
             <!-- Products will load here -->
         </div>
     </div>

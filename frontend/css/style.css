@@ -1092,3 +1092,128 @@ margin:4px 0 6px 0;
     }
 
 }
+
+/* ========================================
+   GLOBAL MOBILE HEADER (UNIFIED)
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* ===== HEADER ===== */
+    .header {
+        padding: 10px 0;
+    }
+
+    .logo-img {
+        height: 36px;
+    }
+
+    .nav-actions {
+        gap: 8px;
+    }
+
+    .cart-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .mobile-menu-toggle span {
+        height: 4px;
+    }
+
+    /* ===== MENU BASE ===== */
+    .nav-menu {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 1, 24, 0.98);
+        backdrop-filter: blur(12px);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 25px;
+
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+
+    .nav-menu.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* ===== LINKS ===== */
+    .nav-item {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav-link {
+        font-size: 18px;
+        padding: 14px 20px;
+        width: 80%;
+        text-align: center;
+        border-radius: 12px;
+        border: 1px solid transparent;
+    }
+
+    .nav-link:hover {
+        background: rgba(255, 0, 255, 0.1);
+        border-color: rgba(255, 0, 255, 0.3);
+    }
+
+    .nav-link.active {
+        background: rgba(255, 0, 255, 0.15);
+        border: 1px solid rgba(255, 0, 255, 0.4);
+        box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    /* ===== MOBILE PROFILE ===== */
+    .mobile-profile {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+
+        margin-top: 20px;
+        padding: 20px;
+
+        width: 85%;
+        border-radius: 14px;
+
+        background: rgba(255, 0, 255, 0.05);
+        border: 1px solid rgba(255, 0, 255, 0.2);
+    }
+
+    .mobile-profile .nav-link {
+        width: 100%;
+    }
+
+    #logoutBtnMobile {
+        color: #ff4d4d;
+    }
+
+    #logoutBtnMobile:hover {
+        background: rgba(255, 0, 0, 0.1);
+    }
+
+    /* ===== HIDE DESKTOP STUFF ===== */
+    .auth-buttons,
+    .profile-dropdown {
+        display: none !important;
+    }
+
+}
