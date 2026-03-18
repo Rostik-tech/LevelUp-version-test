@@ -71,14 +71,13 @@ function updateOrderTotals() {
     if (!checkoutData) return;
 
     const subtotal = checkoutData.total;
-    const tax = 0;
+    
     const total = subtotal;
 
     document.getElementById("subtotalAmount").textContent =
         window.formatPrice(subtotal);
 
-    document.getElementById("taxAmount").textContent =
-        window.formatPrice(tax);
+    
 
     document.getElementById("totalAmount").textContent =
         window.formatPrice(total);
