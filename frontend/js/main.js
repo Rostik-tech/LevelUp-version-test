@@ -351,6 +351,14 @@ document.querySelectorAll('a[href="#"]').forEach(anchor => {
 
 document.addEventListener("DOMContentLoaded", function () {
 
+const mobileMenuClose = document.getElementById('mobileMenuClose');
+const navMenu = document.getElementById('navMenu');
+
+if (mobileMenuClose && navMenu) {
+    mobileMenuClose.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+    });
+}
 const banner = document.getElementById("cookieBanner");
 const accept = document.getElementById("acceptCookies");
 const decline = document.getElementById("declineCookies");

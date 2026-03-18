@@ -1217,3 +1217,41 @@ margin:4px 0 6px 0;
     }
 
 }
+
+/* ===== MOBILE MENU CLOSE BUTTON ===== */
+
+.mobile-menu-close {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mobile-menu-close {
+        display: flex;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+
+        width: 40px;
+        height: 40px;
+
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(255, 0, 255, 0.1);
+        border: 1px solid rgba(255, 0, 255, 0.3);
+        border-radius: 10px;
+
+        color: var(--primary-pink);
+        font-size: 18px;
+
+        cursor: pointer;
+        transition: 0.2s ease;
+        z-index: 1001;
+    }
+
+    .mobile-menu-close:hover {
+        background: rgba(255, 0, 255, 0.2);
+        transform: scale(1.05);
+    }
+}
