@@ -1,7 +1,9 @@
-//  orders.js
+// orders.js
 import { getToken } from "./auth.js";
 
 const API_BASE = "http://localhost:5000/api";
+
+let currentOrders = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     const token = getToken();
@@ -12,6 +14,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await loadOrders();
+});
+
+// 🔥 РЕРЕНДЕР ПРИ СМЕНЕ ЯЗЫКА
+document.addEventListener("languageChanged", () => {
+    const container = document.getElementById("ordersList");
+    if (!container || !currentOrders.length) return;
+
+    renderOrders(container, currentOrders);
 });
 
 async function loadOrders() {
@@ -37,6 +47,7 @@ async function loadOrders() {
             return;
         }
 
+        currentOrders = orders; // 🔥 сохраняем
         renderOrders(ordersList, orders);
 
     } catch (err) {
@@ -56,16 +67,17 @@ function renderEmpty(container) {
 }
 
 function renderOrders(container, orders) {
+    const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+    const localeMap = {
+        en: "en-US",
+        ru: "ru-RU",
+        bg: "bg-BG"
+    };
+
     container.innerHTML = orders.map(order => {
-        const lang = window.currentLanguage ? window.currentLanguage() : "en";
 
-const localeMap = {
-    en: "en-US",
-    ru: "ru-RU",
-    bg: "bg-BG"
-};
-
-const date = new Date(order.createdAt).toLocaleDateString(localeMap[lang]);
+        const date = new Date(order.createdAt).toLocaleDateString(localeMap[lang]);
 
         const itemsHTML = order.OrderItems.map(item => `
             <div class="order-item">
@@ -78,11 +90,11 @@ const date = new Date(order.createdAt).toLocaleDateString(localeMap[lang]);
             <div class="order-card">
                 <div class="order-header">
                     <div>
-                        <div class="order-id" data-en="Order" data-ru="Заказ" data-bg="Поръчки">Order #${order.id}</div>
+                        <div class="order-id" data-en="Order" data-ru="Заказ" data-bg="Поръчка">Order #${order.id}</div>
                         <div class="order-date">${date}</div>
                     </div>
                     <div class="order-status ${order.status}">
-                        ${formatStatus(order.status)}
+                        ${formatStatus(order.status, lang)}
                     </div>
                 </div>
                 <div class="order-items">${itemsHTML}</div>
@@ -93,11 +105,14 @@ const date = new Date(order.createdAt).toLocaleDateString(localeMap[lang]);
             </div>
         `;
     }).join("");
+
+    // 🔥 чтобы data-en/data-ru обновились тоже
+    if (window.updatePageLanguage) {
+        window.updatePageLanguage();
+    }
 }
 
-function formatStatus(status) {
-    const lang = window.currentLanguage ? window.currentLanguage() : "en";
-
+function formatStatus(status, lang) {
     const map = {
         PENDING: {
             en: "Pending",

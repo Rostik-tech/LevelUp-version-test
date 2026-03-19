@@ -67,6 +67,7 @@ function initLanguage() {
 }
 
 function updatePageLanguage() {
+    
     const elements = document.querySelectorAll('[data-en]');
 
     elements.forEach(function (element) {
@@ -76,6 +77,9 @@ function updatePageLanguage() {
             element.textContent = text;
         }
     });
+
+    document.dispatchEvent(new Event("languageChanged"));
+   
 }
 
 

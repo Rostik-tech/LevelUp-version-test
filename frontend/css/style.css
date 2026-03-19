@@ -1324,3 +1324,15 @@ margin:4px 0 6px 0;
 .hidden {
     display: none !important;
 }
+
+@media (max-width: 768px) {
+
+    .navbar {
+        min-width: 0;
+    }
+
+    .nav-menu {
+        min-width: 0;
+    }
+
+}

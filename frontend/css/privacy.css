@@ -574,3 +574,18 @@
     }
 }
 
+@media (max-width: 768px) {
+
+    .page-title {
+        font-size: 28px; /* чуть меньше */
+        line-height: 1.2;
+
+        word-break: break-word;
+        overflow-wrap: break-word;
+
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+}
+
