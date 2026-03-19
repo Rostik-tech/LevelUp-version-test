@@ -107,6 +107,9 @@ function initAuth() {
     if (profileDropdown) profileDropdown.classList.remove('hidden');
     if (mobileProfile) mobileProfile.style.display = 'block';
 
+    const user = getCurrentUser();
+    injectAdminButton(user);
+
 } else {
 
     if (authButtons) authButtons.classList.remove('hidden');
