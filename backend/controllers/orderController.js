@@ -86,7 +86,12 @@ export const createOrder = async (req, res) => {
 export const getOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({
-      include: [OrderItem],
+      include: [
+  {
+    model: OrderItem,
+    include: [Product]
+  }
+],
       order: [["createdAt", "DESC"]],
     });
 
@@ -103,7 +108,12 @@ export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({
       where: { UserId: req.user.id },
-      include: [OrderItem],
+      include: [
+      {
+      model: OrderItem,
+      include: [Product]
+      }
+      ],
       order: [["createdAt", "DESC"]],
     });
 
@@ -119,7 +129,12 @@ export const getMyOrders = async (req, res) => {
 export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id, {
-      include: [OrderItem],
+      include: [
+  {
+    model: OrderItem,
+    include: [Product]
+  }
+],
     });
 
     if (!order) {

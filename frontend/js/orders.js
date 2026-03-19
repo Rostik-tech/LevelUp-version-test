@@ -57,11 +57,19 @@ function renderEmpty(container) {
 
 function renderOrders(container, orders) {
     container.innerHTML = orders.map(order => {
-        const date = new Date(order.createdAt).toLocaleDateString("ru-RU");
+        const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+const localeMap = {
+    en: "en-US",
+    ru: "ru-RU",
+    bg: "bg-BG"
+};
+
+const date = new Date(order.createdAt).toLocaleDateString(localeMap[lang]);
 
         const itemsHTML = order.OrderItems.map(item => `
             <div class="order-item">
-                <span>${item.Product?.name?.ru || "Product"} x${item.quantity}</span>
+                <span>${item.Product?.name_en || "Product"} x${item.quantity}</span>
                 <span>$${(item.price * item.quantity).toFixed(2)}</span>
             </div>
         `).join("");
@@ -88,20 +96,40 @@ function renderOrders(container, orders) {
 }
 
 function formatStatus(status) {
-    switch (status) {
-        case "PENDING":
-            return "Ожидает оплаты";
-        case "PAID":
-            return "Оплачен";
-        case "PROCESSING":
-            return "В обработке";
-        case "SHIPPED":
-            return "Отправлен";
-        case "DELIVERED":
-            return "Доставлен";
-        case "CANCELLED":
-            return "Отменён";
-        default:
-            return status;
-    }
+    const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+    const map = {
+        PENDING: {
+            en: "Pending",
+            ru: "Ожидает оплаты",
+            bg: "Изчаква плащане"
+        },
+        PAID: {
+            en: "Paid",
+            ru: "Оплачен",
+            bg: "Платено"
+        },
+        PROCESSING: {
+            en: "Processing",
+            ru: "В обработке",
+            bg: "В обработка"
+        },
+        SHIPPED: {
+            en: "Shipped",
+            ru: "Отправлен",
+            bg: "Изпратен"
+        },
+        DELIVERED: {
+            en: "Delivered",
+            ru: "Доставлен",
+            bg: "Доставен"
+        },
+        CANCELLED: {
+            en: "Cancelled",
+            ru: "Отменён",
+            bg: "Отменен"
+        }
+    };
+
+    return map[status]?.[lang] || status;
 }
