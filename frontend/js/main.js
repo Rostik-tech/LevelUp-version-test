@@ -87,39 +87,41 @@ function updatePageLanguage() {
 // ========================================
 function initAuth() {
     const authButtons = document.getElementById('authButtons');
+    const authButtonsMobile = document.getElementById('authButtonsMobile');
     const profileDropdown = document.getElementById('profileDropdown');
     const mobileProfile = document.getElementById('mobileProfile');
     const logoutBtn = document.getElementById('logoutBtn');
     const logoutBtnMobile = document.getElementById('logoutBtnMobile');
 
-    if (logoutBtnMobile) {
-    logoutBtnMobile.addEventListener('click', function (e) {
-        e.preventDefault();
-        logout();
-    });
-}
-
     const token = localStorage.getItem('token');
 
     if (token) {
-    if (authButtons) authButtons.style.display = 'none';
-    if (profileDropdown) profileDropdown.style.display = 'block';
-    if (mobileProfile) mobileProfile.style.display = 'block'; // 🔥 ДОБАВЬ
 
-    const payload = getTokenPayload();
+    if (authButtons) authButtons.classList.add('hidden');
+    if (authButtonsMobile) authButtonsMobile.classList.add('hidden');
 
-    if (payload) {
-        injectAdminButton(payload);
-    }
+    if (profileDropdown) profileDropdown.classList.remove('hidden');
+    if (mobileProfile) mobileProfile.style.display = 'block';
 
 } else {
-    if (authButtons) authButtons.style.display = 'flex';
-    if (profileDropdown) profileDropdown.style.display = 'none';
-    if (mobileProfile) mobileProfile.style.display = 'none'; // 🔥 ДОБАВЬ
+
+    if (authButtons) authButtons.classList.remove('hidden');
+    if (authButtonsMobile) authButtonsMobile.classList.remove('hidden');
+
+    if (profileDropdown) profileDropdown.classList.add('hidden');
+    if (mobileProfile) mobileProfile.style.display = 'none';
+
 }
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', function (e) {
             e.preventDefault();
             logout();
         });

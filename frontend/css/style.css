@@ -958,11 +958,8 @@ margin:4px 0 6px 0;
         gap: 6px;
     }
 
-    .auth-buttons,
-    .currency-fixed,
-    .profile-dropdown {
-        display: none !important;
-    }
+    
+    
 
     .logo-img {
         height: 36px;
@@ -1352,5 +1349,36 @@ margin:4px 0 6px 0;
     .cart-btn {
     box-shadow: 0 0 8px rgba(255, 0, 255, 0.4);
 }
+
+.hidden {
+    display: none !important;
+}
+
+}
+
+/* ===== MOBILE AUTH (SEPARATE) ===== */
+
+.auth-buttons-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    /* скрываем desktop кнопки */
+    .auth-buttons {
+        display: none !important;
+    }
+
+    /* показываем мобильные */
+    .auth-buttons-mobile {
+        display: flex;
+        gap: 4px;
+    }
+
+    .auth-buttons-mobile .btn {
+        padding: 6px 8px;
+        font-size: 10px;
+        border-radius: 6px;
+    }
 
 }
