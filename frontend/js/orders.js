@@ -70,7 +70,7 @@ function renderOrders(container, orders) {
             <div class="order-card">
                 <div class="order-header">
                     <div>
-                        <div class="order-id">Заказ #${order.id}</div>
+                        <div class="order-id" data-en="Order" data-ru="Заказ" data-bg="Поръчки">Order #${order.id}</div>
                         <div class="order-date">${date}</div>
                     </div>
                     <div class="order-status ${order.status}">
@@ -79,7 +79,7 @@ function renderOrders(container, orders) {
                 </div>
                 <div class="order-items">${itemsHTML}</div>
                 <div class="order-footer">
-                    <span>Итого:</span>
+                    <span data-en="Total" data-ru="Итого" data-bg="Общо">Total:</span>
                     <span class="order-total">$${Number(order.totalPrice).toFixed(2)}</span>
                 </div>
             </div>

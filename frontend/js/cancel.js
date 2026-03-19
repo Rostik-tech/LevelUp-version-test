@@ -84,9 +84,11 @@ function updateCartInfo() {
         const formattedTotal = window.formatPrice(totalAmount);
         infoMessage.innerHTML = `
             <i class="fas fa-info-circle"></i>
-            <span data-en="Your order has not been processed. ${itemCount} items (${formattedTotal}) remain in your cart." 
-                  data-ru="Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.">
-                Ваш заказ не был обработан. ${itemCount} товар(ов) (${formattedTotal}) остались в корзине.
+            <span 
+                data-en="Your order has not been processed. ${itemCount} items (${formattedTotal}) remain in your cart." 
+                data-ru="Ваш заказ не был обработан. ${itemCount} товаров (${formattedTotal}) осталось в корзине."
+                data-bg="Вашата поръчка не беше обработена. ${itemCount} продукта (${formattedTotal}) остават в количката.">
+                Your order has not been processed. ${itemCount} items (${formattedTotal}) remain in your cart.
             </span>
         `;
     }
