@@ -28,8 +28,11 @@ async function loadProduct() {
 
     try {
 
-        const response = await fetch(
-    `${API_BASE}/products/slug/${slug}`
+        
+    const lang = window.currentLanguage ? window.currentLanguage() : "en";
+
+const response = await fetch(
+    `${API_BASE}/products/slug/${slug}?lang=${lang}`
 );
 
         if (!response.ok) {
