@@ -75,13 +75,20 @@
                  <button class="mobile-menu-close" id="mobileMenuClose">
     <i class="fas fa-times"></i>
 </button>
-<li class="nav-item mobile-profile">
+<li class="nav-item mobile-profile" id="mobileProfile">
 
     <a href="profile.html" class="nav-link"
     data-en="Profile"
     data-ru="Профиль"
     data-bg="Профил">
         <i class="fas fa-user"></i> Profile
+    </a>
+
+    <a href="my-invoices.html" class="nav-link"
+    data-en="My Invoices"
+    data-ru="Мои инвойсы"
+    data-bg="Моите фактури">
+        <i class="fas fa-file-invoice"></i> My Invoices
     </a>
 
     <a href="#" class="nav-link" id="logoutBtnMobile"
@@ -144,6 +151,13 @@
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count" id="cartCount">0</span>
                     </a>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </nav>
         </div>
