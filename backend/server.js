@@ -105,7 +105,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
-
+app.set('trust proxy', 1);
 
 
 /* =====================
