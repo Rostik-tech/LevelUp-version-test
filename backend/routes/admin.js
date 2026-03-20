@@ -318,8 +318,7 @@ try {
 }
 
 if (translations) {
-  data.name_ru = translations.name_ru;
-  data.name_bg = translations.name_bg;
+  
 
   data.shortDescription_ru = translations.shortDescription_ru;
   data.shortDescription_bg = translations.shortDescription_bg;
@@ -381,8 +380,7 @@ if (enChanged) {
 }
 
 if (translations) {
-  data.name_ru = translations.name_ru;
-  data.name_bg = translations.name_bg;
+  
 
   data.shortDescription_ru = translations.shortDescription_ru;
   data.shortDescription_bg = translations.shortDescription_bg;

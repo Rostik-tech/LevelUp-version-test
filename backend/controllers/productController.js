@@ -69,12 +69,7 @@ export const getProducts = async (req, res) => {
     const localizedProducts = await Promise.all(
       products.map(async (p) => {
 
-        const name =
-          lang === "ru"
-            ? p.name_ru
-            : lang === "bg"
-            ? p.name_bg
-            : p.name_en;
+      const name = p.name_en;
 
         const shortDescription =
           lang === "ru"
@@ -152,12 +147,7 @@ export const getProductBySlug = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const name =
-      lang === "ru"
-        ? product.name_ru
-        : lang === "bg"
-        ? product.name_bg
-        : product.name_en;
+    const name = product.name_en;
 
     const shortDescription =
       lang === "ru"

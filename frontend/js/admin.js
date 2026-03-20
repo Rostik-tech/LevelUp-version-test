@@ -711,8 +711,7 @@ function openEditProductModal(product) {
     <div class="product-grid">
 
       <input id="ep_name_en" value="${product.name_en || ""}" placeholder="Name (EN)"/>
-      <input id="ep_name_ru" value="${product.name_ru || ""}" placeholder="Name (RU)"/>
-      <input id="ep_name_bg" value="${product.name_bg || ""}" placeholder="Name (BG)"/>
+      
 
       <input id="ep_slug" value="${product.slug || ""}" placeholder="Slug"/>
 
@@ -942,8 +941,6 @@ if (nameInput) {
       const formData = new FormData();
 
       formData.append("name_en", document.getElementById("ep_name_en").value);
-      formData.append("name_ru", document.getElementById("ep_name_ru").value);
-      formData.append("name_bg", document.getElementById("ep_name_bg").value);
       formData.append("slug", document.getElementById("ep_slug").value);
       formData.append("brand", document.getElementById("ep_brand").value);
       formData.append("rarity", document.getElementById("ep_rarity").value);

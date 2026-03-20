@@ -23,15 +23,7 @@ name_en: {
   }
 },
 
-name_ru: {
-  type: DataTypes.STRING,
-  allowNull: true
-},
 
-name_bg: {
-  type: DataTypes.STRING,
-  allowNull: true
-},
 
 shortDescription_en: {
   type: DataTypes.TEXT,
