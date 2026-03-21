@@ -44,7 +44,7 @@ export const generateInvoicePDF = async (invoice, order, items) => {
       doc.font("Regular");
 
       // ===== LOGO =====
-      const logoPath = path.join("uploads", "logo.png");
+      const logoPath = path.join("uploads", "logotype.png");
       if (fs.existsSync(logoPath)) {
   const logoWidth = 90;
 
