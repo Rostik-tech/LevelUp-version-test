@@ -46,8 +46,15 @@ export const generateInvoicePDF = async (invoice, order, items) => {
       // ===== LOGO =====
       const logoPath = path.join("uploads", "logo.png");
       if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 50, 45, { width: 100 });
-      }
+  const logoWidth = 90;
+
+  const pageWidth = doc.page.width;
+
+  const x = (pageWidth - logoWidth) / 2; // центр по горизонтали
+  const y = 22; // отступ сверху
+
+  doc.image(logoPath, x, y, { width: logoWidth });
+}
 
       // ===== HEADER =====
       doc
