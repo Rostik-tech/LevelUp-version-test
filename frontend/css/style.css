@@ -235,7 +235,8 @@ ul {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 0, 255, 0.2);
     z-index: 1000;
-    padding: var(--spacing-sm) 0;
+     height: 80px;
+    
 }
 
 .navbar {
@@ -243,6 +244,8 @@ ul {
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-lg);
+    height: 100%;
+    padding: 0 20px;
 }
 
 /* Logo */
@@ -250,18 +253,20 @@ ul {
     display: flex;
     align-items: center;
     z-index: 10;
+    margin-top: 10px;
 }
 
 .logo-img {
-    height: 50px;
+    height: 60px; /* база */
     width: auto;
     transition: var(--transition-normal);
-    filter: drop-shadow(var(--neon-pink-glow));
+    filter: drop-shadow(0 0 6px rgba(255, 0, 255, 0.6));
 }
 
 .logo:hover .logo-img {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.8));
+    transform: scale(1.4);
+    filter: drop-shadow(0 0 12px #ff00ff)
+            drop-shadow(0 0 24px #ff00ff);
 }
 
 /* Navigation Menu */
