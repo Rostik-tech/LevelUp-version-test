@@ -111,10 +111,9 @@ app.set('trust proxy', 1);
 /* =====================
    Auth Test Endpoints
 ===================== */
-app.get("/api/test-auth", (req, res) => {
-  res.json({ message: "Auth works" });
+app.get("/api/test-auth", authenticateToken, (req, res) => 
+    { res.json({ message: "Auth works", user: req.user });
 });
-
 app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
   res.json({ message: "Admin access granted" });
 });
