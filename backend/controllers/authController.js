@@ -10,7 +10,7 @@ import { User } from "../models/index.js";
 export const register = async (req, res) => {
   try {
 
-    console.log("REGISTER BODY:", req.body); // 👈 ДОБАВЬ
+    
 
     const { username, email, password, fullName } = req.body;
 
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
   password: hashedPassword,
   role: "USER"
 });
-    console.log("CREATED USER:", user); // 👈 ДОБАВЬ
+    console.log("USER REGISTERED:", email);
 
 
 
@@ -64,30 +64,35 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Email и пароль обязательны" });
     }
 
+    console.log("LOGIN ATTEMPT:", email)
+
     const user = await User.findOne({ where: { email } });
 
-        console.log("USER FROM DB:", user);
-        console.log("INPUT EMAIL:", email);
-        console.log("INPUT PASSWORD:", password);
+        
+        
+        
     if (!user) {
       return res.status(400).json({ message: "Пользователь не найден" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    console.log("PASSWORD MATCH:", isMatch);
-    console.log("HASH IN DB:", user.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Неверный пароль" });
     }
+
+    if (!process.env.JWT_SECRET) {
+  console.error("JWT_SECRET НЕ НАСТРОЕН");
+  return res.status(500).json({ message: "Server config error" });
+}
 
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-
+    console.log("LOGIN SUCCESS:", email);
     return res.json({
       message: "Успешный вход",
       token
