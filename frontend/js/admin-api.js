@@ -1,5 +1,5 @@
 //  admin-api.js
-const API_URL = "https://www.levelup-gaming.store/api";
+const API_URL = "https://levelup-version-test-production.up.railway.app/api";
 
 // ========================================
 // CORE API REQUEST

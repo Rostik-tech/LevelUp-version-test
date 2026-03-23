@@ -107,6 +107,15 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
 app.set('trust proxy', 1);
 
+app.use(cors({
+  origin: [
+    "https://levelup-gaming.store",
+    "https://www.levelup-gaming.store",
+    "http://localhost:3000",
+    "http://127.0.0.1:5500"
+  ],
+  credentials: true
+}));
 
 /* =====================
    Auth Test Endpoints

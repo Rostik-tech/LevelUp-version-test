@@ -19,7 +19,7 @@ let filters = {
   minTotal: "",
   maxTotal: ""
 };
-const API_URL = "https://www.levelup-gaming.store";
+
 /* =========================
    VERIFY ADMIN
 ========================= */
@@ -802,7 +802,7 @@ ${product.longDescription_bg || ""}
         ${(product.images || []).map((img, index) => `
           <div class="image-item">
 
-            <img src="${API_URL}${img}" />
+            <img src="https://levelup-version-test-production.up.railway.app${img}" />
 
             <button class="delete-image" data-index="${index}">
               ✕

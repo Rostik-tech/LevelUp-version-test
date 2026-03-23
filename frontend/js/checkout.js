@@ -1,7 +1,8 @@
-//  checkout.js
+// checkout.js
+import { apiRequest } from "./admin-api.js";
 import { getToken } from "./auth.js";
+
 const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
-const API_BASE = "https://www.levelup-gaming.store/api";
 
 document.addEventListener("DOMContentLoaded", () => {
     const token = getToken();
@@ -11,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    if (!checkoutData || checkoutData.items.length === 0) { 
+    if (!checkoutData || checkoutData.items.length === 0) {
         showEmptyCheckout();
         return;
     }
@@ -24,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
         form.addEventListener("submit", handleCheckout);
     }
 });
-
 
 // ========================================
 // Render summary
@@ -62,7 +62,6 @@ function displayOrderSummary() {
         .join("");
 }
 
-
 // ========================================
 // Totals
 // ========================================
@@ -71,18 +70,14 @@ function updateOrderTotals() {
     if (!checkoutData) return;
 
     const subtotal = checkoutData.total;
-    
     const total = subtotal;
 
     document.getElementById("subtotalAmount").textContent =
         window.formatPrice(subtotal);
 
-    
-
     document.getElementById("totalAmount").textContent =
         window.formatPrice(total);
 }
-
 
 // ========================================
 // Checkout Submit
@@ -91,14 +86,15 @@ function updateOrderTotals() {
 async function handleCheckout(e) {
     e.preventDefault();
 
-    
     const token = getToken();
     const button = document.getElementById("paypalButton");
 
+    if (!button) return;
+
     if (!checkoutData || checkoutData.items.length === 0) {
-    alert("Корзина пуста");
-    return;
-}
+        alert("Корзина пуста");
+        return;
+    }
 
     button.disabled = true;
     button.innerHTML = "Обработка...";
@@ -113,77 +109,70 @@ async function handleCheckout(e) {
         shippingApartment: document.getElementById("apartment").value
     };
 
+    // ✅ базовая валидация
+    if (!shippingData.shippingFullName || !shippingData.shippingAddress) {
+        alert("Заполни обязательные поля");
+        button.disabled = false;
+        button.innerHTML = "Оплатить через PayPal";
+        return;
+    }
+
     try {
-        // 1️⃣ Create Order in DB
-        const orderResponse = await fetch(`${API_BASE}/orders`, {
+        // 1️⃣ Create Order
+        const orderData = await apiRequest("/orders", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-            },
             body: JSON.stringify({
                 items: checkoutData.items.map((item) => ({
-    productId: item.id,
-    quantity: item.quantity
-})),
+                    productId: item.id,
+                    quantity: item.quantity
+                })),
                 ...shippingData
             })
         });
 
-        const orderData = await orderResponse.json();
+        console.log("ORDER DATA:", orderData);
 
-        if (!orderResponse.ok) {
-            throw new Error(orderData.message);
+        const orderId = orderData?.order?.id || orderData?.id;
+
+        if (!orderId) {
+            throw new Error("Order ID не получен");
         }
 
-        const orderId = orderData.order.id;
+        // 2️⃣ Create Payment
+        const paymentData = await apiRequest("/payments/create", {
+            method: "POST",
+            body: JSON.stringify({ orderId })
+        });
 
-        // 2️⃣ Create PayPal order
-        const paymentResponse = await fetch(
-            `${API_BASE}/payments/create`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                },
-                body: JSON.stringify({ orderId })
-            }
-        );
+        console.log("PAYMENT DATA:", paymentData);
 
-        const paymentData = await paymentResponse.json();
-
-        if (!paymentResponse.ok) {
-            throw new Error(paymentData.message);
-        }
-
-        const approvalLink = paymentData.links.find(
-            (link) => link.rel === "approve"
-        )?.href;
+        const approvalLink =
+            paymentData.approvalUrl ||
+            paymentData.links?.find(link => link.rel === "approve")?.href;
 
         if (!approvalLink) {
             throw new Error("Ссылка оплаты не получена");
         }
 
-        // ❗ Никакого capture тут больше нет
+        // 🚀 Redirect to PayPal
         window.location.href = approvalLink;
 
     } catch (err) {
         console.error(err);
         alert(err.message || "Ошибка оформления заказа");
+
         button.disabled = false;
         button.innerHTML = "Оплатить через PayPal";
+        return;
     }
 }
-
 
 // ========================================
 // Empty
 // ========================================
 
 function showEmptyCheckout() {
-    const checkoutLayout =
-        document.querySelector(".checkout-layout");
+    const checkoutLayout = document.querySelector(".checkout-layout");
 
     if (!checkoutLayout) return;
 

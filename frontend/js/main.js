@@ -15,12 +15,13 @@ document.addEventListener('DOMContentLoaded', function () {
     initDropdowns();
     initStarsBackground();
 });
-const API_URL = "https://www.levelup-gaming.store/api";
+const API_URL = "https://levelup-version-test-production.up.railway.app/api";
+
 async function apiRequest(endpoint, options = {}) {
     const token = localStorage.getItem("token");
 
     const headers = {
-        "Content-Type": "application/json",
+        ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
         ...options.headers
     };
 
@@ -28,18 +29,29 @@ async function apiRequest(endpoint, options = {}) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+    try {
+        const res = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers
+        });
 
-    const data = await res.json();
+        let data = null;
+        const contentType = res.headers.get("content-type");
 
-    if (!res.ok) {
-        throw new Error(data.message || "API error");
+        if (contentType && contentType.includes("application/json")) {
+            data = await res.json();
+        }
+
+        if (!res.ok) {
+            throw new Error(data?.message || "API error");
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("API ERROR:", err.message);
+        throw err;
     }
-
-    return data;
 }
 
 async function login(email, password) {

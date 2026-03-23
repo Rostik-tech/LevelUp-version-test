@@ -2,6 +2,7 @@
 // Cart Page - Clean UI + JWT + i18n (FIXED CURRENCY)
 // ========================================
 
+
 document.addEventListener("DOMContentLoaded", async function () {
     await displayCart();
 
@@ -42,14 +43,20 @@ async function displayCart() {
         return;
     }
 // получаем все id товаров
-const ids = cart.items.map(i => i.id).join(",");
+const ids = cart.items.map(i => i.id).filter(Boolean).join(",");
+
+if (!ids) {
+    console.warn("No product IDs found");
+    return;
+}
 
 // запрашиваем цены из backend
+
 const response = await fetch(
-    `https://www.levelup-gaming.store/api/products?ids=${ids}`
+    `https://levelup-version-test-production.up.railway.app/api/products?ids=${ids}`
 );
 
-    const products = await response.json();
+const products = await response.json();
     window.cartProducts = products;
     container.innerHTML = cart.items.map(item => {
 
