@@ -27,11 +27,12 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-      role: "USER"
-    });
+  username,
+  email,
+  fullName,
+  password: hashedPassword,
+  role: "USER"
+});
     console.log("CREATED USER:", user); // 👈 ДОБАВЬ
 
 
