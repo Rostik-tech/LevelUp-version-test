@@ -1,7 +1,7 @@
 //  checkout.js
 import { getToken } from "./auth.js";
 const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://www.levelup-gaming.store/api";
 
 document.addEventListener("DOMContentLoaded", () => {
     const token = getToken();

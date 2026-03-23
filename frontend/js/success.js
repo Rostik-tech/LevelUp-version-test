@@ -24,7 +24,7 @@ async function handlePaymentSuccess() {
 
     try {
         const response = await fetch(
-            `http://localhost:5000/api/payments/capture/${paypalToken}`,
+            `https://www.levelup-gaming.store/api/payments/capture/${paypalToken}`,
             {
                 method: "POST",
                 headers: {
@@ -77,7 +77,7 @@ function enableInvoiceDownload(invoiceNumber) {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://localhost:5000/api/invoices/${invoiceNumber}`,
+                `https://www.levelup-gaming.store/api/invoices/${invoiceNumber}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

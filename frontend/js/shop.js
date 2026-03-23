@@ -3,8 +3,8 @@
 // Shop Page - Backend Connected (Slug Version)
 // ========================================
 
-const API_BASE = "http://localhost:5000/api";
-const BACKEND_BASE = "http://localhost:5000";
+const API_BASE = "https://www.levelup-gaming.store/api";
+const BACKEND_BASE = "https://www.levelup-gaming.store";
 
 let allProducts = [];
 let activeRarity = "ALL";

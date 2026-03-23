@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initDropdowns();
     initStarsBackground();
 });
-const API_URL = "https://levelup-gaming.store/api";
+const API_URL = "https://www.levelup-gaming.store/api";
 async function fatch(endpoint, options = {}) {
     const token = localStorage.getItem("token");
 

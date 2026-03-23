@@ -46,7 +46,7 @@ const ids = cart.items.map(i => i.id).join(",");
 
 // запрашиваем цены из backend
 const response = await fetch(
-    `http://localhost:5000/api/products?ids=${ids}`
+    `https://www.levelup-gaming.store/api/products?ids=${ids}`
 );
 
     const products = await response.json();

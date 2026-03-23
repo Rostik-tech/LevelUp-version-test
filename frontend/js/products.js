@@ -2,8 +2,8 @@
 // Product Page - Backend Connected (SAFE + Gallery)
 // ========================================
 
-const API_BASE = "http://localhost:5000/api";
-const BACKEND_BASE = "http://localhost:5000";
+const API_BASE = "https://www.levelup-gaming.store/api";
+const BACKEND_BASE = "https://www.levelup-gaming.store";
 
 let currentProduct = null;
 let selectedSize = null;
@@ -259,7 +259,7 @@ function addToCart() {
             quantity: 1,
             size: selectedSize,
             image: currentProduct.images?.[0]
-    ? `http://localhost:5000${currentProduct.images[0]}`
+    ? `https://www.levelup-gaming.store${currentProduct.images[0]}`
     : null
         });
     }

@@ -2,7 +2,7 @@
 // Profile Page - Backend Connected Version
 // ========================================
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://www.levelup-gaming.store/api";
 
 document.addEventListener("DOMContentLoaded", async function () {
     const token = localStorage.getItem("token");

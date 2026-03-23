@@ -2,7 +2,7 @@
 // My Invoices - Production Version
 // ========================================
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://www.levelup-gaming.store/api";
 
 document.addEventListener("DOMContentLoaded", () => {
   init();
