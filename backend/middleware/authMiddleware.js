@@ -32,7 +32,7 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (err) {
     return res
-      .status(403)
+      .status(401)
       .json({ message: "Недействительный или просроченный токен" });
   }
 };

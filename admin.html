@@ -1,7 +1,37 @@
-// admin.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+html {
+    display: none;
+}
+</style>
+    <script>
+(function() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const role = payload?.role?.toUpperCase();
+
+        if (role !== "ADMIN") {
+            window.location.href = "index.html";
+            return;
+        }
+
+        // ✅ КЛЮЧЕВОЕ — ПОКАЗЫВАЕМ СТРАНИЦУ
+        document.documentElement.style.display = "block";
+
+    } catch (e) {
+        window.location.href = "login.html";
+    }
+})();
+</script>
     <meta charset="UTF-8">
     <title
     data-en="Admin Panel - Level Up Gaming"
@@ -164,9 +194,7 @@
 
 <script>
 async function initAdminPage() {
-    // 1. Быстрая проверка (frontend)
-    requireAdmin();
-
+    
     // 2. Реальная проверка (backend)
     try {
         const token = localStorage.getItem("token");
