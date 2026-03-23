@@ -163,11 +163,39 @@
 <script src="frontend/js/main.js"></script>
 
 <script>
-requireAdmin();
+async function initAdminPage() {
+    // 1. Быстрая проверка (frontend)
+    requireAdmin();
 
-document.getElementById("logoutBtn").addEventListener("click", function () {
-    logout();
-});
+    // 2. Реальная проверка (backend)
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+            "https://levelup-version-test-production.up.railway.app/api/test-admin",
+            {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+        );
+
+        if (!res.ok) {
+            throw new Error("Not admin");
+        }
+
+    } catch (err) {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+
+    // logout
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+        logout();
+    });
+}
+
+initAdminPage();
 </script>
 
 <script type="module" src="frontend/js/admin.js"></script>

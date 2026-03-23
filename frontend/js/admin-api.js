@@ -10,7 +10,7 @@ export async function apiRequest(path, options = {}) {
 
   if (!token) {
     redirectToLogin();
-    return;
+    throw new Error("No token");
   }
 
   const controller = new AbortController();
@@ -19,61 +19,49 @@ export async function apiRequest(path, options = {}) {
   try {
     const isFormData = options.body instanceof FormData;
 
-    const response = await fetch(`${API_URL}${path}`, {
+    const res = await fetch(`${API_URL}${path}`, {
       ...options,
       signal: controller.signal,
       headers: {
         ...(isFormData ? {} : { "Content-Type": "application/json" }),
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         ...options.headers
       }
     });
 
     clearTimeout(timeout);
 
-    // ========================================
-    // AUTH HANDLING
-    // ========================================
-
-    if (response.status === 401 || response.status === 403) {
+    // 🔥 ЖЁСТКАЯ ПРОВЕРКА AUTH
+    if (res.status === 401 || res.status === 403) {
       localStorage.removeItem("token");
       redirectToLogin();
-      return;
+      throw new Error("Unauthorized");
     }
-
-    // ========================================
-    // SAFE JSON PARSE
-    // ========================================
 
     let data = null;
 
-    const contentType = response.headers.get("content-type");
-
-    if (contentType && contentType.includes("application/json")) {
-      data = await response.json();
+    if (res.headers.get("content-type")?.includes("application/json")) {
+      data = await res.json();
     }
 
-    if (!response.ok) {
-      const message =
-        data?.message ||
-        `Request failed with status ${response.status}`;
-      throw new Error(message);
+    if (!res.ok) {
+      throw new Error(data?.message || `Error ${res.status}`);
     }
 
     return data;
 
-  } catch (error) {
+  } catch (err) {
     clearTimeout(timeout);
 
-    if (error.name === "AbortError") {
-      throw new Error("Request timeout. Please try again.");
+    if (err.name === "AbortError") {
+      throw new Error("Request timeout");
     }
 
     if (!navigator.onLine) {
-      throw new Error("No internet connection.");
+      throw new Error("No internet connection");
     }
 
-    throw error;
+    throw err;
   }
 }
 

@@ -3,6 +3,10 @@
 // ========================================
 import { apiRequest } from "./admin-api.js";
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await verifyAdmin(); // 🔥 ДОБАВИЛИ
+    init();
+});
 let revenueChart = null;
 let autoRefreshInterval = null;
 
@@ -14,6 +18,13 @@ const state = {
     isLoading: false
 };
 
+async function verifyAdmin() {
+    try {
+        await apiRequest("/test-admin");
+    } catch {
+        window.location.href = "login.html";
+    }
+}
 // ========================================
 // INIT
 // ========================================
