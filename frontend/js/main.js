@@ -15,7 +15,52 @@ document.addEventListener('DOMContentLoaded', function () {
     initDropdowns();
     initStarsBackground();
 });
+const API_URL = "https://levelup-gaming.store/api";
+async function fatch(endpoint, options = {}) {
+    const token = localStorage.getItem("token");
 
+    const headers = {
+        "Content-Type": "application/json",
+        ...options.headers
+    };
+
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const res = await apiRequest(`${API_URL}${endpoint}`, {
+        ...options,
+        headers
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || "API error");
+    }
+
+    return data;
+}
+
+async function login(email, password) {
+    try {
+        const data = await apiRequest("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+        });
+
+        localStorage.setItem("token", data.token);
+
+        window.location.href = "index.html";
+
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+apiRequest("/test-auth")
+    .then(data => console.log("AUTH OK:", data))
+    .catch(err => console.log("AUTH ERROR:", err.message));
 // ========================================
 // ===== Language Switching =====
 // ========================================
@@ -389,3 +434,7 @@ banner.style.display = "none";
 });
 
 });
+
+apiRequest("/products")
+    .then(data => console.log("PRODUCTS:", data))
+    .catch(err => console.error("ERROR:", err));
