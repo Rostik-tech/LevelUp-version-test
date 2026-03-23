@@ -9,7 +9,10 @@ import { User } from "../models/index.js";
 ========================= */
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+
+    console.log("REGISTER BODY:", req.body); // 👈 ДОБАВЬ
+
+    const { username, email, password, fullName } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).json({ message: "Все поля обязательны" });
@@ -29,6 +32,7 @@ export const register = async (req, res) => {
       password: hashedPassword,
       role: "USER"
     });
+    console.log("CREATED USER:", user); // 👈 ДОБАВЬ
 
 
 

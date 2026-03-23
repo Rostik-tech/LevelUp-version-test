@@ -205,45 +205,44 @@ document.getElementById("registerForm").addEventListener("submit", async functio
         return;
     }
 
-    try {
-        fetch("https://levelup-version-test-production.up.railway.app/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fullName, username, email, password })
-        });
+try {
+    const response = await fetch("https://levelup-version-test-production.up.railway.app/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password, fullName })
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            formMessage.className = "form-message error";
-            formMessage.setAttribute("data-en", data.message || "Registration error");
-            formMessage.setAttribute("data-ru", data.message || "Ошибка регистрации");
-            formMessage.setAttribute("data-bg", data.message || "Грешка при регистрация");
-            formMessage.textContent = data.message || "Ошибка регистрации";
-            updatePageLanguage();    
-            return;
-        }
-
-        formMessage.className = "form-message success";
-        formMessage.setAttribute("data-en", "Registration successful!");
-        formMessage.setAttribute("data-ru", "Регистрация успешна!");
-        formMessage.setAttribute("data-bg", "Регистрацията е успешна!");
-        formMessage.textContent = "Регистрация успешна!";
-        updatePageLanguage();
-
-        setTimeout(() => {
-            window.location.href = "login.html";
-        }, 1200);
-
-    } catch {
+    if (!response.ok) {
         formMessage.className = "form-message error";
-        formMessage.setAttribute("data-en", "Server connection error");
-        formMessage.setAttribute("data-ru", "Ошибка соединения с сервером");
-        formMessage.setAttribute("data-bg", "Грешка при връзка със сървъра");
-        formMessage.textContent = "Ошибка соединения с сервером";
-        updatePageLanguage();   
+        formMessage.setAttribute("data-en", data.message || "Registration error");
+        formMessage.setAttribute("data-ru", data.message || "Ошибка регистрации");
+        formMessage.setAttribute("data-bg", data.message || "Грешка при регистрация");
+        formMessage.textContent = data.message || "Ошибка регистрации";
+        updatePageLanguage();    
+        return;
     }
-});
+
+    formMessage.className = "form-message success";
+    formMessage.setAttribute("data-en", "Registration successful!");
+    formMessage.setAttribute("data-ru", "Регистрация успешна!");
+    formMessage.setAttribute("data-bg", "Регистрацията е успешна!");
+    formMessage.textContent = "Регистрация успешна!";
+    updatePageLanguage();
+
+    setTimeout(() => {
+        window.location.href = "login.html";
+    }, 1200);
+
+} catch {
+    formMessage.className = "form-message error";
+    formMessage.setAttribute("data-en", "Server connection error");
+    formMessage.setAttribute("data-ru", "Ошибка соединения с сервером");
+    formMessage.setAttribute("data-bg", "Грешка при връзка със сървъра");
+    formMessage.textContent = "Ошибка соединения с сервером";
+    updatePageLanguage();   
+}});
 </script>
 
 </body>
