@@ -30,6 +30,8 @@ export const register = async (req, res) => {
       role: "USER"
     });
 
+
+
     return res.status(201).json({
       message: "Пользователь создан",
       user: {
@@ -59,11 +61,17 @@ export const login = async (req, res) => {
 
     const user = await User.findOne({ where: { email } });
 
+        console.log("USER FROM DB:", user);
+        console.log("INPUT EMAIL:", email);
+        console.log("INPUT PASSWORD:", password);
     if (!user) {
       return res.status(400).json({ message: "Пользователь не найден" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log("PASSWORD MATCH:", isMatch);
+    console.log("HASH IN DB:", user.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Неверный пароль" });
