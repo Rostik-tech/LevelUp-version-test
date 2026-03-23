@@ -70,15 +70,21 @@ const adminLimiter = rateLimit({
 
 app.use(generalLimiter);
 
+app.use(cors({
+  origin: [
+    "https://levelup-gaming.store",
+    "https://www.levelup-gaming.store",
+    "http://localhost:3000",
+    "http://127.0.0.1:5500"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 /* =====================
    CORS (Production Safe)
 ===================== */
-app.use(cors({
-  origin: process.env.FRONTEND_URLS
-    ? process.env.FRONTEND_URLS.split(",")
-    : ["http://127.0.0.1:5500"],
-  credentials: true
-}));
+
 
 /* =====================
    RAW body для PayPal Webhook
@@ -107,15 +113,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
 app.set('trust proxy', 1);
 
-app.use(cors({
-  origin: [
-    "https://levelup-gaming.store",
-    "https://www.levelup-gaming.store",
-    "http://localhost:3000",
-    "http://127.0.0.1:5500"
-  ],
-  credentials: true
-}));
+
 
 /* =====================
    Auth Test Endpoints
