@@ -206,7 +206,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     }
 
     try {
-        const response = await fetch("https://svvi2klt.up.railway.app/api/auth/register", {
+        fetch("https://levelup-version-test-production.up.railway.app/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ fullName, username, email, password })
