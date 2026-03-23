@@ -28,7 +28,7 @@ async function apiRequest(endpoint, options = {}) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const res = await apiRequest(`${API_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers
     });
