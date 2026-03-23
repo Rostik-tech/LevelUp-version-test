@@ -138,8 +138,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     e.preventDefault();
 
     const formMessage = document.getElementById("formMessage");
+
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
+
+    console.log("LOGIN DATA:", { email, password });
 
     try {
         const response = await fetch("https://levelup-version-test-production.up.railway.app/api/auth/login", {
@@ -148,19 +151,28 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        // ✅ защита от HTML ответа (очень важно)
+        let data = {};
+        try {
+            data = await response.json();
+        } catch {
+            data = { message: "Invalid server response" };
+        }
 
         if (!response.ok) {
+            const msg = data.message || "Login error";
+
             formMessage.className = "form-message error";
-            formMessage.setAttribute("data-en", data.message || "Login error");
-            formMessage.setAttribute("data-ru", data.message || "Ошибка входа");
-            formMessage.setAttribute("data-bg", data.message || "Грешка при вход");
-            formMessage.textContent = data.message || "Ошибка входа";
+            formMessage.setAttribute("data-en", msg);
+            formMessage.setAttribute("data-ru", msg);
+            formMessage.setAttribute("data-bg", msg);
+            formMessage.textContent = msg;
+
             updatePageLanguage();
             return;
         }
 
-        // Сохраняем JWT
+        // ✅ JWT
         localStorage.setItem("token", data.token);
 
         formMessage.className = "form-message success";
@@ -168,19 +180,23 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         formMessage.setAttribute("data-ru", "Вход выполнен успешно!");
         formMessage.setAttribute("data-bg", "Входът е успешен!");
         formMessage.textContent = "Вход выполнен успешно!";
+
         updatePageLanguage();
 
         setTimeout(() => {
             window.location.href = "index.html";
         }, 800);
 
-    } catch {
+    } catch (err) {
+        console.error("LOGIN ERROR:", err);
+
         formMessage.className = "form-message error";
         formMessage.setAttribute("data-en", "Server connection error");
         formMessage.setAttribute("data-ru", "Ошибка соединения с сервером");
         formMessage.setAttribute("data-bg", "Грешка при връзка със сървъра");
         formMessage.textContent = "Ошибка соединения с сервером";
-        updatePageLanguage();   
+
+        updatePageLanguage();
     }
 });
 </script>
