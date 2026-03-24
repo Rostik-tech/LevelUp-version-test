@@ -105,6 +105,11 @@ app.use(
 app.use(express.json());
 
 /* =====================
+   FRONTEND STATIC
+===================== */
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+/* =====================
    Routes
 ===================== */
 app.use("/api/auth", authLimiter, authRouter);
@@ -118,6 +123,21 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
 app.set('trust proxy', 1);
 
+/* =====================
+   FRONTEND ROUTES
+===================== */
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+});
+
+app.get("/shop", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/shop.html"));
+});
+
+app.get("/product", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/product.html"));
+});
 
 
 /* =====================
