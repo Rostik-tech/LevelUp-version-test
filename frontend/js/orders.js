@@ -1,7 +1,7 @@
 // orders.js
 import { getToken } from "./auth.js";
 
-const API_BASE = "https://www.levelup-gaming.store/api";
+const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
 
 let currentOrders = [];
 

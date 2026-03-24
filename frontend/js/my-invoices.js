@@ -2,7 +2,7 @@
 // My Invoices - Production Version
 // ========================================
 
-const API_BASE = "https://www.levelup-gaming.store/api";
+const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
 
 document.addEventListener("DOMContentLoaded", () => {
   init();

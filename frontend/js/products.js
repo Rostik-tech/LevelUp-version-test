@@ -2,7 +2,7 @@
 // Product Page - Backend Connected (SAFE + Gallery)
 // ========================================
 
-const API_BASE = "https://www.levelup-gaming.store/api";
+const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
 const BACKEND_BASE = "https://www.levelup-gaming.store";
 
 let currentProduct = null;
