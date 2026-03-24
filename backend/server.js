@@ -26,7 +26,7 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const rootDir = path.resolve(__dirname, "..");
 
 
 dotenv.config();
@@ -107,7 +107,7 @@ app.use(express.json());
 /* =====================
    FRONTEND STATIC
 ===================== */
-app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(rootDir, "frontend")));
 
 /* =====================
    Routes
@@ -128,15 +128,15 @@ app.set('trust proxy', 1);
 ===================== */
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  res.sendFile(path.join(rootDir, "frontend", "index.html"));
 });
 
 app.get("/shop", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/shop.html"));
+  res.sendFile(path.join(rootDir, "frontend", "shop.html"));
 });
 
 app.get("/product", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/product.html"));
+  res.sendFile(path.join(rootDir, "frontend", "product.html"));
 });
 
 
