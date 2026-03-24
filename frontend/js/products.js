@@ -60,7 +60,7 @@ const response = await fetch(
 // Helper for Image URLs
 // ========================
 function getImageUrl(path) {
-    if (!path) return "frontend/images/placeholder.jpg";
+    if (!path) return "images/placeholder.jpg";
     return `${BACKEND_BASE}${path}`;
 }
 

@@ -67,7 +67,7 @@ function applyFilter() {
 }
 
 function getImageUrl(path) {
-    if (!path) return "frontend/images/placeholder.jpg";
+    if (!path) return "images/placeholder.jpg";
     return `${BACKEND_BASE}${path}`;
 }
 
@@ -76,7 +76,7 @@ function renderProducts(container, products) {
 
         const image = (product.images && product.images.length > 0)
     ? getImageUrl(product.images[0])
-    : "frontend/images/placeholder.jpg";
+    : "images/placeholder.jpg";
 
         return `
         <div class="product-card"
