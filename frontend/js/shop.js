@@ -3,8 +3,8 @@
 // Shop Page - Backend Connected (Slug Version)
 // ========================================
 
-const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
-const BACKEND_BASE = "https://levelup-version-test-production.up.railway.app";
+const API_BASE = window.CONFIG.API_BASE;
+const BACKEND_BASE = window.CONFIG.BACKEND_BASE;
 
 let allProducts = [];
 let activeRarity = "ALL";
