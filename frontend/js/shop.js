@@ -4,7 +4,7 @@
 // ========================================
 
 const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
-const BACKEND_BASE = "https://www.levelup-gaming.store";
+const BACKEND_BASE = "https://levelup-version-test-production.up.railway.app";
 
 let allProducts = [];
 let activeRarity = "ALL";
