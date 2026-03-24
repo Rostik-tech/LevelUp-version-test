@@ -1,3 +1,4 @@
+//products.js
 // ========================================
 // Product Page - Backend Connected (SAFE + Gallery)
 // ========================================
