@@ -31,7 +31,7 @@ router.get(
   isAdmin,
   async (req, res) => {
     try {
-      const { from, to } = req.query;
+      const { from, to, status } = req.query;
 
       if (!from || !to) {
         return res.status(400).json({
@@ -55,44 +55,57 @@ router.get(
       }
 
       const diff = toDate.getTime() - fromDate.getTime();
+      const statusFilter = status && status !== "ALL"
+      ? `AND o.status = :status`
+      : "";
       const prevFrom = new Date(fromDate.getTime() - diff);
       const prevTo = new Date(toDate.getTime() - diff);
 
       /* ================= CURRENT KPI ================= */
 
       const currentKpi = await sequelize.query(
-        `
-        SELECT
-          COUNT(DISTINCT o.id) AS orders,
-          COALESCE(SUM(p.amount),0) AS total_revenue,
-          COALESCE(SUM(p."refundedAmount"),0) AS refund_amount,
-          COUNT(DISTINCT o."UserId") AS customers
-        FROM "Orders" o
-        JOIN "Payments" p ON p."OrderId" = o.id
-        WHERE o."createdAt" BETWEEN :from AND :to
-        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
-        `,
-        {
-          replacements: { from: fromDate, to: toDate },
-          type: QueryTypes.SELECT
-        }
-      );
+  `
+  SELECT
+    COUNT(DISTINCT o.id) AS orders,
+    COALESCE(SUM(p.amount - COALESCE(p."refundedAmount",0)),0) AS total_revenue,
+    COALESCE(SUM(p."refundedAmount"),0) AS refund_amount,
+    COUNT(DISTINCT o."UserId") AS customers
+  FROM "Orders" o
+  JOIN "Payments" p ON p."OrderId" = o.id
+  WHERE o."createdAt" BETWEEN :from AND :to
+  ${statusFilter}
+  AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+  `,
+  {
+    replacements: {
+      from: fromDate,
+      to: toDate,
+      status: status?.toUpperCase()
+    },
+    type: QueryTypes.SELECT
+  }
+);
 
       const prevKpi = await sequelize.query(
-        `
-        SELECT
-          COUNT(DISTINCT o.id) AS orders,
-          COALESCE(SUM(p.amount),0) AS total_revenue
-        FROM "Orders" o
-        JOIN "Payments" p ON p."OrderId" = o.id
-        WHERE o."createdAt" BETWEEN :from AND :to
-        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
-        `,
-        {
-          replacements: { from: prevFrom, to: prevTo },
-          type: QueryTypes.SELECT
-        }
-      );
+  `
+  SELECT
+    COUNT(DISTINCT o.id) AS orders,
+    COALESCE(SUM(p.amount - COALESCE(p."refundedAmount",0)),0) AS total_revenue
+  FROM "Orders" o
+  JOIN "Payments" p ON p."OrderId" = o.id
+  WHERE o."createdAt" BETWEEN :from AND :to
+  ${statusFilter}
+  AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+  `,
+  {
+    replacements: {
+      from: prevFrom,
+      to: prevTo,
+      status: status?.toUpperCase()
+    },
+    type: QueryTypes.SELECT
+  }
+);
 
       const current = currentKpi[0] || {};
       const previous = prevKpi[0] || {};
@@ -130,47 +143,57 @@ router.get(
       /* ================= DAILY ================= */
 
       const dailyData = await sequelize.query(
-        `
-        SELECT
-          DATE(o."createdAt") AS date,
-          SUM(p.amount) AS revenue,
-          COUNT(o.id) AS orders
-        FROM "Orders" o
-        JOIN "Payments" p ON p."OrderId" = o.id
-        WHERE o."createdAt" BETWEEN :from AND :to
-        AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
-        GROUP BY DATE(o."createdAt")
-        ORDER BY date ASC
-        `,
-        {
-          replacements: { from: fromDate, to: toDate },
-          type: QueryTypes.SELECT
-        }
-      );
+  `
+  SELECT
+    DATE(o."createdAt") AS date,
+    SUM(p.amount - COALESCE(p."refundedAmount",0)) AS revenue,
+    COUNT(DISTINCT o.id) AS orders
+  FROM "Orders" o
+  JOIN "Payments" p ON p."OrderId" = o.id
+  WHERE o."createdAt" BETWEEN :from AND :to
+  ${statusFilter}
+  AND p.status IN ('COMPLETED','PARTIALLY_REFUNDED','REFUNDED')
+  GROUP BY DATE(o."createdAt")
+  ORDER BY date ASC
+  `,
+  {
+    replacements: {
+      from: fromDate,
+      to: toDate,
+      status: status?.toUpperCase()
+    },
+    type: QueryTypes.SELECT
+  }
+);
 
       /* ================= TOP PRODUCTS ================= */
 
       const topProducts = await sequelize.query(
-        `
-        SELECT
-          pr.id,
-          pr.name_en AS name,
-          SUM(oi.quantity) AS units,
-          SUM(oi.quantity * oi.price) AS revenue
-        FROM "OrderItems" oi
-        JOIN "Orders" o ON o.id = oi."OrderId"
-        JOIN "Products" pr ON pr.id = oi."ProductId"
-        WHERE o."createdAt" BETWEEN :from AND :to
-        AND o.status IN ('PAID','PROCESSING','SHIPPED','DELIVERED','PARTIALLY_REFUNDED','REFUNDED')
-        GROUP BY pr.id, pr.name_en
-        ORDER BY revenue DESC
-        LIMIT 10
-        `,
-        {
-          replacements: { from: fromDate, to: toDate },
-          type: QueryTypes.SELECT
-        }
-      );
+  `
+  SELECT
+    pr.id,
+    pr.name_en AS name,
+    SUM(oi.quantity) AS units,
+    SUM((oi.quantity * oi.price)) AS revenue
+  FROM "OrderItems" oi
+  JOIN "Orders" o ON o.id = oi."OrderId"
+  JOIN "Products" pr ON pr.id = oi."ProductId"
+  WHERE o."createdAt" BETWEEN :from AND :to
+  ${statusFilter}
+  AND o.status IN ('PAID','PROCESSING','SHIPPED','DELIVERED','PARTIALLY_REFUNDED','REFUNDED')
+  GROUP BY pr.id, pr.name_en
+  ORDER BY revenue DESC
+  LIMIT 10
+  `,
+  {
+    replacements: {
+      from: fromDate,
+      to: toDate,
+      status: status?.toUpperCase()
+    },
+    type: QueryTypes.SELECT
+  }
+);
 
       return res.json({
         totalRevenue,
