@@ -1,6 +1,5 @@
 // config.js
-
-export const CONFIG = {
-    API_BASE: "https://www.levelup-gaming.store/api",
-    BACKEND_BASE: "https://www.levelup-gaming.store"
+window.CONFIG = {
+    API_BASE: "https://levelup-version-test-production.up.railway.app/api",
+    BACKEND_BASE: "https://levelup-version-test-production.up.railway.app"
 };
