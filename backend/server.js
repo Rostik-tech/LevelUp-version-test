@@ -41,7 +41,12 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 /* =====================
    Security Middleware
 ===================== */
-app.use(helmet());
+app.use(
+  "/uploads",
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 
 /* =====================
    Rate Limiting
@@ -146,7 +151,7 @@ const startServer = async () => {
     console.log("Database connected");
 
     // 👇 ДОБАВЬ ВОТ ЭТО
-    await sequelize.sync();
+    
     console.log("Database synced");
 
     app.listen(PORT, () => {
