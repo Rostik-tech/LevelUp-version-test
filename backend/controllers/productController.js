@@ -87,7 +87,7 @@ export const getProducts = async (req, res) => {
           price,
           currency: "USD",
           shortDescription,
-          images: p.images,
+          images: p.images?.map(img => `/uploads/products/${img}`) || [],
           rarity: p.rarity
         };
 
@@ -120,7 +120,10 @@ export const getProductById = async (req, res) => {
       });
     }
 
-    return res.json(product);
+    return res.json({
+  ...product.toJSON(),
+  images: product.images?.map(img => `/uploads/products/${img}`) || []
+});
 
   } catch (err) {
     console.error("GET PRODUCT ERROR:", err.message);
@@ -173,7 +176,7 @@ export const getProductBySlug = async (req, res) => {
       currency: "USD",
       shortDescription,
       longDescription,
-      images: product.images,
+      images: product.images?.map(img => `/uploads/products/${img}`) || [],
       rarity: product.rarity,
       sizes: product.sizes
     });

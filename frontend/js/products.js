@@ -58,9 +58,22 @@ const response = await fetch(
 // Helper for Image URLs
 // ========================
 function getImageUrl(path) {
-    if (!path) return "images/placeholder.jpg";
-    if (path.startsWith("http")) return path;
-    return `${BACKEND_BASE}${path}`;
+  if (!path) return "images/placeholder.jpg";
+
+  if (path.startsWith("http")) return path;
+
+  // уже полный путь
+  if (path.startsWith("/uploads")) {
+    return window.CONFIG.BACKEND_BASE + path;
+  }
+
+  // если путь типа products/xxx.jpg
+  if (path.startsWith("products")) {
+    return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
+  }
+
+  // fallback
+  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
 }
 
 // ========================
