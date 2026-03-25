@@ -124,12 +124,12 @@ export const getProductById = async (req, res) => {
     }
 
     return res.json({
-      ...product.toJSON(),
-      images: product.images?.map(img => {
-        if (img.startsWith("/uploads")) return img;
-        return `/uploads/products/${img}`;
-      }) || [],
-    });
+  ...product.toJSON(),
+  images: product.images?.map(img => {
+    if (img.startsWith("/uploads")) return img;
+    return `/uploads/products/${img}`;
+  }) || []
+});
 
   } catch (err) {
     console.error("GET PRODUCT ERROR:", err.message);

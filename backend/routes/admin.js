@@ -304,7 +304,7 @@ router.post(
   "/products",
   authenticateToken,
   isAdmin,
-  upload.array("images", 5),
+upload.array("images", 10),
   async (req, res) => {
   try {
     const data = { ...req.body };
@@ -368,7 +368,7 @@ router.put(
   "/products/:id",
   authenticateToken,
   isAdmin,
-  upload.array("images", 5),
+  upload.array("images", 10),
   async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
