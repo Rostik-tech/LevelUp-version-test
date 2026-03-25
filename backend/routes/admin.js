@@ -3,6 +3,7 @@ import express from "express";
 import axios from "axios";
 import { Op, QueryTypes } from "sequelize";
 import { upload } from "../middleware/uploadMiddleware.js";
+import { uploadToCloudinary } from "../services/cloudinaryService.js";
 import {
   sequelize,
   Product,
@@ -319,9 +320,14 @@ if (data.sizes && typeof data.sizes === "string") {
 }
 
     if (req.files && req.files.length > 0) {
-  data.images = req.files.map(
-    file => `/uploads/products/${file.filename}`
-  );
+  const uploadedImages = [];
+
+  for (const file of req.files) {
+    const result = await uploadToCloudinary(file.buffer);
+    uploadedImages.push(result.secure_url);
+  }
+
+  data.images = uploadedImages;
 }
 
     // пересчёт stock
@@ -436,9 +442,10 @@ if (req.body.existingImages) {
 let newImages = [];
 
 if (req.files && req.files.length > 0) {
-  newImages = req.files.map(
-    file => `/uploads/products/${file.filename}`
-  );
+  for (const file of req.files) {
+    const result = await uploadToCloudinary(file.buffer);
+    newImages.push(result.secure_url);
+  }
 }
 
 // объединяем
