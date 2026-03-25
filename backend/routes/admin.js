@@ -442,7 +442,12 @@ if (req.files && req.files.length > 0) {
 }
 
 // объединяем
-data.images = [...existingImages, ...newImages];
+const currentImages = product.images || [];
+
+data.images = [
+  ...currentImages.filter(img => existingImages.includes(img)),
+  ...newImages
+];
 
     if (data.sizes && Array.isArray(data.sizes)) {
       data.stock = data.sizes.reduce(

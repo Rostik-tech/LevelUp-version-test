@@ -1007,6 +1007,7 @@ document.getElementById("ep_long_bg").value
       const files = document.getElementById("ep_images").files;
 
       formData.append("existingImages", JSON.stringify(images));
+      console.log("SENDING IMAGES:", images);
 
       for (let i = 0; i < files.length; i++) {
         formData.append("images", files[i]);
