@@ -153,7 +153,7 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 /* =====================
    UNIVERSAL PAGE ROUTE
 ===================== */
-app.get("*", (req, res, next) => {
+app.get("/*", (req, res, next) => {
   const requestedPath = req.path;
 
   // не трогаем API
