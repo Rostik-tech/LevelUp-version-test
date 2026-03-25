@@ -31,6 +31,11 @@ async function verifyAdmin() {
   }
 }
 
+function getImageUrl(path) {
+  if (!path) return "images/placeholder.jpg";
+  if (path.startsWith("http")) return path;
+  return window.CONFIG.BACKEND_BASE + path;
+}
 /* =========================
    LOAD ORDERS
 ========================= */
@@ -805,7 +810,7 @@ ${product.longDescription_bg || ""}
         ${(product.images || []).map((img, index) => `
           <div class="image-item">
 
-           <img src="${img.startsWith('http') ? img : window.CONFIG.BACKEND_BASE + img}" />
+           <img src="${getImageUrl(img)}" />
 
             <button class="delete-image" data-index="${index}">
               ✕
