@@ -409,3 +409,6 @@ banner.style.display = "none";
 
 });
 
+if (window.location.pathname.includes("login")) {
+    requireGuest();
+}
