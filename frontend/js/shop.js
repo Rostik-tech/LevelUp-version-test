@@ -69,13 +69,16 @@ function applyFilter() {
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
 
-  // Cloudinary (главное)
+  // Cloudinary — сразу вернуть
   if (path.startsWith("http")) {
     return path;
   }
 
-  // fallback для старых данных
-  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
+  // убрать возможный мусор
+  path = path.replace(/^\/?uploads\/products\//, "");
+  path = path.replace(/^\/?uploads\//, "");
+
+  return `${window.CONFIG.BACKEND_BASE}/uploads/products/${path}`;
 }
 
 function renderProducts(container, products) {
