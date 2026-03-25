@@ -151,6 +151,31 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 });
 
 /* =====================
+   UNIVERSAL PAGE ROUTE
+===================== */
+app.get("*", (req, res, next) => {
+  const requestedPath = req.path;
+
+  // не трогаем API
+  if (requestedPath.startsWith("/api")) return next();
+
+  // если это файл (css/js/images) — пропускаем
+  if (requestedPath.includes(".")) return next();
+
+  let filePath = path.join(rootDir, "frontend", requestedPath);
+
+  // если это корень папки → index.html
+  if (requestedPath === "/") {
+    filePath = path.join(rootDir, "frontend", "index.html");
+  } else {
+    filePath += ".html";
+  }
+
+  res.sendFile(filePath, (err) => {
+    if (err) next();
+  });
+});
+/* =====================
    404 Handler
 ===================== */
 app.use((req, res, next) => {
