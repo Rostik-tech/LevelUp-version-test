@@ -2,7 +2,7 @@
 // Profile Page - Backend Connected Version
 // ========================================
 
-const API_BASE = "https://www.levelup-gaming.store/api";
+const API_BASE = window.CONFIG.API_BASE;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const token = localStorage.getItem("token");
@@ -43,8 +43,7 @@ async function loadUserProfile() {
         document.getElementById("profileEmail").textContent =
             user.email || "user@example.com";
 
-        document.getElementById("profileName").textContent =
-    user.username || "Пользователь";
+        
 
 document.getElementById("fullNameInput").value =
     user.username || "";

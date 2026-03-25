@@ -21,6 +21,8 @@ export function getUserFromToken() {
     if (!token) return null;
 
     try {
+        if (!token.includes(".")) return null;
+
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload;
     } catch {

@@ -258,8 +258,9 @@ function addToCart() {
             price: Number(currentProduct.price),
             quantity: 1,
             size: selectedSize,
-            image: currentProduct.images?.[0]
-    ? `https://www.levelup-gaming.store${currentProduct.images[0]}`
+            
+    image: currentProduct.images?.[0]
+    ? `${BACKEND_BASE}${currentProduct.images[0]}`
     : null
         });
     }

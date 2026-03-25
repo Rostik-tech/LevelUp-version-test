@@ -1,6 +1,7 @@
 // ========================================
 // Production Success Page Script (INVOICE READY)
 // ========================================
+const API_BASE = window.CONFIG.API_BASE;
 
 document.addEventListener("DOMContentLoaded", async function () {
     await handlePaymentSuccess();
@@ -24,7 +25,7 @@ async function handlePaymentSuccess() {
 
     try {
         const response = await fetch(
-            `https://www.levelup-gaming.store/api/payments/capture/${paypalToken}`,
+            `${API_BASE}/payments/capture/${paypalToken}`,
             {
                 method: "POST",
                 headers: {
@@ -77,7 +78,7 @@ function enableInvoiceDownload(invoiceNumber) {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `https://www.levelup-gaming.store/api/invoices/${invoiceNumber}`,
+                `${API_BASE}/invoices/${invoiceNumber}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

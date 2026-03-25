@@ -110,12 +110,17 @@ async function handleCheckout(e) {
     };
 
     // ✅ базовая валидация
-    if (!shippingData.shippingFullName || !shippingData.shippingAddress) {
-        alert("Заполни обязательные поля");
-        button.disabled = false;
-        button.innerHTML = "Оплатить через PayPal";
-        return;
-    }
+    if (
+    !shippingData.shippingFullName ||
+    !shippingData.shippingAddress ||
+    !shippingData.shippingCity ||
+    !shippingData.shippingCountry
+) {
+    alert("Заполни все обязательные поля");
+    button.disabled = false;
+    button.innerHTML = "Оплатить через PayPal";
+    return;
+}
 
     try {
         // 1️⃣ Create Order
@@ -158,13 +163,12 @@ async function handleCheckout(e) {
         window.location.href = approvalLink;
 
     } catch (err) {
-        console.error(err);
-        alert(err.message || "Ошибка оформления заказа");
-
-        button.disabled = false;
-        button.innerHTML = "Оплатить через PayPal";
-        return;
-    }
+    console.error(err);
+    alert(err.message || "Ошибка оформления заказа");
+} finally {
+    button.disabled = false;
+    button.innerHTML = "Оплатить через PayPal";
+}
 }
 
 // ========================================

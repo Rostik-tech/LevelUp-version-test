@@ -29,7 +29,7 @@ async function verifyAdmin() {
 // INIT
 // ========================================
 
-document.addEventListener("DOMContentLoaded", init);
+
 
 function init() {
     cacheDates();
@@ -188,10 +188,10 @@ async function loadAnalytics() {
 
         const data = await apiRequest(`/admin/analytics?${query.toString()}`);
 
-        if (!data?.dailyData) {
-            showError();
-            return;
-        }
+        if (!data || !Array.isArray(data.dailyData)) {
+    showError();
+    return;
+}
 
         displayKPIs(data);
         displayChart(data.dailyData);

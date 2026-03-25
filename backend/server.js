@@ -76,14 +76,7 @@ const adminLimiter = rateLimit({
 app.use(generalLimiter);
 
 app.use(cors({
-  origin: [
-    "https://levelup-gaming.store",
-    "https://www.levelup-gaming.store",
-    "http://localhost:3000",
-    "http://127.0.0.1:5500"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: true,
   credentials: true
 }));
 /* =====================

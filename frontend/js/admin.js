@@ -802,7 +802,7 @@ ${product.longDescription_bg || ""}
         ${(product.images || []).map((img, index) => `
           <div class="image-item">
 
-            <img src="https://levelup-version-test-production.up.railway.app${img}" />
+           <img src="${img}" />
 
             <button class="delete-image" data-index="${index}">
               ✕
@@ -849,7 +849,7 @@ ${product.longDescription_bg || ""}
 
     btn.addEventListener("click", () => {
 
-      const index = btn.dataset.index;
+      const index = Number(btn.dataset.index);
 
       images.splice(index,1);
 
@@ -1040,4 +1040,3 @@ document.getElementById("ep_long_bg").value
 
 })();
 
-const imageGrid = document.getElementById("imageGrid");

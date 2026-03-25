@@ -5,7 +5,7 @@
 
 // ===== Language State =====
 let currentLanguage = localStorage.getItem('language') || 'ru';
-
+import { apiRequest } from "./admin-api.js";
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function () {
@@ -15,44 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
     initDropdowns();
     initStarsBackground();
 });
-const API_URL = "https://levelup-version-test-production.up.railway.app/api";
+const API_URL = "/api";
 
-async function apiRequest(endpoint, options = {}) {
-    const token = localStorage.getItem("token");
 
-    const headers = {
-        ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
-        ...options.headers
-    };
-
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    try {
-        const res = await fetch(`${API_URL}${endpoint}`, {
-            ...options,
-            headers
-        });
-
-        let data = null;
-        const contentType = res.headers.get("content-type");
-
-        if (contentType && contentType.includes("application/json")) {
-            data = await res.json();
-        }
-
-        if (!res.ok) {
-            throw new Error(data?.message || "API error");
-        }
-
-        return data;
-
-    } catch (err) {
-        console.error("API ERROR:", err.message);
-        throw err;
-    }
-}
 
 async function login(email, password) {
     try {
@@ -70,9 +35,6 @@ async function login(email, password) {
     }
 }
 
-apiRequest("/test-auth")
-    .then(data => console.log("AUTH OK:", data))
-    .catch(err => console.log("AUTH ERROR:", err.message));
 // ========================================
 // ===== Language Switching =====
 // ========================================
@@ -447,6 +409,3 @@ banner.style.display = "none";
 
 });
 
-apiRequest("/products")
-    .then(data => console.log("PRODUCTS:", data))
-    .catch(err => console.error("ERROR:", err));

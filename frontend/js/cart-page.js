@@ -52,9 +52,10 @@ if (!ids) {
 
 // запрашиваем цены из backend
 
-const response = await fetch(
-    `https://levelup-version-test-production.up.railway.app/api/products?ids=${ids}`
-);
+const response = await fetch(`/api/products?ids=${ids}`);
+if (!response.ok) {
+    throw new Error("Failed to load cart products");
+}
 
 const products = await response.json();
     window.cartProducts = products;
@@ -173,7 +174,8 @@ function changeQuantity(productId, size, change) {
     const newQuantity = item.quantity + change;
 
     if (newQuantity <= 0) {
-        removeFromCart(productId);
+    removeFromCart(productId, size);
+
     } else {
         item.quantity = newQuantity;
         cart.saveCart();
@@ -228,7 +230,7 @@ function handleCheckout() {
 
     let items = cart.items.map(item => {
         const product = products.find(p => p.id === item.id);
-        const price = product ? product.price : item.price;
+        const price = product ? Number(product.price) : Number(item.price);
 
         return {
             ...item,

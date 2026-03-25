@@ -2,8 +2,7 @@
 // My Invoices - Production Version
 // ========================================
 
-const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
-
+const API_BASE = "/api";
 document.addEventListener("DOMContentLoaded", () => {
   init();
 });

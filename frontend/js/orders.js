@@ -1,8 +1,7 @@
 // orders.js
 import { getToken } from "./auth.js";
 
-const API_BASE = "https://levelup-version-test-production.up.railway.app/api";
-
+const API_BASE = "/api";
 let currentOrders = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -29,7 +28,7 @@ async function loadOrders() {
     if (!ordersList) return;
 
     try {
-        const response = await fetch(`${API_BASE}/orders/my`, {
+        const response = await fetch(`/api/orders/my)`, {
             headers: {
                 "Authorization": "Bearer " + getToken()
             }
@@ -100,7 +99,7 @@ function renderOrders(container, orders) {
                 <div class="order-items">${itemsHTML}</div>
                 <div class="order-footer">
                     <span data-en="Total" data-ru="Итого" data-bg="Общо">Total:</span>
-                    <span class="order-total">$${Number(order.totalPrice).toFixed(2)}</span>
+                    <span class="order-total">${window.formatPrice(order.totalPrice)}</span>
                 </div>
             </div>
         `;
