@@ -34,16 +34,16 @@ async function verifyAdmin() {
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
 
-  // Cloudinary — сразу вернуть
+  // если внутри уже есть cloudinary
+  if (path.includes("res.cloudinary.com")) {
+    return path.replace(/^.*https/, "https");
+  }
+
   if (path.startsWith("http")) {
     return path;
   }
 
-  // убрать возможный мусор
-  path = path.replace(/^\/?uploads\/products\//, "");
-  path = path.replace(/^\/?uploads\//, "");
-
-  return `${window.CONFIG.BACKEND_BASE}/uploads/products/${path}`;
+  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
 }
 /* =========================
    LOAD ORDERS
