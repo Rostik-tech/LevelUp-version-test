@@ -153,22 +153,21 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 /* =====================
    UNIVERSAL PAGE ROUTE
 ===================== */
-app.get("/*", (req, res, next) => {
+app.use((req, res, next) => {
   const requestedPath = req.path;
 
   // не трогаем API
   if (requestedPath.startsWith("/api")) return next();
 
-  // если это файл (css/js/images) — пропускаем
+  // не трогаем файлы (css, js, img)
   if (requestedPath.includes(".")) return next();
 
-  let filePath = path.join(rootDir, "frontend", requestedPath);
+  let filePath;
 
-  // если это корень папки → index.html
   if (requestedPath === "/") {
     filePath = path.join(rootDir, "frontend", "index.html");
   } else {
-    filePath += ".html";
+    filePath = path.join(rootDir, "frontend", requestedPath + ".html");
   }
 
   res.sendFile(filePath, (err) => {
