@@ -28,7 +28,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
-
+console.log("UPLOADS PATH:", path.join(__dirname, "uploads"));
 dotenv.config();
 
 const app = express();
@@ -149,10 +149,11 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 app.use((req, res, next) => {
   const requestedPath = req.path;
 
-  // не трогаем API
+  // 🔥 ДОБАВЬ ЭТО
+  if (requestedPath.startsWith("/uploads")) return next();
+
   if (requestedPath.startsWith("/api")) return next();
 
-  // не трогаем файлы (css, js, img)
   if (requestedPath.includes(".")) return next();
 
   let filePath;
