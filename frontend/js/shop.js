@@ -67,9 +67,15 @@ function applyFilter() {
 }
 
 function getImageUrl(path) {
-    if (!path) return "images/placeholder.jpg";
-    if (path.startsWith("http")) return path;
-    return `${BACKEND_BASE}${path}`;
+  if (!path) return "images/placeholder.jpg";
+
+  // Cloudinary (главное)
+  if (path.startsWith("http")) {
+    return path;
+  }
+
+  // fallback для старых данных
+  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
 }
 
 function renderProducts(container, products) {

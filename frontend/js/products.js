@@ -60,19 +60,12 @@ const response = await fetch(
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
 
-  if (path.startsWith("http")) return path;
-
-  // уже полный путь
-  if (path.startsWith("/uploads")) {
-    return window.CONFIG.BACKEND_BASE + path;
+  // Cloudinary (главное)
+  if (path.startsWith("http")) {
+    return path;
   }
 
-  // если путь типа products/xxx.jpg
-  if (path.startsWith("products")) {
-    return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
-  }
-
-  // fallback
+  // fallback для старых данных
   return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
 }
 
