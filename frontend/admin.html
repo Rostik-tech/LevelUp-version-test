@@ -190,7 +190,7 @@ html {
     </div>
 </section>
 
-<script src="js/main.js"></script>
+<script type="module" src="main.js"></script>
 
 <script>
 async function initAdminPage() {
@@ -200,7 +200,7 @@ async function initAdminPage() {
         const token = localStorage.getItem("token");
 
         const res = await fetch(
-            "https://levelup-version-test-production.up.railway.app/api/test-admin",
+            "/api/test-admin",
             {
                 headers: {
                     Authorization: "Bearer " + token

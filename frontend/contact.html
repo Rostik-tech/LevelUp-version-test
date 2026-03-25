@@ -349,7 +349,7 @@ Send Message
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script type="module" src="main.js"></script>
 <script>
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
 
@@ -366,7 +366,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
 
     try {
 
-        const res = await fetch("https://www.levelup-gaming.store/api/contact", {
+        const res = await fetch("/api/contact", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
