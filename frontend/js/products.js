@@ -22,9 +22,9 @@ async function loadProduct() {
     const slug = params.get("slug");
 
     if (!slug) {
-        window.location.href = "shop.html";
-        return;
-    }
+    console.error("SLUG NOT FOUND");
+    return;
+}
 
     try {
 
@@ -36,10 +36,9 @@ const response = await fetch(
 );
 
         if (!response.ok) {
-            console.error("Product not found");
-            window.location.href = "shop.html";
-            return;
-        }
+    console.error("PRODUCT NOT FOUND", response.status);
+    return;
+}
 
         const product = await response.json();
         currentProduct = product;
@@ -51,9 +50,8 @@ const response = await fetch(
         renderProduct(product);
 
     } catch (err) {
-        console.error("PRODUCT LOAD ERROR:", err);
-        window.location.href = "shop.html";
-    }
+    console.error("PRODUCT LOAD ERROR:", err);
+}
 }
 
 // ========================
@@ -61,6 +59,7 @@ const response = await fetch(
 // ========================
 function getImageUrl(path) {
     if (!path) return "images/placeholder.jpg";
+    if (path.startsWith("http")) return path;
     return `${BACKEND_BASE}${path}`;
 }
 
@@ -70,9 +69,9 @@ function getImageUrl(path) {
 function renderProduct(product) {
 
     // ===== IMAGES (Gallery) =====
-    const images = (product.images && product.images.length > 0)
-        ? product.images
-        : [null];
+    const images = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : [null];
 
     const mainImageEl = document.getElementById("productImage");
     const thumbnailsContainer = document.getElementById("imageThumbnails");
@@ -260,7 +259,7 @@ function addToCart() {
             size: selectedSize,
             
     image: currentProduct.images?.[0]
-    ? `${BACKEND_BASE}${currentProduct.images[0]}`
+    ? getImageUrl(currentProduct.images[0])
     : null
         });
     }

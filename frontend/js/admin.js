@@ -665,7 +665,10 @@ rarity.addEventListener("change", () => {
       formData.append("shortDescription_en", document.getElementById("p_short").value);
       formData.append("longDescription_en", document.getElementById("p_long").value);
 
-      formData.append("sizes", document.getElementById("p_sizes").value);
+      const sizesValue = document.getElementById("p_sizes").value;
+if (sizesValue) {
+  formData.append("sizes", sizesValue);
+}
 
       const files = document.getElementById("p_images").files;
 
@@ -802,7 +805,7 @@ ${product.longDescription_bg || ""}
         ${(product.images || []).map((img, index) => `
           <div class="image-item">
 
-           <img src="${img}" />
+           <img src="${img.startsWith('http') ? img : window.CONFIG.BACKEND_BASE + img}" />
 
             <button class="delete-image" data-index="${index}">
               ✕

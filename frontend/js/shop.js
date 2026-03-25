@@ -68,6 +68,7 @@ function applyFilter() {
 
 function getImageUrl(path) {
     if (!path) return "images/placeholder.jpg";
+    if (path.startsWith("http")) return path;
     return `${BACKEND_BASE}${path}`;
 }
 
@@ -117,7 +118,7 @@ ${product.rarity}
 }
 
 function goToProduct(slug) {
-    window.location.href = `product.html?slug=${slug}`;
+    window.location.href = `/product?slug=${slug}`;
 }
 
 function triggerLanguageUpdate() {
