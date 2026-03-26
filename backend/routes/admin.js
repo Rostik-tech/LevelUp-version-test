@@ -418,25 +418,7 @@ if (data.sizes && typeof data.sizes === "string") {
 }
 
     // существующие изображения
-let existingImages = [];
-
-if (req.body.existingImages) {
-  try {
-    existingImages = JSON.parse(req.body.existingImages);
-  } catch {
-    return res.status(400).json({ message: "Invalid existingImages format" });
-  }
-}
-
-
-
-// объединяем
-const currentImages = product.images || [];
-
-data.images = [
-  ...currentImages.filter(img => existingImages.includes(img)),
-  ...newImages
-];
+data.images = req.body.images || product.images;
 
     if (data.sizes && Array.isArray(data.sizes)) {
       data.stock = data.sizes.reduce(
