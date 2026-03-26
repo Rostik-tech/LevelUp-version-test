@@ -369,8 +369,17 @@ if (
   return res.status(400).send("Invalid signature");
 }
 
-    const event = req.body;
-    const eventType = event.event_type;
+    // 🔥 FIX: parse raw body (PayPal webhook приходит как Buffer)
+let event;
+
+try {
+  event = JSON.parse(req.body.toString());
+} catch (err) {
+  console.error("❌ Webhook JSON parse error:", err.message);
+  return res.status(400).send("Invalid JSON");
+}
+
+const eventType = event.event_type;
 
     console.log("📩 PayPal Webhook:", eventType);
 
