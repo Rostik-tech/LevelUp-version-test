@@ -359,10 +359,15 @@ export const paypalWebhook = async (req, res) => {
       }
     );
 
-    if (verifyResponse.data.verification_status !== "SUCCESS") {
-      console.warn("⚠️ Invalid webhook signature");
-      return res.status(400).send("Invalid signature");
-    }
+    const isSandbox = process.env.PAYPAL_MODE !== "live";
+
+if (
+  verifyResponse.data.verification_status !== "SUCCESS" &&
+  !isSandbox
+) {
+  console.warn("⚠️ Invalid webhook signature");
+  return res.status(400).send("Invalid signature");
+}
 
     const event = req.body;
     const eventType = event.event_type;
