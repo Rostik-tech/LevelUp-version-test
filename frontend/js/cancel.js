@@ -19,8 +19,8 @@ function logCancelledPayment() {
     const cancelLog = {
         timestamp: new Date().toISOString(),
         reason: reason,
-        cartItems: window.cart ? window.cart.items.length : 0,
-        cartTotal: window.cart ? window.cart.getTotal() : 0
+        cartItems: window.cart?.items?.length || 0,
+        cartTotal: window.cart?.getTotal?.() || 0
     };
     
     // Store cancel log
