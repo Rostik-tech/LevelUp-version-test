@@ -79,8 +79,8 @@ export const createOrder = async (req, res) => {
           },
         ],
         application_context: {
-          return_url: "http://127.0.0.1:5500/success.html",
-          cancel_url: "http://127.0.0.1:5500/cancel.html",
+          return_url: "https://www.levelup-gaming.store/success.html",
+          cancel_url: "https://www.levelup-gaming.store/cancel.html",
           brand_name: "Level Up Gaming",
           landing_page: "LOGIN",
           user_action: "PAY_NOW",
