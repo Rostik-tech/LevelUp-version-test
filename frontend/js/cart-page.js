@@ -43,11 +43,22 @@ if (!cart || !Array.isArray(cart.items)) return;
         triggerLanguageUpdate();
         return;
     }
+    // получаем все id товаров
+const ids = cart.items
+    .map(i => i.id)
+    .filter(Boolean)
+    .join(",");
+
+if (!ids) {
+    console.warn("No product IDs found");
+    return;
+}
+
 let products = [];
 
 try {
-    
-    const response = await fetch(`/api/products?ids=${ids}`);
+
+    const response = await fetch(`${window.CONFIG.API_BASE}/products?ids=${ids}`);
 
     if (!response.ok) {
         throw new Error("Failed to load cart products");
