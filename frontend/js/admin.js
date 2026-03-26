@@ -37,8 +37,8 @@ function getImageUrl(path) {
 }
 
 async function uploadToCloudinaryDirect(file) {
-  const CLOUD_NAME = "ТВОЙ_CLOUD_NAME"; // заменить
-  const UPLOAD_PRESET = "ТВОЙ_UPLOAD_PRESET"; // заменить
+const CLOUD_NAME = "dnkuetmxu";
+const UPLOAD_PRESET = "products_upload";
 
   const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
