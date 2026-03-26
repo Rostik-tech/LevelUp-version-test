@@ -389,30 +389,69 @@ const eventType = event.event_type;
       // ===============================
       // PAYMENT COMPLETED
       // ===============================
-      if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
-        const captureId = event.resource.id;
+if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
+  const captureId = event.resource.id;
+  const paypalOrderId =
+    event.resource.supplementary_data?.related_ids?.order_id;
 
-        const payment = await Payment.findOne({
-          where: { paypalCaptureId: captureId },
-          transaction,
-          lock: transaction.LOCK.UPDATE,
-        });
+  // 🔒 сначала ищем по captureId
+  let payment = await Payment.findOne({
+    where: { paypalCaptureId: captureId },
+    transaction,
+    lock: transaction.LOCK.UPDATE,
+  });
 
-        if (payment && payment.status !== "COMPLETED") {
-          payment.status = "COMPLETED";
-          await payment.save({ transaction });
+  // 🔁 fallback: ищем по paypalOrderId
+  if (!payment && paypalOrderId) {
+    payment = await Payment.findOne({
+      where: { paypalOrderId },
+      transaction,
+      lock: transaction.LOCK.UPDATE,
+    });
+  }
 
-          const order = await Order.findByPk(payment.OrderId, {
-            transaction,
-            lock: transaction.LOCK.UPDATE,
-          });
+  // ⚠️ если вообще не нашли payment
+  if (!payment) {
+    console.warn("⚠️ Webhook: payment not found", {
+      captureId,
+      paypalOrderId,
+    });
 
-          if (order && order.status !== "PAID") {
-            order.status = "PAID";
-            await order.save({ transaction });
-          }
-        }
-      }
+    await transaction.commit();
+    return res.status(200).send("Payment not found");
+  }
+
+  // ✅ idempotency: если уже completed — просто выходим
+  if (payment.status === "COMPLETED") {
+    await transaction.commit();
+    return res.status(200).send("Already processed");
+  }
+
+  // 🔥 сохраняем captureId если его ещё нет
+  if (!payment.paypalCaptureId) {
+    payment.paypalCaptureId = captureId;
+  }
+
+  payment.status = "COMPLETED";
+  await payment.save({ transaction });
+
+  // 🔄 обновляем заказ
+  const order = await Order.findByPk(payment.OrderId, {
+    transaction,
+    lock: transaction.LOCK.UPDATE,
+  });
+
+  if (order && order.status !== "PAID") {
+    order.status = "PAID";
+
+    // (опционально, но правильно)
+    if (!order.paypalCaptureId) {
+      order.paypalCaptureId = captureId;
+    }
+
+    await order.save({ transaction });
+  }
+}
 
       // ===============================
       // REFUND COMPLETED
