@@ -34,6 +34,7 @@ function logCancelledPayment() {
 // Check Cart Status
 function checkCartStatus() {
     const cart = window.cart;
+if (!cart || !Array.isArray(cart.items)) return;
     
     if (!cart || cart.items.length === 0) {
         // Cart is empty - show different message
@@ -72,7 +73,7 @@ function showEmptyCartMessage() {
 // Update Cart Info
 function updateCartInfo() {
     const cart = window.cart;
-    if (!cart) return;
+if (!cart || !Array.isArray(cart.items)) return;
     
     const itemCount = cart.items.length;
     const totalAmount = cart.getTotal();

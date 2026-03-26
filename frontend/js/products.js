@@ -239,6 +239,7 @@ async function validateProduct() {
 // ========================
 function addToCart() {
     const cart = window.cart;
+if (!cart || !Array.isArray(cart.items)) return;
     if (!cart) return;
 
     const existing = cart.items.find(i =>

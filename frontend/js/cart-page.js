@@ -16,6 +16,7 @@ async function displayCart() {
     if (!container) return;
 
     const cart = window.cart;
+if (!cart || !Array.isArray(cart.items)) return;
     
 
     if (!cart || cart.items.length === 0) {
@@ -42,22 +43,23 @@ async function displayCart() {
         triggerLanguageUpdate();
         return;
     }
-// получаем все id товаров
-const ids = cart.items.map(i => i.id).filter(Boolean).join(",");
+let products = [];
 
-if (!ids) {
-    console.warn("No product IDs found");
+try {
+    
+    const response = await fetch(`/api/products?ids=${ids}`);
+
+    if (!response.ok) {
+        throw new Error("Failed to load cart products");
+    }
+
+    products = await response.json();
+
+} catch (err) {
+    console.error("Cart load error:", err);
+    alert("Ошибка загрузки товаров. Попробуйте позже.");
     return;
 }
-
-// запрашиваем цены из backend
-
-const response = await fetch(`/api/products?ids=${ids}`);
-if (!response.ok) {
-    throw new Error("Failed to load cart products");
-}
-
-const products = await response.json();
     window.cartProducts = products;
     container.innerHTML = cart.items.map(item => {
 
@@ -136,6 +138,7 @@ const formattedTotal = window.formatPrice(total);
 function updateCartSummary() {
 
     const cart = window.cart;
+if (!cart || !Array.isArray(cart.items)) return;
     const products = window.cartProducts || [];
 
     if (!cart) return;
@@ -164,7 +167,7 @@ function updateCartSummary() {
 
 function changeQuantity(productId, size, change) {
     const cart = window.cart;
-    if (!cart) return;
+if (!cart || !Array.isArray(cart.items)) return;
 
     const item = cart.items.find(
     i => i.id === productId && i.size === size
@@ -187,7 +190,7 @@ function changeQuantity(productId, size, change) {
 
 function removeFromCart(productId, size) {
     const cart = window.cart;
-    if (!cart) return;
+if (!cart || !Array.isArray(cart.items)) return;
 
     const confirmText = window.currentLanguage && window.currentLanguage() === "en"
         ? "Remove item from cart?"
@@ -206,6 +209,7 @@ function removeFromCart(productId, size) {
 
 function handleCheckout() {
     const cart = window.cart;
+if (!cart || !Array.isArray(cart.items)) return;
 
     if (!cart || cart.items.length === 0) {
         alert(
