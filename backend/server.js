@@ -152,12 +152,17 @@ app.get("/api/test-admin", authenticateToken, isAdmin, (req, res) => {
 app.use((req, res, next) => {
   const requestedPath = req.path;
 
-  // 🔥 ДОБАВЬ ЭТО
-  if (requestedPath.startsWith("/uploads")) return next();
-
-  if (requestedPath.startsWith("/api")) return next();
-
-  if (requestedPath.includes(".")) return next();
+  // ✅ пропускаем статические файлы (js, css, images и т.д.)
+  if (
+    requestedPath.startsWith("/uploads") ||
+    requestedPath.startsWith("/api") ||
+    requestedPath.startsWith("/js") ||
+    requestedPath.startsWith("/css") ||
+    requestedPath.startsWith("/images") ||
+    requestedPath.includes(".")
+  ) {
+    return next();
+  }
 
   let filePath;
 
