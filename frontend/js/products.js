@@ -4,7 +4,6 @@
 // ========================================
 
 const API_BASE = window.CONFIG.API_BASE;
-const BACKEND_BASE = window.CONFIG.BACKEND_BASE;
 let currentProduct = null;
 let selectedSize = null;
 let currentProductId = null;
@@ -59,17 +58,7 @@ const response = await fetch(
 // ========================
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
-
-  // если внутри уже есть cloudinary
-  if (path.includes("res.cloudinary.com")) {
-    return path.replace(/^.*https/, "https");
-  }
-
-  if (path.startsWith("http")) {
-    return path;
-  }
-
-  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
+  return path;
 }
 
 // ========================

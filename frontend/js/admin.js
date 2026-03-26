@@ -33,17 +33,31 @@ async function verifyAdmin() {
 
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
+  return path;
+}
 
-  // если внутри уже есть cloudinary
-  if (path.includes("res.cloudinary.com")) {
-    return path.replace(/^.*https/, "https");
+async function uploadToCloudinaryDirect(file) {
+  const CLOUD_NAME = "ТВОЙ_CLOUD_NAME"; // заменить
+  const UPLOAD_PRESET = "ТВОЙ_UPLOAD_PRESET"; // заменить
+
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if (!data.secure_url) {
+    throw new Error("Cloudinary upload failed");
   }
 
-  if (path.startsWith("http")) {
-    return path;
-  }
-
-  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
+  return data.secure_url;
 }
 /* =========================
    LOAD ORDERS
@@ -667,33 +681,42 @@ rarity.addEventListener("change", () => {
 
     try {
 
-      const formData = new FormData();
+      // собираем обычный объект (НЕ FormData)
+const files = document.getElementById("p_images").files;
 
-      formData.append("name_en", document.getElementById("p_name").value);
-      formData.append("slug", document.getElementById("p_slug").value);
-      formData.append("brand", document.getElementById("p_brand").value);
-      formData.append("rarity", document.getElementById("p_rarity").value);
-      formData.append("price", document.getElementById("p_price").value);
-      formData.append("currency", "USD");
+const images = [];
 
-      formData.append("shortDescription_en", document.getElementById("p_short").value);
-      formData.append("longDescription_en", document.getElementById("p_long").value);
-
-      const sizesValue = document.getElementById("p_sizes").value;
-if (sizesValue) {
-  formData.append("sizes", sizesValue);
+for (let i = 0; i < files.length; i++) {
+  const url = await uploadToCloudinaryDirect(files[i]);
+  images.push(url);
 }
 
-      const files = document.getElementById("p_images").files;
+const payload = {
+  name_en: document.getElementById("p_name").value,
+  slug: document.getElementById("p_slug").value,
+  brand: document.getElementById("p_brand").value,
+  rarity: document.getElementById("p_rarity").value,
+  price: document.getElementById("p_price").value,
+  currency: "USD",
 
-      for (let i = 0; i < files.length; i++) {
-        formData.append("images", files[i]);
-      }
+  shortDescription_en: document.getElementById("p_short").value,
+  longDescription_en: document.getElementById("p_long").value,
 
-      await apiRequest("/admin/products", {
-        method: "POST",
-        body: formData
-      });
+  images
+};
+
+const sizesValue = document.getElementById("p_sizes").value;
+if (sizesValue) {
+  payload.sizes = JSON.parse(sizesValue);
+}
+
+await apiRequest("/admin/products", {
+  method: "POST",
+  body: JSON.stringify(payload),
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
 
       modal.remove();
 
@@ -955,64 +978,46 @@ if (nameInput) {
 
     try {
 
-      const formData = new FormData();
-
-      formData.append("name_en", document.getElementById("ep_name_en").value);
-      formData.append("slug", document.getElementById("ep_slug").value);
-      formData.append("brand", document.getElementById("ep_brand").value);
-      formData.append("rarity", document.getElementById("ep_rarity").value);
-      formData.append("price", document.getElementById("ep_price").value);
-
-      formData.append("currency", "USD");
-
-      formData.append(
-"shortDescription_en",
-document.getElementById("ep_short_en").value
-);
-
-formData.append(
-"shortDescription_ru",
-document.getElementById("ep_short_ru").value
-);
-
-formData.append(
-"shortDescription_bg",
-document.getElementById("ep_short_bg").value
-);
-
-      formData.append(
-"longDescription_en",
-document.getElementById("ep_long_en").value
-);
-
-formData.append(
-"longDescription_ru",
-document.getElementById("ep_long_ru").value
-);
-
-formData.append(
-"longDescription_bg",
-document.getElementById("ep_long_bg").value
-);
-
-      formData.append(
-        "sizes",
-        document.getElementById("ep_sizes").value
-      );
-
       const files = document.getElementById("ep_images").files;
 
-      formData.append("existingImages", JSON.stringify(images));
-      console.log("SENDING IMAGES:", images);
+const newImages = [];
 
-      for (let i = 0; i < files.length; i++) {
-        formData.append("images", files[i]);
-      }
+for (let i = 0; i < files.length; i++) {
+  const url = await uploadToCloudinaryDirect(files[i]);
+  newImages.push(url);
+}
 
-      await apiRequest(`/admin/products/${product.id}`, {
-        method: "PUT",
-        body: formData
-      });
+const payload = {
+  name_en: document.getElementById("ep_name_en").value,
+  slug: document.getElementById("ep_slug").value,
+  brand: document.getElementById("ep_brand").value,
+  rarity: document.getElementById("ep_rarity").value,
+  price: document.getElementById("ep_price").value,
+  currency: "USD",
+
+  shortDescription_en: document.getElementById("ep_short_en").value,
+  shortDescription_ru: document.getElementById("ep_short_ru").value,
+  shortDescription_bg: document.getElementById("ep_short_bg").value,
+
+  longDescription_en: document.getElementById("ep_long_en").value,
+  longDescription_ru: document.getElementById("ep_long_ru").value,
+  longDescription_bg: document.getElementById("ep_long_bg").value,
+
+  sizes: JSON.parse(document.getElementById("ep_sizes").value),
+
+  images: [
+    ...images,      // старые
+    ...newImages    // новые
+  ]
+};
+
+await apiRequest(`/admin/products/${product.id}`, {
+  method: "PUT",
+  body: JSON.stringify(payload),
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
 
       modal.remove();
 

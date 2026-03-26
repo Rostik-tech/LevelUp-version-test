@@ -36,7 +36,7 @@ const app = express();
 /* =====================
    Static Files
 ===================== */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 /* =====================
    Security Middleware

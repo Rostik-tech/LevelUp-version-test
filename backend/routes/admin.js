@@ -2,7 +2,6 @@
 import express from "express";
 import axios from "axios";
 import { Op, QueryTypes } from "sequelize";
-import { upload } from "../middleware/uploadMiddleware.js";
 import { uploadToCloudinary } from "../services/cloudinaryService.js";
 import {
   sequelize,
@@ -305,7 +304,7 @@ router.post(
   "/products",
   authenticateToken,
   isAdmin,
-upload.array("images", 10),
+
   async (req, res) => {
   try {
     const data = { ...req.body };
@@ -319,16 +318,7 @@ if (data.sizes && typeof data.sizes === "string") {
   }
 }
 
-    if (req.files && req.files.length > 0) {
-  const uploadedImages = [];
-
-  for (const file of req.files) {
-    const result = await uploadToCloudinary(file.buffer);
-    uploadedImages.push(result.secure_url);
-  }
-
-  data.images = uploadedImages;
-}
+   
 
     // пересчёт stock
     if (data.sizes && Array.isArray(data.sizes)) {
@@ -374,7 +364,7 @@ router.put(
   "/products/:id",
   authenticateToken,
   isAdmin,
-  upload.array("images", 10),
+  
   async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
@@ -438,15 +428,7 @@ if (req.body.existingImages) {
   }
 }
 
-// новые изображения
-let newImages = [];
 
-if (req.files && req.files.length > 0) {
-  for (const file of req.files) {
-    const result = await uploadToCloudinary(file.buffer);
-    newImages.push(result.secure_url);
-  }
-}
 
 // объединяем
 const currentImages = product.images || [];

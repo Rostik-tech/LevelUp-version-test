@@ -4,7 +4,7 @@
 // ========================================
 
 const API_BASE = window.CONFIG.API_BASE;
-const BACKEND_BASE = window.CONFIG.BACKEND_BASE;
+
 
 let allProducts = [];
 let activeRarity = "ALL";
@@ -68,17 +68,7 @@ function applyFilter() {
 
 function getImageUrl(path) {
   if (!path) return "images/placeholder.jpg";
-
-  // если внутри уже есть cloudinary
-  if (path.includes("res.cloudinary.com")) {
-    return path.replace(/^.*https/, "https");
-  }
-
-  if (path.startsWith("http")) {
-    return path;
-  }
-
-  return window.CONFIG.BACKEND_BASE + "/uploads/" + path;
+  return path;
 }
 
 function renderProducts(container, products) {
