@@ -1,7 +1,7 @@
 // ========================================
 // Production Success Page Script (INVOICE READY)
 // ========================================
-const API_BASE = "/api'";
+const API_BASE = "/api";
 
 document.addEventListener("DOMContentLoaded", async function () {
     await handlePaymentSuccess();
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function handlePaymentSuccess() {
     const urlParams = new URLSearchParams(window.location.search);
     const paypalToken = urlParams.get("token");
+    console.log("PAYPAL TOKEN:", paypalToken);
 
     if (!paypalToken) {
         redirectToCancel();
@@ -17,6 +18,7 @@ async function handlePaymentSuccess() {
     }
 
     const token = localStorage.getItem("token");
+    console.log("USER TOKEN:", token);
 
     if (!token) {
         redirectToCancel();
@@ -25,22 +27,27 @@ async function handlePaymentSuccess() {
 
     try {
         const response = await fetch(
-            `${API_BASE}/payments/capture/${paypalToken}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            }
-        );
+    `${API_BASE}/payments/capture/${paypalToken}`,
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    }
+);
+
+console.log("CAPTURE STATUS:", response.status);
+
+const data = await response.json();
+console.log("CAPTURE DATA:", data);
 
         if (!response.ok) {
             redirectToCancel();
             return;
         }
 
-        const data = await response.json();
+        
 
         if (!data.order || data.order.status !== "PAID") {
             redirectToCancel();
