@@ -219,16 +219,25 @@ if (payment.status === "COMPLETED") {
     // 🔑 4. Capture у PayPal
     const accessToken = await getAccessToken();
 
-    await axios.post(
-      `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+  await axios.post(
+    `${PAYPAL_BASE}/v2/checkout/orders/${id}/capture`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+} catch (err) {
+  console.error("❌ PAYPAL CAPTURE ERROR:", err.response?.data || err.message);
+  await transaction.rollback();
+  return res.status(500).json({
+    message: "Ошибка capture PayPal",
+    error: err.response?.data || err.message,
+  });
+}
 
     // 🔍 5. Проверка статуса PayPal
 const verifyResponse = await axios.get(
@@ -238,10 +247,16 @@ const verifyResponse = await axios.get(
   }
 );
 
+console.log("PAYPAL VERIFY:", {
+  paypalStatus: verifyResponse.data.status,
+  paypalAmount: verifyResponse.data.purchase_units[0].amount.value,
+  dbAmount: dbOrder.totalPrice,
+});
+
 if (
   verifyResponse.data.status !== "COMPLETED" ||
-  verifyResponse.data.purchase_units[0].amount.value !==
-    dbOrder.totalPrice.toFixed(2)
+  Number(verifyResponse.data.purchase_units[0].amount.value) !==
+    Number(dbOrder.totalPrice)
 ) {
   await transaction.rollback();
   return res.status(400).json({
