@@ -2,10 +2,15 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const generateInvoicePDF = async (invoice, order, items) => {
   return new Promise((resolve, reject) => {
     try {
-      const invoicesDir = path.join("uploads", "invoices");
+      const invoicesDir = path.join(__dirname, "../uploads/invoices");
 
       if (!fs.existsSync(invoicesDir)) {
         fs.mkdirSync(invoicesDir, { recursive: true });
@@ -30,21 +35,26 @@ export const generateInvoicePDF = async (invoice, order, items) => {
       console.log("====== END DEBUG ======");
 
       // ===== FONTS (FIX КИРИЛЛИЦЫ) =====
-      const fontRegular = path.join("fonts", "Roboto-Regular.ttf");
-      const fontBold = path.join("fonts", "Roboto-Bold.ttf");
+      const fontRegular = path.join(__dirname, "../fonts/Roboto-Regular.ttf");
+      const fontBold = path.join(__dirname, "../fonts/Roboto-Bold.ttf");
 
-      if (fs.existsSync(fontRegular)) {
-        doc.registerFont("Regular", fontRegular);
-      }
+      if (!fs.existsSync(fontRegular)) {
+  throw new Error(`Font not found: ${fontRegular}`);
+}
 
-      if (fs.existsSync(fontBold)) {
-        doc.registerFont("Bold", fontBold);
-      }
+if (!fs.existsSync(fontBold)) {
+  throw new Error(`Font not found: ${fontBold}`);
+}
+
+doc.registerFont("Regular", fontRegular);
+doc.registerFont("Bold", fontBold);
+
+      
 
       doc.font("Regular");
 
       // ===== LOGO =====
-      const logoPath = path.join("uploads", "logotype.png");
+      const logoPath = path.join(__dirname, "../uploads/logotype.png");
       if (fs.existsSync(logoPath)) {
   const logoWidth = 90;
 
