@@ -25,12 +25,14 @@ export const sendOrderNotification = async (order, payment, items) => {
       <ul>${itemsHtml}</ul>
     `;
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: "Level Up <onboarding@resend.dev>",
       to: process.env.NOTIFY_EMAIL,
       subject: `Новый заказ #${order.id}`,
       html,
     });
+
+    console.log("✅ Email sent:", result);
 
   } catch (err) {
     console.error("❌ Admin email failed:", err.message);
@@ -73,12 +75,13 @@ export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
       </div>
     `;
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: "Level Up <onboarding@resend.dev>",
       to: invoice.customerEmail,
       subject: `Your Invoice #${invoice.invoiceNumber}`,
       html,
     });
+    console.log("✅ Email sent:", result);
 
   } catch (err) {
     console.error("❌ Customer email failed:", err.message);
@@ -98,13 +101,13 @@ export const sendBusinessInvoiceCopy = async (invoice, order, items) => {
       <p>Order ID: ${order.id}</p>
     `;
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: "Level Up <onboarding@resend.dev>",
       to: process.env.BUSINESS_EMAIL,
       subject: `Invoice #${invoice.invoiceNumber}`,
       html,
     });
-
+      console.log("✅ Email sent:", result);
   } catch (err) {
     console.error("❌ Business email failed:", err.message);
   }
@@ -123,13 +126,14 @@ export const sendContactEmail = async ({ name, email, subject, message }) => {
       <p>${message}</p>
     `;
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: "Level Up <onboarding@resend.dev>",
       to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
       subject: `Contact: ${subject}`,
       html,
       replyTo: email,
     });
+    console.log("✅ Email sent:", result);
 
   } catch (err) {
     console.error("❌ Contact email failed:", err.message);
