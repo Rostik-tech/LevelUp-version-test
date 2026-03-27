@@ -2,7 +2,7 @@
 // Profile Page - Backend Connected Version
 // ========================================
 
-const API_BASE = window.CONFIG.API_BASE;
+const API_BASE = "/api";
 
 document.addEventListener("DOMContentLoaded", async function () {
     const token = localStorage.getItem("token");

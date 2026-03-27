@@ -3,7 +3,7 @@
 // Shop Page - Backend Connected (Slug Version)
 // ========================================
 
-const API_BASE = window.CONFIG.API_BASE;
+const API_BASE = "/api";
 
 
 let allProducts = [];

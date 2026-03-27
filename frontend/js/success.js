@@ -1,7 +1,7 @@
 // ========================================
 // Production Success Page Script (INVOICE READY)
 // ========================================
-const API_BASE = window.CONFIG.API_BASE;
+const API_BASE = "/api'";
 
 document.addEventListener("DOMContentLoaded", async function () {
     await handlePaymentSuccess();

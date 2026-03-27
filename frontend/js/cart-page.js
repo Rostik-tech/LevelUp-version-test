@@ -58,7 +58,7 @@ let products = [];
 
 try {
 
-    const response = await fetch(`${window.CONFIG.API_BASE}/products?ids=${ids}`);
+    const response = await fetch(`api/products?ids=${ids}`);
 
     if (!response.ok) {
         throw new Error("Failed to load cart products");

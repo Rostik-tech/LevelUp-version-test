@@ -3,7 +3,7 @@
 // Product Page - Backend Connected (SAFE + Gallery)
 // ========================================
 
-const API_BASE = window.CONFIG.API_BASE;
+const API_BASE = "/api";
 let currentProduct = null;
 let selectedSize = null;
 let currentProductId = null;
