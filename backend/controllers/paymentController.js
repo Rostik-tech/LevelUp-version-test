@@ -96,6 +96,10 @@ export const createOrder = async (req, res) => {
 
     const paypalOrderId = response.data.id;
 
+    // 🔥 ВАЖНО: сохраняем paypalOrderId в Order
+    dbOrder.paypalOrderId = paypalOrderId;
+    await dbOrder.save();
+
     const transaction = await sequelize.transaction();
 
     try {
@@ -275,6 +279,7 @@ payment.paypalCaptureId = captureId;
 
     // 🔄 7. Обновление статусов
     dbOrder.status = "PAID";
+    dbOrder.paypalCaptureId = captureId; // 🔥 ДОБАВЬ
     await dbOrder.save({ transaction });
 
     payment.status = "COMPLETED";
