@@ -1,5 +1,6 @@
 // services/emailService.js
 import { Resend } from "resend";
+import fs from "fs";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -40,10 +41,12 @@ export const sendOrderNotification = async (order, payment, items) => {
 };
 
 // ========================================
-// 📧 ИНВОЙС КЛИЕНТУ
+// 📧 ИНВОЙС КЛИЕНТУ (С PDF)
 // ========================================
 export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
   try {
+    const fileBuffer = fs.readFileSync(invoice.pdfPath);
+
     const itemsHtml = items.map(item => `
       <tr>
         <td>${item.Product?.name || "Product"}</td>
@@ -80,7 +83,14 @@ export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
       to: invoice.customerEmail,
       subject: `Your Invoice #${invoice.invoiceNumber}`,
       html,
+      attachments: [
+        {
+          filename: `${invoice.invoiceNumber}.pdf`,
+          content: fileBuffer,
+        },
+      ],
     });
+
     console.log("✅ Email sent:", result);
 
   } catch (err) {
@@ -89,11 +99,13 @@ export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
 };
 
 // ========================================
-// 📧 КОПИЯ ИНВОЙСА (тебе)
+// 📧 КОПИЯ ИНВОЙСА (ТЕБЕ С PDF)
 // ========================================
 export const sendBusinessInvoiceCopy = async (invoice, order, items) => {
   try {
     if (!process.env.BUSINESS_EMAIL) return;
+
+    const fileBuffer = fs.readFileSync(invoice.pdfPath);
 
     const html = `
       <h2>INTERNAL INVOICE COPY</h2>
@@ -106,8 +118,16 @@ export const sendBusinessInvoiceCopy = async (invoice, order, items) => {
       to: process.env.BUSINESS_EMAIL,
       subject: `Invoice #${invoice.invoiceNumber}`,
       html,
+      attachments: [
+        {
+          filename: `${invoice.invoiceNumber}.pdf`,
+          content: fileBuffer,
+        },
+      ],
     });
-      console.log("✅ Email sent:", result);
+
+    console.log("✅ Email sent:", result);
+
   } catch (err) {
     console.error("❌ Business email failed:", err.message);
   }
@@ -133,6 +153,7 @@ export const sendContactEmail = async ({ name, email, subject, message }) => {
       html,
       replyTo: email,
     });
+
     console.log("✅ Email sent:", result);
 
   } catch (err) {
