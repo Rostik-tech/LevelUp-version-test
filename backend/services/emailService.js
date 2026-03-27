@@ -26,7 +26,7 @@ export const sendOrderNotification = async (order, payment, items) => {
     `;
 
     const result = await resend.emails.send({
-      from: "Level Up <onboarding@resend.dev>",
+      from: "Level Up <noreply@levelup-gaming.store>",
       to: process.env.NOTIFY_EMAIL,
       subject: `Новый заказ #${order.id}`,
       html,
@@ -76,7 +76,7 @@ export const sendCustomerInvoiceEmail = async (invoice, order, items) => {
     `;
 
     const result = await resend.emails.send({
-      from: "Level Up <onboarding@resend.dev>",
+      from: "Level Up <noreply@levelup-gaming.store>",
       to: invoice.customerEmail,
       subject: `Your Invoice #${invoice.invoiceNumber}`,
       html,
@@ -102,7 +102,7 @@ export const sendBusinessInvoiceCopy = async (invoice, order, items) => {
     `;
 
     const result = await resend.emails.send({
-      from: "Level Up <onboarding@resend.dev>",
+      from: "Level Up <noreply@levelup-gaming.store>",
       to: process.env.BUSINESS_EMAIL,
       subject: `Invoice #${invoice.invoiceNumber}`,
       html,
@@ -127,7 +127,7 @@ export const sendContactEmail = async ({ name, email, subject, message }) => {
     `;
 
     const result = await resend.emails.send({
-      from: "Level Up <onboarding@resend.dev>",
+      from: "Level Up <noreply@levelup-gaming.store>",
       to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
       subject: `Contact: ${subject}`,
       html,
