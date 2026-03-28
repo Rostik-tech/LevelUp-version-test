@@ -163,9 +163,7 @@ function renderOrders(container, response) {
       </thead>
       <tbody>
         ${orders.map(order => {
-          const payment = order.Payments?.find(p =>
-  ["COMPLETED", "PARTIALLY_REFUNDED", "REFUNDED"].includes(p.status)
-);
+          const payment = order.payment;
 
 let remaining = 0;
 
@@ -182,9 +180,13 @@ remaining = Number(remaining.toFixed(2));
 
 console.log("🧾 FRONT DEBUG:", {
   orderId: order.id,
-  payments: order.Payments,
+  payment: order.payment,
   selectedPayment: payment,
   remaining
+});
+console.log("🧾 FIXED ORDER:", {
+  orderId: order.id,
+  payment: order.payment
 });
           return `
             <tr>

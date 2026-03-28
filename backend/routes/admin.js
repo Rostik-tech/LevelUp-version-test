@@ -658,9 +658,10 @@ router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
           include: [Product]
         },
         {
-          model: Payment,
-          attributes: ["id", "amount", "refundedAmount", "status"]
-        }
+  model: Payment,
+  as: "payment",
+  attributes: ["id", "amount", "refundedAmount", "status"]
+}
       ],
       limit: limitNumber,
       offset,
