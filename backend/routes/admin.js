@@ -854,19 +854,26 @@ router.post("/orders/:id/refund", authenticateToken, isAdmin, async (req, res) =
 
 const status = order.status;
 
-// нельзя вернуть если отправлено
-if (status === "SHIPPED") {
+// ❌ запрещённые статусы
+if (["SHIPPED", "CANCELLED"].includes(status)) {
   await transaction.rollback();
   return res.status(400).json({
-    message: "Refund not allowed after shipment"
+    message: "Refund not allowed for this order status"
   });
 }
 
-// нельзя вернуть если отменён
-if (status === "CANCELLED") {
+// ✅ разрешённые статусы
+const allowedStatuses = [
+  "PAID",
+  "PROCESSING",
+  "DELIVERED",
+  "PARTIALLY_REFUNDED"
+];
+
+if (!allowedStatuses.includes(status)) {
   await transaction.rollback();
   return res.status(400).json({
-    message: "Order already cancelled"
+    message: "Invalid order status for refund"
   });
 }
 
@@ -915,6 +922,13 @@ if (diffDays > ADMIN_REFUND_DAYS) {
 
     const remaining = paymentAmount - alreadyRefunded;
 
+    if (remaining <= 0) {
+      await transaction.rollback();
+      return res.status(400).json({
+         message: "Order already fully refunded"
+      });
+    }
+
     if (refundAmount > remaining) {
       await transaction.rollback();
       return res.status(400).json({ message: "Refund exceeds remaining amount" });
@@ -922,6 +936,7 @@ if (diffDays > ADMIN_REFUND_DAYS) {
 
     // 🔑 3. PayPal refund call
     const accessToken = await getAccessToken();
+    const idempotencyKey = crypto.randomUUID();
 
     const paypalResponse = await axios.post(
       `${PAYPAL_BASE}/v2/payments/captures/${payment.paypalCaptureId}/refund`,
@@ -935,12 +950,13 @@ if (diffDays > ADMIN_REFUND_DAYS) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
+          "PayPal-Request-Id": idempotencyKey // 🔥 ВОТ СЮДА
         },
       }
     );
 
     const refundData = paypalResponse.data;
-    const idempotencyKey = crypto.randomUUID();
+    
 
     // 🧾 4. Create Refund record
     await Refund.create(
@@ -964,8 +980,10 @@ if (diffDays > ADMIN_REFUND_DAYS) {
 
     if (payment.refundedAmount >= paymentAmount) {
   payment.status = "REFUNDED";
+  order.status = "REFUNDED"; // 🔥 ВАЖНО
 } else {
   payment.status = "PARTIALLY_REFUNDED";
+  order.status = "PARTIALLY_REFUNDED"; // 🔥 ВАЖНО
 }
 
     await payment.save({ transaction });
