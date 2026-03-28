@@ -658,7 +658,8 @@ router.get("/orders", authenticateToken, isAdmin, async (req, res) => {
           include: [Product]
         },
         {
-          model: Payment
+          model: Payment,
+          attributes: ["id", "amount", "refundedAmount", "status"]
         }
       ],
       limit: limitNumber,
@@ -921,6 +922,20 @@ if (diffDays > ADMIN_REFUND_DAYS) {
     const alreadyRefunded = parseFloat(payment.refundedAmount || 0);
 
     const remaining = paymentAmount - alreadyRefunded;
+    if (refundAmount > paymentAmount) {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Refund exceeds payment amount (critical)"
+  });
+}
+
+    console.log("💰 REFUND DEBUG:", {
+  orderId: order.id,
+  paymentAmount,
+  alreadyRefunded,
+  remaining,
+  refundAmount
+});
 
     if (remaining <= 0) {
       await transaction.rollback();
@@ -928,6 +943,15 @@ if (diffDays > ADMIN_REFUND_DAYS) {
          message: "Order already fully refunded"
       });
     }
+
+    console.log("🚨 FINAL CHECK:", {
+  orderId: order.id,
+  paymentAmount,
+  alreadyRefunded,
+  remaining,
+  refundAmount,
+  difference: remaining - refundAmount
+});
 
     if (refundAmount > remaining) {
       await transaction.rollback();
@@ -976,7 +1000,7 @@ if (diffDays > ADMIN_REFUND_DAYS) {
 
     // 🔄 5. Update Payment
     payment.refundedAmount = alreadyRefunded + refundAmount;
-    order.refundedAmount = parseFloat(order.refundedAmount || 0) + refundAmount;
+    order.refundedAmount = payment.refundedAmount;
 
     if (payment.refundedAmount >= paymentAmount) {
   payment.status = "REFUNDED";

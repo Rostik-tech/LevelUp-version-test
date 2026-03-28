@@ -163,11 +163,29 @@ function renderOrders(container, response) {
       </thead>
       <tbody>
         ${orders.map(order => {
-          const remaining = (
-  Number(order.totalPrice) -
-  Number(order.refundedAmount || 0)
-).toFixed(2);
+          const payment = order.Payments?.find(p =>
+  ["COMPLETED", "PARTIALLY_REFUNDED", "REFUNDED"].includes(p.status)
+);
 
+let remaining = 0;
+
+if (payment) {
+  remaining = Number(payment.amount) - Number(payment.refundedAmount || 0);
+
+  if (remaining < 0) {
+    console.warn("⚠️ NEGATIVE REMAINING!", payment);
+    remaining = 0;
+  }
+}
+
+remaining = Number(remaining.toFixed(2));
+
+console.log("🧾 FRONT DEBUG:", {
+  orderId: order.id,
+  payments: order.Payments,
+  selectedPayment: payment,
+  remaining
+});
           return `
             <tr>
               <td>${order.id}</td>
