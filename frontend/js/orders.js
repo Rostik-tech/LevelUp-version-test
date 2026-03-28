@@ -28,7 +28,7 @@ async function loadOrders() {
     if (!ordersList) return;
 
     try {
-        const response = await fetch(`/api/orders/my)`, {
+        const response = await fetch(`/api/orders/my`, {
             headers: {
                 "Authorization": "Bearer " + getToken()
             }
