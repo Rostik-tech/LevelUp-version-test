@@ -90,17 +90,33 @@ body {
     background: white;
 
     box-shadow:
-        100px 200px white, 200px 400px white, 300px 100px white,
-        400px 300px white, 500px 150px white, 600px 450px white,
-        700px 250px white, 800px 350px white, 900px 100px white,
-        1000px 400px white, 1100px 200px white, 1200px 300px white,
-        150px 500px white, 350px 550px white, 550px 600px white,
-        750px 650px white, 950px 700px white, 50px 50px white,
-        250px 150px rgba(255, 0, 255, 0.8),
-        450px 250px rgba(255, 0, 255, 0.8),
-        650px 350px rgba(255, 0, 255, 0.8),
-        850px 450px rgba(255, 0, 255, 0.8),
-        1050px 550px rgba(0, 240, 255, 0.8);
+    100px 200px white, 200px 400px white, 300px 100px white,
+    400px 300px white, 500px 150px white, 600px 450px white,
+    700px 250px white, 800px 350px white, 900px 100px white,
+    1000px 400px white, 1100px 200px white, 1200px 300px white,
+
+    150px 500px white, 350px 550px white, 550px 600px white,
+    750px 650px white, 950px 700px white, 50px 50px white,
+
+    /* ✨ ДОБАВИЛИ МНОГО НОВЫХ */
+    120px 80px white, 220px 180px white, 320px 280px white,
+    420px 380px white, 520px 480px white, 620px 580px white,
+    720px 680px white, 820px 780px white, 920px 880px white,
+
+    80px 600px rgba(255,255,255,0.7),
+    180px 700px rgba(255,255,255,0.6),
+    280px 800px rgba(255,255,255,0.5),
+
+    /* НЕОНОВЫЕ */
+    250px 150px rgba(255, 0, 255, 0.8),
+    450px 250px rgba(255, 0, 255, 0.8),
+    650px 350px rgba(255, 0, 255, 0.8),
+    850px 450px rgba(255, 0, 255, 0.8),
+
+    1050px 550px rgba(0, 240, 255, 0.8),
+    175px 325px rgba(0, 240, 255, 0.8),
+    375px 425px rgba(0, 240, 255, 0.8),
+    575px 525px rgba(0, 240, 255, 0.8);
 
     animation:
         twinkle 2s infinite ease-in-out,
