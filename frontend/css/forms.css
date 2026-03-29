@@ -408,23 +408,25 @@
     }
 
     .form-card {
-        width: 100%;
-        max-width: 100%;
+    width: 100%;
+    max-width: 100%;
 
-        padding: 28px 20px;
+    padding: 32px 22px;
 
-        border-radius: 16px;
+    border-radius: 18px;
+
+    transform: scale(1.08);
+    transform-origin: top center;
     }
 
     .form-title {
-        font-size: 24px;
-        margin-bottom: 24px;
-    }
+    font-size: 26px;
+}
 
     .form-input {
-        padding: 16px 16px 16px 46px;
-        font-size: 16px;
-    }
+    padding: 18px 16px 18px 48px;
+    font-size: 17px;
+}
 
     .input-icon {
         left: 16px;
@@ -432,10 +434,11 @@
     }
 
     .btn-large {
-        width: 100%;
-        height: 52px;
-        font-size: 16px;
-    }
+    width: 100%;
+    height: 56px;
+    font-size: 17px;
+    border-radius: 12px;
+}
 
     .form-group {
         margin-bottom: 20px;
