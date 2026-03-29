@@ -358,40 +358,8 @@ document.querySelectorAll('a[href="#"]').forEach(anchor => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-
-const mobileMenuClose = document.getElementById('mobileMenuClose');
-const navMenu = document.getElementById('navMenu');
-
-if (mobileMenuClose && navMenu) {
-    mobileMenuClose.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-    });
-}
-const banner = document.getElementById("cookieBanner");
-const accept = document.getElementById("acceptCookies");
-const decline = document.getElementById("declineCookies");
-
-const consent = localStorage.getItem("cookieConsent");
-
-if (consent === null) {
-banner.style.display = "block";
-}
-
-accept.addEventListener("click", function () {
-localStorage.setItem("cookieConsent", "accepted");
-banner.style.display = "none";
-});
-
-decline.addEventListener("click", function () {
-localStorage.setItem("cookieConsent", "declined");
-banner.style.display = "none";
-});
-
-});
-
 // ========================================
-// ===== CANVAS SPACE BACKGROUND =====
+// ===== ADVANCED SPACE BACKGROUND =====
 // ========================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -401,82 +369,131 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const ctx = canvas.getContext("2d");
 
-    let stars = [];
-    let shootingStars = [];
-
+    let w, h;
     function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
     }
-    window.addEventListener("resize", resize);
     resize();
+    window.addEventListener("resize", resize);
 
-    function createStars(count) {
-        stars = [];
-        for (let i = 0; i < count; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2,
-                opacity: Math.random(),
-            });
-        }
+    // ⭐ ЗВЕЗДЫ
+    const stars = [];
+    const STAR_COUNT = 150;
+
+    function randomColor() {
+        const colors = [
+            "255,255,255",
+            "255,0,255",
+            "0,240,255"
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    function createShootingStar() {
-        shootingStars.push({
-            x: Math.random() * canvas.width,
-            y: 0,
-            length: Math.random() * 80 + 50,
-            speed: Math.random() * 10 + 6,
-            opacity: 1,
+    for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            size: Math.random() * 2,
+            opacity: Math.random(),
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            color: randomColor(),
+            life: Math.random() * 200
         });
     }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ☄️ КОМЕТЫ
+    const comets = [];
 
-        // ⭐ звезды
+    function createComet() {
+        comets.push({
+            x: Math.random() * w,
+            y: Math.random() * h * 0.5,
+            length: 120 + Math.random() * 100,
+            speed: 5 + Math.random() * 3,
+            opacity: 1
+        });
+    }
+
+    setInterval(() => {
+        if (Math.random() < 0.4) createComet();
+    }, 4000);
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+
+        // ⭐ ЗВЕЗДЫ
         stars.forEach(star => {
+
+            star.x += star.vx;
+            star.y += star.vy;
+
+            // 🔥 ТЕЛЕПОРТ
+            star.life--;
+            if (star.life <= 0) {
+                star.x = Math.random() * w;
+                star.y = Math.random() * h;
+                star.life = 100 + Math.random() * 200;
+                star.color = randomColor();
+            }
+
+            // границы
+            if (star.x < 0 || star.x > w || star.y < 0 || star.y > h) {
+                star.x = Math.random() * w;
+                star.y = Math.random() * h;
+            }
+
+            // мигание
             star.opacity += (Math.random() - 0.5) * 0.05;
+            star.opacity = Math.max(0.2, Math.min(1, star.opacity));
 
-            if (star.opacity < 0.1) star.opacity = 0.1;
-            if (star.opacity > 1) star.opacity = 1;
-
+            // НЕОН
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+
+            ctx.fillStyle = `rgba(${star.color}, ${star.opacity})`;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = `rgba(${star.color}, 1)`;
+
             ctx.fill();
         });
 
-        // 🚀 кометы
-        shootingStars.forEach((s, i) => {
-            ctx.beginPath();
-            ctx.moveTo(s.x, s.y);
-            ctx.lineTo(s.x - s.length, s.y + s.length);
-            ctx.strokeStyle = `rgba(255,255,255,${s.opacity})`;
+        // ☄️ КОМЕТЫ
+        comets.forEach((c, i) => {
+
+            const gradient = ctx.createLinearGradient(
+                c.x, c.y,
+                c.x - c.length, c.y + c.length
+            );
+
+            gradient.addColorStop(0, "rgba(255,255,255,1)");
+            gradient.addColorStop(0.3, "rgba(255,0,255,0.8)");
+            gradient.addColorStop(1, "rgba(0,240,255,0)");
+
+            ctx.strokeStyle = gradient;
             ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(c.x, c.y);
+            ctx.lineTo(c.x - c.length, c.y + c.length);
             ctx.stroke();
 
-            s.x += s.speed;
-            s.y += s.speed;
-            s.opacity -= 0.01;
+            c.x += c.speed;
+            c.y += c.speed;
+            c.opacity -= 0.01;
 
-            if (s.opacity <= 0) {
-                shootingStars.splice(i, 1);
+            if (c.opacity <= 0) {
+                comets.splice(i, 1);
             }
         });
 
-        if (Math.random() < 0.01) {
-            createShootingStar();
-        }
-
-        requestAnimationFrame(draw);
+        requestAnimationFrame(animate);
     }
 
-    createStars(500); // можешь увеличить до 800-1200
-    draw();
+    animate();
 });
+
 if (window.location.pathname.includes("login")) {
     requireGuest();
 }
