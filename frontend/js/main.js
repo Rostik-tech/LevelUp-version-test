@@ -408,10 +408,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createComet() {
         comets.push({
-            x: Math.random() * w,
-            y: Math.random() * h * 0.5,
+            x: Math.random() * w * 0.3,
+            y: Math.random() * h * 0.3,
+
             length: 120 + Math.random() * 100,
-            speed: 5 + Math.random() * 3,
+
+            speedX: Math.random() * 4 + 4, // вправо
+            speedY: Math.random() * 4 + 4, // вниз
+
             opacity: 1
         });
     }
@@ -438,7 +442,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 star.color = randomColor();
             }
 
-            // границы
             if (star.x < 0 || star.x > w || star.y < 0 || star.y > h) {
                 star.x = Math.random() * w;
                 star.y = Math.random() * h;
@@ -448,7 +451,6 @@ document.addEventListener("DOMContentLoaded", function () {
             star.opacity += (Math.random() - 0.5) * 0.05;
             star.opacity = Math.max(0.2, Math.min(1, star.opacity));
 
-            // НЕОН
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
 
@@ -459,28 +461,30 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.fill();
         });
 
-        // ☄️ КОМЕТЫ
+        // ☄️ КОМЕТЫ (FIXED НАПРАВЛЕНИЕ)
         comets.forEach((c, i) => {
 
-            const gradient = ctx.createLinearGradient(
-                c.x, c.y,
-                c.x - c.length, c.y + c.length
-            );
+            const angle = Math.atan2(c.speedY, c.speedX);
 
+            const tailX = c.x - Math.cos(angle) * c.length;
+            const tailY = c.y - Math.sin(angle) * c.length;
+
+            const gradient = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
             gradient.addColorStop(0, "rgba(255,255,255,1)");
             gradient.addColorStop(0.3, "rgba(255,0,255,0.8)");
             gradient.addColorStop(1, "rgba(0,240,255,0)");
 
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 2;
-
             ctx.beginPath();
             ctx.moveTo(c.x, c.y);
-            ctx.lineTo(c.x - c.length, c.y + c.length);
+            ctx.lineTo(tailX, tailY);
+
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
-            c.x += c.speed;
-            c.y += c.speed;
+            // движение
+            c.x += c.speedX;
+            c.y += c.speedY;
             c.opacity -= 0.01;
 
             if (c.opacity <= 0) {
