@@ -388,63 +388,6 @@
     }
 }
 
-
-
-/* ========================================
-   MOBILE AUTH FINAL (CLEAN)
-   ======================================== */
-
-@media (max-width: 768px) {
-
-    .auth-page {
-        padding: 90px 12px 40px;
-        align-items: flex-start;
-        justify-content: stretch;
-    }
-
-    .auth-container {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .form-card {
-    width: 100%;
-    max-width: 100%;
-
-    padding: 32px 22px;
-
-    border-radius: 18px;
-
-    transform: scale(1.08);
-    transform-origin: top center;
-    }
-
-    .form-title {
-    font-size: 26px;
-}
-
-    .form-input {
-    padding: 18px 16px 18px 48px;
-    font-size: 17px;
-}
-
-    .input-icon {
-        left: 16px;
-        font-size: 16px;
-    }
-
-    .btn-large {
-    width: 100%;
-    height: 56px;
-    font-size: 17px;
-    border-radius: 12px;
-}
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-}
-
 /* ========================================
    AUTH PAGES ONLY (LOGIN / REGISTER)
    ======================================== */
