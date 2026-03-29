@@ -1312,3 +1312,13 @@ margin:4px 0 6px 0;
     }
 
 }
+
+.auth-page {
+    position: relative;
+    z-index: 2;
+}
+
+.auth-container {
+    position: relative;
+    z-index: 2;
+}
