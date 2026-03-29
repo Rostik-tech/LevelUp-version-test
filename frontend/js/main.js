@@ -359,7 +359,7 @@ document.querySelectorAll('a[href="#"]').forEach(anchor => {
 });
 
 // ========================================
-// ===== ADVANCED SPACE BACKGROUND =====
+// ===== ULTRA SPACE BACKGROUND (PRO) =====
 // ========================================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -377,9 +377,9 @@ document.addEventListener("DOMContentLoaded", function () {
     resize();
     window.addEventListener("resize", resize);
 
-    // ⭐ ЗВЕЗДЫ
+    // ⭐ ЗВЕЗДЫ С ГЛУБИНОЙ
     const stars = [];
-    const STAR_COUNT = 150;
+    const STAR_COUNT = 200;
 
     function randomColor() {
         const colors = [
@@ -391,41 +391,64 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     for (let i = 0; i < STAR_COUNT; i++) {
+        const depth = Math.random(); // глубина
+
         stars.push({
             x: Math.random() * w,
             y: Math.random() * h,
-            size: Math.random() * 2,
+            size: Math.random() * 2 + depth,
             opacity: Math.random(),
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
+            vx: (Math.random() - 0.5) * depth,
+            vy: (Math.random() - 0.5) * depth,
             color: randomColor(),
-            life: Math.random() * 200
+            life: 100 + Math.random() * 300,
+            depth: depth
         });
     }
 
     // ☄️ КОМЕТЫ
     const comets = [];
 
-    function createComet() {
+    function createComet(superMode = false) {
+
+        // разные углы
+        const angle = (Math.random() * Math.PI) / 3 + Math.PI / 6;
+
+        const speed = superMode ? 10 : 5 + Math.random() * 3;
+
         comets.push({
-            x: Math.random() * w * 0.3,
+            x: Math.random() * w * 0.5,
             y: Math.random() * h * 0.3,
-
-            length: 120 + Math.random() * 100,
-
-            speedX: Math.random() * 4 + 4, // вправо
-            speedY: Math.random() * 4 + 4, // вниз
-
-            opacity: 1
+            length: superMode ? 250 : 120 + Math.random() * 100,
+            speedX: Math.cos(angle) * speed,
+            speedY: Math.sin(angle) * speed,
+            width: superMode ? 3 : 2,
+            glow: superMode ? 25 : 15
         });
     }
 
-    setInterval(() => {
-        if (Math.random() < 0.4) createComet();
-    }, 4000);
+    // 🔥 СПАВН БЕЗ НАКОПЛЕНИЯ
+    let lastCometTime = 0;
+    const cometDelay = 6000;
 
-    function animate() {
+    function trySpawnComet(time) {
+        if (time - lastCometTime > cometDelay + Math.random() * 5000) {
+
+            // шанс на супер-комету
+            if (Math.random() < 0.15) {
+                createComet(true);
+            } else {
+                createComet(false);
+            }
+
+            lastCometTime = time;
+        }
+    }
+
+    function animate(time = 0) {
         ctx.clearRect(0, 0, w, h);
+
+        trySpawnComet(time);
 
         // ⭐ ЗВЕЗДЫ
         stars.forEach(star => {
@@ -433,12 +456,12 @@ document.addEventListener("DOMContentLoaded", function () {
             star.x += star.vx;
             star.y += star.vy;
 
-            // 🔥 ТЕЛЕПОРТ
+            // телепорт
             star.life--;
             if (star.life <= 0) {
                 star.x = Math.random() * w;
                 star.y = Math.random() * h;
-                star.life = 100 + Math.random() * 200;
+                star.life = 100 + Math.random() * 300;
                 star.color = randomColor();
             }
 
@@ -447,21 +470,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 star.y = Math.random() * h;
             }
 
-            // мигание
-            star.opacity += (Math.random() - 0.5) * 0.05;
+            // мягкое мерцание
+            star.opacity += (Math.random() - 0.5) * 0.03;
             star.opacity = Math.max(0.2, Math.min(1, star.opacity));
 
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
 
             ctx.fillStyle = `rgba(${star.color}, ${star.opacity})`;
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = `rgba(${star.color}, 1)`;
+            ctx.shadowBlur = 10 + star.depth * 10;
+            ctx.shadowColor = `rgba(${star.color},1)`;
 
             ctx.fill();
         });
 
-        // ☄️ КОМЕТЫ (FIXED НАПРАВЛЕНИЕ)
+        // ☄️ КОМЕТЫ
         comets.forEach((c, i) => {
 
             const angle = Math.atan2(c.speedY, c.speedX);
@@ -470,8 +493,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const tailY = c.y - Math.sin(angle) * c.length;
 
             const gradient = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
+
             gradient.addColorStop(0, "rgba(255,255,255,1)");
-            gradient.addColorStop(0.3, "rgba(255,0,255,0.8)");
+            gradient.addColorStop(0.3, "rgba(255,0,255,0.9)");
+            gradient.addColorStop(0.6, "rgba(0,240,255,0.6)");
             gradient.addColorStop(1, "rgba(0,240,255,0)");
 
             ctx.beginPath();
@@ -479,15 +504,22 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.lineTo(tailX, tailY);
 
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = c.width;
+            ctx.shadowBlur = c.glow;
+            ctx.shadowColor = "rgba(255,255,255,0.8)";
+
             ctx.stroke();
 
-            // движение
             c.x += c.speedX;
             c.y += c.speedY;
-            c.opacity -= 0.01;
 
-            if (c.opacity <= 0) {
+            // удаление только за экраном
+            if (
+                c.x > w + 300 ||
+                c.y > h + 300 ||
+                c.x < -300 ||
+                c.y < -300
+            ) {
                 comets.splice(i, 1);
             }
         });
