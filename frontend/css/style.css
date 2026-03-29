@@ -69,120 +69,91 @@ body {
     min-height: 100vh;
 }
 
-/* ===== Animated Stars Background ===== */
+/* ===== PARALLAX STARS ===== */
+
 .stars-background {
     position: fixed;
-    opacity: 0.9;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -1;
     overflow: hidden;
-    background: var(--gradient-bg);
-    background-image:
-    radial-gradient(2px 2px at 20px 30px, white, transparent),
-    radial-gradient(2px 2px at 200px 150px, white, transparent),
-    radial-gradient(2px 2px at 400px 300px, white, transparent),
-    radial-gradient(2px 2px at 600px 450px, white, transparent),
-    radial-gradient(2px 2px at 800px 100px, white, transparent);
 
-background-repeat: repeat;
-background-size: 400px 400px;
-animation: starsLayer 120s linear infinite;
+    background:
+        radial-gradient(1px 1px at 50px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 150px 200px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(2px 2px at 200px 100px, white, transparent),
+        radial-gradient(2px 2px at 400px 300px, white, transparent);
+
+    background-size: 300px 300px;
+    
+    animation: starsSlow 200s linear infinite;
 }
 
-.stars-background::before,
-.stars-background::after {
+.stars-background::before {
     content: '';
     position: absolute;
     width: 2px;
     height: 2px;
-    background: white;
 
     box-shadow:
-    100px 200px white, 200px 400px white, 300px 100px white,
-    400px 300px white, 500px 150px white, 600px 450px white,
-    700px 250px white, 800px 350px white, 900px 100px white,
-    1000px 400px white, 1100px 200px white, 1200px 300px white,
+        100px 200px white,
+        300px 400px rgba(255,255,255,0.7),
+        500px 100px rgba(255,255,255,0.6),
 
-    150px 500px white, 350px 550px white, 550px 600px white,
-    750px 650px white, 950px 700px white, 50px 50px white,
+        250px 150px rgba(255, 0, 255, 0.8),
+        450px 250px rgba(0, 240, 255, 0.8);
 
-    /* ✨ ДОБАВИЛИ МНОГО НОВЫХ */
-    120px 80px white, 220px 180px white, 320px 280px white,
-    420px 380px white, 520px 480px white, 620px 580px white,
-    720px 680px white, 820px 780px white, 920px 880px white,
-
-    80px 600px rgba(255,255,255,0.7),
-    180px 700px rgba(255,255,255,0.6),
-    280px 800px rgba(255,255,255,0.5),
-
-    /* НЕОНОВЫЕ */
-    250px 150px rgba(255, 0, 255, 0.8),
-    450px 250px rgba(255, 0, 255, 0.8),
-    650px 350px rgba(255, 0, 255, 0.8),
-    850px 450px rgba(255, 0, 255, 0.8),
-
-    1050px 550px rgba(0, 240, 255, 0.8),
-    175px 325px rgba(0, 240, 255, 0.8),
-    375px 425px rgba(0, 240, 255, 0.8),
-    575px 525px rgba(0, 240, 255, 0.8);
+    opacity: 0.6;
+    transform: scale(1.1);
 
     animation:
-        twinkle 2s infinite ease-in-out,
-        drift 60s linear infinite;
+        twinkle 2.5s infinite ease-in-out,
+        starsMedium 120s linear infinite;
+}
+
+.stars-background::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+
+    box-shadow:
+        200px 300px white,
+        400px 100px rgba(255,255,255,0.8),
+        600px 200px rgba(255,255,255,0.5),
+
+        350px 200px rgba(255, 0, 255, 0.8),
+        550px 350px rgba(0, 240, 255, 0.8);
+
+    opacity: 0.4;
+
+    animation:
+        twinkle 3s infinite ease-in-out reverse,
+        starsFast 60s linear infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes starsSlow {
+    from { background-position: 0 0; }
+    to { background-position: 0 -1000px; }
+}
+
+@keyframes starsMedium {
+    from { transform: translateY(0); }
+    to { transform: translateY(-800px); }
+}
+
+@keyframes starsFast {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1200px); }
 }
 
 @keyframes twinkle {
     0%, 100% { opacity: 0.2; }
     50% { opacity: 1; }
-}
-
-@keyframes drift {
-    0% {
-        transform: translateY(0px);
-    }
-    100% {
-        transform: translateY(-1000px);
-    }
-}
-
-@keyframes starsLayer {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        background-position: 0 -1000px;
-    }
-}
-
-.stars-background::before {
-    transform: scale(1.2);
-    opacity: 0.7;
-
-    animation:
-        twinkle 2s infinite ease-in-out,
-        drift 60s linear infinite;
-}
-
-.stars-background::before,
-.stars-background::after {
-    filter: drop-shadow(0 0 2px white);
-}
-
-.stars-background::after {
-    transform: scale(0.8);
-    opacity: 0.4;
-
-    width: 1px;
-    height: 1px;
-
-    animation:
-        twinkle 3s infinite ease-in-out reverse,
-        drift 90s linear infinite;
-
-    animation-delay: 1s, 0s;
 }
 
 
