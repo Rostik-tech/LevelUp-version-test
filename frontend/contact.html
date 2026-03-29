@@ -299,6 +299,8 @@ data-bg="Изпрати съобщение">
 Send Message
 </button>
 
+<p id="formStatus" style="margin-top:10px;"></p>
+
 </form>
                 </div>
             </div>
@@ -351,54 +353,89 @@ Send Message
 
     <script type="module" src="js/main.js"></script>
 <script>
-document.getElementById("contactForm").addEventListener("submit", async function(e) {
+    function getTranslation(obj) {
+    const lang = localStorage.getItem('language') || 'en';
+    return obj[lang] || obj['en'];
+}
 
-    e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
 
-    const form = e.target;
+    const form = document.getElementById("contactForm");
 
-    const data = {
-        name: form.name.value,
-        email: form.email.value,
-        subject: form.subject.value,
-        message: form.message.value
-    };
+    // создаём блок сообщения (чтобы не трогать HTML)
+    const status = document.createElement("p");
+    status.style.marginTop = "10px";
+    status.style.fontSize = "14px";
 
-    try {
+    form.appendChild(status);
 
-        const res = await fetch("/api/contact", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+    form.addEventListener("submit", async function(e) {
 
-        const result = await res.json();
+        e.preventDefault();
 
-        if (res.ok) {
-            alert(getTranslation({
-            en: "Message sent successfully!",
-            ru: "Сообщение успешно отправлено!",
-            bg: "Съобщението е изпратено успешно!"
-            }));
-            form.reset();
-        } else {
-            alert(result.message || getTranslation({
-            en: "Error sending message",
-            ru: "Ошибка отправки сообщения",
-            bg: "Грешка при изпращане на съобщението"
-        }));
+        const data = {
+            name: form.name.value,
+            email: form.email.value,
+            subject: form.subject.value,
+            message: form.message.value
+        };
+
+        try {
+
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+
+                // ✅ очистка формы
+                form.reset();
+
+                // ✅ сообщение
+                status.textContent = getTranslation({
+                    en: "Message sent successfully!",
+                    ru: "Сообщение успешно отправлено!",
+                    bg: "Съобщението е изпратено успешно!"
+                });
+
+                status.style.color = "#00ffff";
+
+            } else {
+
+                status.textContent = result.message || getTranslation({
+                    en: "Error sending message",
+                    ru: "Ошибка отправки сообщения",
+                    bg: "Грешка при изпращане на съобщението"
+                });
+
+                status.style.color = "#ff4d4d";
+            }
+
+        } catch (err) {
+
+            console.error(err);
+
+            status.textContent = getTranslation({
+                en: "Server connection error",
+                ru: "Ошибка соединения с сервером",
+                bg: "Грешка при връзка със сървъра"
+            });
+
+            status.style.color = "#ff4d4d";
         }
 
-    } catch (err) {
-        console.error(err);
-        alert(getTranslation({
-        en: "Server connection error",
-        ru: "Ошибка соединения с сервером",
-        bg: "Грешка при връзка със сървъра"
-        }));
-    }
+        // ⏳ авто-очистка сообщения через 4 сек
+        setTimeout(() => {
+            status.textContent = "";
+        }, 4000);
+
+    });
 
 });
 </script>
