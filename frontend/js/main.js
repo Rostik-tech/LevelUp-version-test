@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     initAuth();
     initMobileMenu();
     initDropdowns();
-    initStarsBackground();
 });
 const API_URL = "/api";
 
@@ -232,25 +231,7 @@ function initDropdowns() {
 // ========================================
 // ===== Stars Background =====
 // ========================================
-function initStarsBackground() {
-    const starsBackground = document.getElementById('starsBackground');
-    if (!starsBackground) return;
 
-    for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.position = 'absolute';
-        particle.style.width = '2px';
-        particle.style.height = '2px';
-        particle.style.background = '#FF00FF';
-        particle.style.borderRadius = '50%';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.opacity = Math.random();
-
-        starsBackground.appendChild(particle);
-    }
-}
 
 function formatPrice(price) {
     return `$${Number(price).toFixed(2)}`;
@@ -409,6 +390,93 @@ banner.style.display = "none";
 
 });
 
+// ========================================
+// ===== CANVAS SPACE BACKGROUND =====
+// ========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("space");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    let stars = [];
+    let shootingStars = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function createStars(count) {
+        stars = [];
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                opacity: Math.random(),
+            });
+        }
+    }
+
+    function createShootingStar() {
+        shootingStars.push({
+            x: Math.random() * canvas.width,
+            y: 0,
+            length: Math.random() * 80 + 50,
+            speed: Math.random() * 10 + 6,
+            opacity: 1,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // ⭐ звезды
+        stars.forEach(star => {
+            star.opacity += (Math.random() - 0.5) * 0.05;
+
+            if (star.opacity < 0.1) star.opacity = 0.1;
+            if (star.opacity > 1) star.opacity = 1;
+
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+            ctx.fill();
+        });
+
+        // 🚀 кометы
+        shootingStars.forEach((s, i) => {
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y);
+            ctx.lineTo(s.x - s.length, s.y + s.length);
+            ctx.strokeStyle = `rgba(255,255,255,${s.opacity})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            s.x += s.speed;
+            s.y += s.speed;
+            s.opacity -= 0.01;
+
+            if (s.opacity <= 0) {
+                shootingStars.splice(i, 1);
+            }
+        });
+
+        if (Math.random() < 0.01) {
+            createShootingStar();
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    createStars(500); // можешь увеличить до 800-1200
+    draw();
+});
 if (window.location.pathname.includes("login")) {
     requireGuest();
 }
