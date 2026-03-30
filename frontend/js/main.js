@@ -440,10 +440,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 🔥 СПАВН БЕЗ НАКОПЛЕНИЯ
     let lastCometTime = 0;
-    const cometDelay = 60000;
+    const cometDelay = 6000;
 
     function trySpawnComet(time) {
-        if (time - lastCometTime > cometDelay + Math.random() * 120000) {
+        if (time - lastCometTime > cometDelay + Math.random() * 5000) {
 
             // шанс на супер-комету
             if (Math.random() < 0.05) {
