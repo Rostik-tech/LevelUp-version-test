@@ -422,17 +422,19 @@ document.addEventListener("DOMContentLoaded", function () {
     x: Math.random() * w * 0.5,
     y: Math.random() * h * 0.3,
 
-    length: superMode ? 250 : 120 + Math.random() * 100,
+    
 
     speedX: Math.cos(angle) * speed,
     speedY: Math.sin(angle) * speed,
 
-    width: superMode ? 3 : 2,
-    glow: superMode ? 25 : 15,
+    
 
     // 🔥 НОВОЕ (ядро + частицы)
-    headSize: superMode ? 6 : 4,
-    particleRate: superMode ? 4 : 2
+    headSize: superMode ? 10 : 4,
+    particleRate: superMode ? 8 : 2,
+    width: superMode ? 5 : 2,
+    glow: superMode ? 40 : 15,
+    length: superMode ? 400 : 120 + Math.random() * 100
 });
     }
 
@@ -444,7 +446,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (time - lastCometTime > cometDelay + Math.random() * 120000) {
 
             // шанс на супер-комету
-            if (Math.random() < 0.15) {
+            if (Math.random() < 0.05) {
                 createComet(true);
             } else {
                 createComet(false);
@@ -520,31 +522,49 @@ function spawnParticles(c) {
             const tailX = c.x - Math.cos(angle) * c.length;
             const tailY = c.y - Math.sin(angle) * c.length;
 
-            const gradient = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
+            
 
-            gradient.addColorStop(0, "rgba(255,255,255,1)");
-            gradient.addColorStop(0.3, "rgba(255,0,255,0.9)");
-            gradient.addColorStop(0.6, "rgba(0,240,255,0.6)");
-            gradient.addColorStop(1, "rgba(0,240,255,0)");
+            // 🌫 ДЫМНЫЙ ХВОСТ (мягкий)
+for (let i = 0; i < c.length; i += 4) {
 
-            ctx.beginPath();
-            ctx.moveTo(c.x, c.y);
-            ctx.lineTo(tailX, tailY);
+    const t = i / c.length;
 
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = c.width;
-            ctx.shadowBlur = c.glow;
-            ctx.shadowColor = "rgba(255,255,255,0.8)";
+    const x = c.x - Math.cos(angle) * i;
+    const y = c.y - Math.sin(angle) * i;
 
-            ctx.stroke();
-            // 🔥 ГОЛОВА КОМЕТЫ
+    const size = c.width * (1 - t) * 6;
+
+    const alpha = (1 - t) * 0.15;
+
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "rgba(255,255,255,0.5)";
+
+    ctx.fill();
+}
+// ✨ GLOW КАК В ИГРАХ (слои)
+
+// внешний glow
+ctx.beginPath();
+ctx.arc(c.x, c.y, c.headSize * 3, 0, Math.PI * 2);
+ctx.fillStyle = "rgba(255,255,255,0.08)";
+ctx.fill();
+
+// средний glow
+ctx.beginPath();
+ctx.arc(c.x, c.y, c.headSize * 2, 0, Math.PI * 2);
+ctx.fillStyle = "rgba(255,255,255,0.15)";
+ctx.fill();
+
+// ядро
 ctx.beginPath();
 ctx.arc(c.x, c.y, c.headSize, 0, Math.PI * 2);
-
 ctx.fillStyle = "rgba(255,255,255,1)";
-ctx.shadowBlur = c.glow * 2;
+ctx.shadowBlur = 30;
 ctx.shadowColor = "rgba(255,255,255,1)";
-
 ctx.fill();
 
             c.x += c.speedX;
@@ -559,9 +579,7 @@ ctx.fill();
             ) {
                 comets.splice(i, 1);
             }
-            if (particles.length > 1000) {
-    particles.splice(0, 200);
-}
+            
         });
 
         // ✨ ОТРИСОВКА ЧАСТИЦ
@@ -586,6 +604,10 @@ particles.forEach((p, i) => {
         particles.splice(i, 1);
     }
 });
+
+if (particles.length > 1000) {
+    particles.splice(0, 200);
+}
 
         requestAnimationFrame(animate);
     }
