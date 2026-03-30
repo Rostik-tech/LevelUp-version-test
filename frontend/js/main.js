@@ -408,6 +408,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ☄️ КОМЕТЫ
     const comets = [];
+    // ✨ ЧАСТИЦЫ КОМЕТ
+    const particles = [];
 
     function createComet(superMode = false) {
 
@@ -417,14 +419,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const speed = superMode ? 10 : 5 + Math.random() * 3;
 
         comets.push({
-            x: Math.random() * w * 0.5,
-            y: Math.random() * h * 0.3,
-            length: superMode ? 250 : 120 + Math.random() * 100,
-            speedX: Math.cos(angle) * speed,
-            speedY: Math.sin(angle) * speed,
-            width: superMode ? 3 : 2,
-            glow: superMode ? 25 : 15
-        });
+    x: Math.random() * w * 0.5,
+    y: Math.random() * h * 0.3,
+
+    length: superMode ? 250 : 120 + Math.random() * 100,
+
+    speedX: Math.cos(angle) * speed,
+    speedY: Math.sin(angle) * speed,
+
+    width: superMode ? 3 : 2,
+    glow: superMode ? 25 : 15,
+
+    // 🔥 НОВОЕ (ядро + частицы)
+    headSize: superMode ? 6 : 4,
+    particleRate: superMode ? 4 : 2
+});
     }
 
     // 🔥 СПАВН БЕЗ НАКОПЛЕНИЯ
@@ -444,6 +453,24 @@ document.addEventListener("DOMContentLoaded", function () {
             lastCometTime = time;
         }
     }
+
+    // ✨ СОЗДАНИЕ ЧАСТИЦ
+function spawnParticles(c) {
+    for (let i = 0; i < c.particleRate; i++) {
+
+        particles.push({
+            x: c.x,
+            y: c.y,
+
+            vx: (Math.random() - 0.5) * 1 - c.speedX * 0.1,
+            vy: (Math.random() - 0.5) * 1 - c.speedY * 0.1,
+
+            life: 40 + Math.random() * 20,
+            size: Math.random() * 2 + 0.5
+        });
+    }
+}
+
 
     function animate(time = 0) {
         ctx.clearRect(0, 0, w, h);
@@ -486,6 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // ☄️ КОМЕТЫ
         comets.forEach((c, i) => {
+            spawnParticles(c);
 
             const angle = Math.atan2(c.speedY, c.speedX);
 
@@ -509,6 +537,15 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.shadowColor = "rgba(255,255,255,0.8)";
 
             ctx.stroke();
+            // 🔥 ГОЛОВА КОМЕТЫ
+ctx.beginPath();
+ctx.arc(c.x, c.y, c.headSize, 0, Math.PI * 2);
+
+ctx.fillStyle = "rgba(255,255,255,1)";
+ctx.shadowBlur = c.glow * 2;
+ctx.shadowColor = "rgba(255,255,255,1)";
+
+ctx.fill();
 
             c.x += c.speedX;
             c.y += c.speedY;
@@ -522,7 +559,33 @@ document.addEventListener("DOMContentLoaded", function () {
             ) {
                 comets.splice(i, 1);
             }
+            if (particles.length > 1000) {
+    particles.splice(0, 200);
+}
         });
+
+        // ✨ ОТРИСОВКА ЧАСТИЦ
+particles.forEach((p, i) => {
+
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+
+    const alpha = p.life / 60;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "rgba(255,255,255,1)";
+
+    ctx.fill();
+
+    if (p.life <= 0) {
+        particles.splice(i, 1);
+    }
+});
 
         requestAnimationFrame(animate);
     }
