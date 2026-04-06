@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -23,54 +23,3 @@ jobs:
 
       - name: Run API tests
         run: newman run tests/api/auth.postman_collection.json
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Check token
-        run: |
-          if [ -z "${{ secrets.RAILWAY_TOKEN }}" ]; then
-            echo "❌ TOKEN IS EMPTY"
-            exit 1
-          else
-            echo "✅ TOKEN EXISTS"
-          fi
-
-      - name: Get latest deployment ID
-        run: |
-          echo "Fetching deployments..."
-
-          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
-            -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{"query":"query { service(id: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\") { deployments(first: 1) { edges { node { id } } } } }"}')
-
-          echo "FULL RESPONSE:"
-          echo "$RESPONSE"
-
-          DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.data.service.deployments.edges[0].node.id')
-
-          echo "Parsed Deployment ID: $DEPLOYMENT_ID"
-
-          if [ "$DEPLOYMENT_ID" = "null" ] || [ -z "$DEPLOYMENT_ID" ]; then
-            echo "❌ ERROR: Deployment ID is empty"
-            exit 1
-          fi
-
-          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
-
-      - name: Restart deployment
-        run: |
-          echo "Restarting deployment..."
-
-          curl -X POST https://backboard.railway.app/graphql/v2 \
-            -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\":\"mutation { deploymentRestart(id: \\\"$DEPLOYMENT_ID\\\") }\"}"
-
-          echo "✅ Restart request sent"
