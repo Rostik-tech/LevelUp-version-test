@@ -29,14 +29,14 @@ jobs:
     needs: test
 
     steps:
-      - name: Force Railway redeploy (debug)
+      - name: Force Railway redeploy
         run: |
           echo "Starting deploy..."
 
-          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql \
+          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"mutation { deploymentCreate(input: { serviceId: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\" }) { id } }"}')
+            -d '{"query":"mutation deploymentCreate($input: DeploymentCreateInput!) { deploymentCreate(input: $input) { id } }","variables":{"input":{"serviceId":"b663cae9-8114-4d46-8e27-9c3db2fc8d9c"}}}')
 
           echo "Response from Railway:"
           echo "$RESPONSE"
