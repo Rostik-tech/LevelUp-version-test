@@ -32,14 +32,14 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Get latest deployment ID (debug)
+      - name: Get latest deployment ID
         run: |
           echo "Fetching deployments..."
 
           RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"query { service(id: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\") { deployments(limit: 1) { edges { node { id } } } } }"}')
+            -d '{"query":"query { service(id: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\") { deployments(first: 1) { edges { node { id } } } } }"}')
 
           echo "FULL RESPONSE:"
           echo "$RESPONSE"
