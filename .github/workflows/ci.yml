@@ -29,9 +29,14 @@ jobs:
     needs: test
 
     steps:
-      - name: Force Railway redeploy
+      - name: Force Railway redeploy (debug)
         run: |
-          curl -X POST https://backboard.railway.app/graphql \
+          echo "Starting deploy..."
+
+          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"mutation { deploymentCreate(input: { serviceId: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\" }) { id } }"}'
+            -d '{"query":"mutation { deploymentCreate(input: { serviceId: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\" }) { id } }"}')
+
+          echo "Response from Railway:"
+          echo "$RESPONSE"
