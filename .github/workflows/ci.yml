@@ -32,6 +32,15 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
+      - name: Check token
+        run: |
+          if [ -z "${{ secrets.RAILWAY_TOKEN }}" ]; then
+            echo "❌ TOKEN IS EMPTY"
+            exit 1
+          else
+            echo "✅ TOKEN EXISTS"
+          fi
+
       - name: Get latest deployment ID
         run: |
           echo "Fetching deployments..."
@@ -57,12 +66,11 @@ jobs:
 
       - name: Restart deployment
         run: |
-          echo "Restarting deployment: $DEPLOYMENT_ID"
+          echo "Restarting deployment..."
 
-          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
+          curl -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d "{\"query\":\"mutation { deploymentRestart(id: \\\"$DEPLOYMENT_ID\\\") { id } }\"}")
+            -d "{\"query\":\"mutation { deploymentRestart(id: \\\"$DEPLOYMENT_ID\\\") }\"}"
 
-          echo "Restart response:"
-          echo "$RESPONSE"
+          echo "✅ Restart request sent"
