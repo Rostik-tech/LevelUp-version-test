@@ -32,28 +32,37 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Get latest deployment ID
-        id: get_deploy
+      - name: Get latest deployment ID (debug)
         run: |
-          echo "Fetching latest deployment..."
+          echo "Fetching deployments..."
 
-          DEPLOYMENT_ID=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
+          RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"query":"query { service(id: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\") { deployments(limit: 1) { edges { node { id } } } } }"}' \
-            | jq -r '.data.service.deployments.edges[0].node.id')
+            -d '{"query":"query { service(id: \"b663cae9-8114-4d46-8e27-9c3db2fc8d9c\") { deployments(limit: 1) { edges { node { id } } } } }"}')
 
-          echo "Deployment ID: $DEPLOYMENT_ID"
+          echo "FULL RESPONSE:"
+          echo "$RESPONSE"
+
+          DEPLOYMENT_ID=$(echo "$RESPONSE" | jq -r '.data.service.deployments.edges[0].node.id')
+
+          echo "Parsed Deployment ID: $DEPLOYMENT_ID"
+
+          if [ "$DEPLOYMENT_ID" = "null" ] || [ -z "$DEPLOYMENT_ID" ]; then
+            echo "❌ ERROR: Deployment ID is empty"
+            exit 1
+          fi
+
           echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
 
       - name: Restart deployment
         run: |
-          echo "Restarting deployment..."
+          echo "Restarting deployment: $DEPLOYMENT_ID"
 
           RESPONSE=$(curl -s -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"query\":\"mutation { deploymentRestart(id: \\\"$DEPLOYMENT_ID\\\") { id } }\"}")
 
-          echo "Response:"
+          echo "Restart response:"
           echo "$RESPONSE"
