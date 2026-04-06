@@ -1,0 +1,24 @@
+name: API Tests CI
+
+on:
+  push:
+    branches: [ "old-version" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Забрать код
+        uses: actions/checkout@v3
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Установить Newman
+        run: npm install -g newman
+
+      - name: Запустить тесты
+        run: newman run tests/api/auth.postman_collection.json
