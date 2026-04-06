@@ -2,23 +2,32 @@ name: API Tests CI
 
 on:
   push:
-    branches: [ "old-version" ]
+    branches:
+      - old-version
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Забрать код
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Установить Node.js
+      - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
 
-      - name: Установить Newman
+      - name: Install Newman
         run: npm install -g newman
 
-      - name: Запустить тесты
+      - name: Run API tests
         run: newman run tests/api/auth.postman_collection.json
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test   # 🔥 ВОТ ЭТО ГЛАВНОЕ
+
+    steps:
+      - name: Deploy
+        run: echo "Deploying project..."
