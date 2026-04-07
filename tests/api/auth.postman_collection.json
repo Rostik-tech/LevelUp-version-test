@@ -109,8 +109,8 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Login status is 500\", function () {\r",
-              "    pm.response.to.have.status(500);\r",
+              "pm.test(\"Login status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
               "});\r",
               "\r",
               "const jsonData = pm.response.json();\r",
