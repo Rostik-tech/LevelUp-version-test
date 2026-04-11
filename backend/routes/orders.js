@@ -4,7 +4,7 @@ import { sequelize, Order, OrderItem, Product } from "../models/index.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { Op } from "sequelize";
 import { orderLimiter } from '../middleware/rateLimiter.js';
-
+import { createOrder } from '../controllers/orderController.js';
 
 const router = express.Router();
 
