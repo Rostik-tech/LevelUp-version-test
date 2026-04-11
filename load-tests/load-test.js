@@ -77,9 +77,15 @@ while (attempts < 2) {
   sleep(0.5);
 }
 
-  if (res.status !== 201) {
-    console.error('ORDER FAILED:', res.status, res.body);
-  }
+// ✅ check — ТОЛЬКО ОДИН РАЗ
+check(res, {
+  'order success or rate limited': (r) =>
+    r.status === 201 || r.status === 429,
+});
 
-  sleep(Math.random() * 2);
+// ✅ логируем только реальные ошибки
+if (res.status !== 201 && res.status !== 429) {
+  console.error('ORDER FAILED:', res.status, res.body);
+}
+sleep(Math.random() * 2);
 }
