@@ -1,9 +1,7 @@
 name: API Tests CI
 
 on:
-  push:
-    branches:
-      - old-version
+  workflow_dispatch:
 
 jobs:
   test:
