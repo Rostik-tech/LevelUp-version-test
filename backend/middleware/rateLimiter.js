@@ -11,13 +11,27 @@ export const authLimiter = rateLimit({
   },
 });
 
-// 🛒 мягкий limiter для заказов (под нагрузку)
+// 🛒 мягкий limiter для заказов
 export const orderLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 минута
-  max: 10000, // 🔥 увеличили лимит (было 2000)
+  max: 10000, // 🔥 под нагрузку
+
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    message: "Слишком много запросов на заказы",
+
+  keyGenerator: (req) => {
+    // 🔥 фикс для proxy + k6
+    return req.headers["x-forwarded-for"] || req.ip;
+  },
+
+  handler: (req, res) => {
+    console.log("🚫 RATE LIMIT TRIGGERED:", {
+      ip: req.ip,
+      forwarded: req.headers["x-forwarded-for"],
+    });
+
+    res.status(429).json({
+      message: "Too many requests",
+    });
   },
 });

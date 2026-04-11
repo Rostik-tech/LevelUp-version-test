@@ -32,6 +32,7 @@ console.log("UPLOADS PATH:", path.join(__dirname, "uploads"));
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 
 /* =====================
    Static Files
@@ -73,7 +74,7 @@ const adminLimiter = rateLimit({
   message: "Too many admin requests."
 });
 
-app.use(generalLimiter);
+
 
 app.use(cors({
   origin: true,
