@@ -87,8 +87,21 @@ export default function () {
 
     // ❗ логируем только реальные ошибки
     if (res.status !== 201 && res.status !== 400) {
-      console.error(`❌ ORDER FAILED: ${res.status} | ${res.body}`);
-    }
+  console.error(`❌ STATUS: ${res.status} | BODY: ${res.body}`);
+}
+
+// 🔥 считаем статистику
+if (res.status === 429) {
+  console.warn("⚠️ RATE LIMIT");
+}
+
+if (res.status === 401) {
+  console.warn("🔐 AUTH ERROR");
+}
+
+if (res.status === 500) {
+  console.error("💥 SERVER ERROR");
+}
   });
 
   sleep(Math.random() * 1.5);
