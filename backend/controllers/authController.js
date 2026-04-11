@@ -1,106 +1,79 @@
-//backend/controllers/authController.js
-import http from 'k6/http';
-import { sleep, check } from 'k6';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { User } from "../models/index.js";
 
-export const options = {
-  vus: 20,
-  duration: '1m',
+// =========================
+// REGISTER
+// =========================
+export const register = async (req, res) => {
+  try {
+    const { username, email, password, fullName } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      fullName,
+    });
+
+    return res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+
+  } catch (err) {
+    console.error("REGISTER ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-const BASE_URL = 'https://www.levelup-gaming.store/api';
+// =========================
+// LOGIN
+// =========================
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-export default function () {
-  // =========================
-  // 1. REGISTER
-  // =========================
-  const email = `user_${__VU}_${__ITER}@test.com`;
+    const user = await User.findOne({ where: { email } });
 
-  const registerPayload = JSON.stringify({
-    username: `user_${__VU}_${__ITER}`,
-    email: email,
-    password: '123456',
-    fullName: 'Test User'
-  });
-
-  const registerRes = http.post(
-    `${BASE_URL}/auth/register`,
-    registerPayload,
-    {
-      headers: { 'Content-Type': 'application/json' },
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-  );
 
-  check(registerRes, {
-    'register status 201': (r) => r.status === 201,
-  });
+    const isMatch = await bcrypt.compare(password, user.password);
 
-  // =========================
-  // 2. LOGIN
-  // =========================
-  const loginPayload = JSON.stringify({
-    email: email,
-    password: '123456',
-  });
-
-  const loginRes = http.post(
-    `${BASE_URL}/auth/login`,
-    loginPayload,
-    {
-      headers: { 'Content-Type': 'application/json' },
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-  );
 
-  const loginCheck = check(loginRes, {
-    'login status 200': (r) => r.status === 200,
-    'login has token': (r) => r.json('token') !== undefined,
-  });
-
-  if (!loginCheck) {
-    console.error('LOGIN FAILED:', loginRes.body);
-    return;
-  }
-
-  const token = loginRes.json('token');
-
-  // =========================
-  // 3. GET PRODUCTS
-  // =========================
-  const productsRes = http.get(`${BASE_URL}/products`);
-
-  check(productsRes, {
-    'products status 200': (r) => r.status === 200,
-  });
-
-  // =========================
-  // 4. CREATE ORDER
-  // =========================
-  const orderPayload = JSON.stringify({
-    items: [
-      { productId: 1, quantity: 1 }
-    ],
-    shippingFullName: "Test User",
-    shippingPhone: "+123456789",
-    shippingCountry: "USA",
-    shippingCity: "NY",
-    shippingAddress: "Test street",
-    shippingPostalCode: "10001",
-    shippingApartment: "1A"
-  });
-
-  const orderRes = http.post(
-    `${BASE_URL}/orders`,
-    orderPayload,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+    const token = jwt.sign(
+      {
+        id: user.id,
+        role: user.role || "USER",
       },
-    }
-  );
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-  check(orderRes, {
-    'order created 201': (r) => r.status === 201,
-  });
+    return res.json({ token });
 
-  sleep(1);
-}
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
