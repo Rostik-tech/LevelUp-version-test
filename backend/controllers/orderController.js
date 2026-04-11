@@ -9,7 +9,24 @@ export const createOrder = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
-    const { items, shipping } = req.body;
+    // 🔐 защита
+    if (!req.user || !req.user.id) {
+      await transaction.rollback();
+      return res.status(401).json({ message: "Не авторизован" });
+    }
+
+    console.log("USER:", req.user);
+
+    const {
+      items,
+      shippingFullName,
+      shippingPhone,
+      shippingCountry,
+      shippingCity,
+      shippingAddress,
+      shippingPostalCode,
+      shippingApartment,
+    } = req.body;
 
     if (!items || items.length === 0) {
       await transaction.rollback();
@@ -29,7 +46,9 @@ export const createOrder = async (req, res) => {
 
       if (product.stock < item.quantity) {
         await transaction.rollback();
-        return res.status(400).json({ message: "Недостаточно товара на складе" });
+        return res.status(400).json({
+          message: "Недостаточно товара на складе",
+        });
       }
 
       totalPrice += product.price * item.quantity;
@@ -42,13 +61,13 @@ export const createOrder = async (req, res) => {
         totalPrice,
         status: "PENDING",
 
-        shippingFullName: shipping?.fullName,
-        shippingPhone: shipping?.phone,
-        shippingCountry: shipping?.country,
-        shippingCity: shipping?.city,
-        shippingAddress: shipping?.address,
-        shippingPostalCode: shipping?.postalCode,
-        shippingApartment: shipping?.apartment,
+        shippingFullName,
+        shippingPhone,
+        shippingCountry,
+        shippingCity,
+        shippingAddress,
+        shippingPostalCode,
+        shippingApartment,
       },
       { transaction }
     );
@@ -87,11 +106,11 @@ export const getOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({
       include: [
-  {
-    model: OrderItem,
-    include: [Product]
-  }
-],
+        {
+          model: OrderItem,
+          include: [Product],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
@@ -109,10 +128,10 @@ export const getMyOrders = async (req, res) => {
     const orders = await Order.findAll({
       where: { UserId: req.user.id },
       include: [
-      {
-      model: OrderItem,
-      include: [Product]
-      }
+        {
+          model: OrderItem,
+          include: [Product],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -130,11 +149,11 @@ export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id, {
       include: [
-  {
-    model: OrderItem,
-    include: [Product]
-  }
-],
+        {
+          model: OrderItem,
+          include: [Product],
+        },
+      ],
     });
 
     if (!order) {
@@ -146,4 +165,3 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
