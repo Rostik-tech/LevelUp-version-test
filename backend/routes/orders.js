@@ -5,9 +5,10 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 import { Op } from "sequelize";
 import { orderLimiter } from '../middleware/rateLimiter.js';
 
-router.post('/', orderLimiter, createOrder);
+
 const router = express.Router();
 
+router.post('/', orderLimiter, createOrder);
 // ========================================
 // СОЗДАНИЕ ЗАКАЗА
 // ========================================
