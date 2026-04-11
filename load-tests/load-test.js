@@ -15,6 +15,8 @@ export const options = {
   { duration: '30s', target: 50 },
   { duration: '30s', target: 70 },
   { duration: '30s', target: 90 },
+  { duration: '30s', target: 120 },
+  { duration: '30s', target: 150 },
 ],
       gracefulRampDown: '10s',
     },
@@ -46,7 +48,7 @@ export default function () {
   const payload = JSON.stringify({
     items: [
       {
-        productId: 11,
+        productId: 16,
         quantity: 1,
       },
     ],
