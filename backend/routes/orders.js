@@ -2,6 +2,7 @@
 import express from "express";
 import { sequelize, Order, OrderItem, Product } from "../models/index.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
+import { Op } from "sequelize";
 
 const router = express.Router();
 
@@ -46,26 +47,59 @@ router.post("/", authenticateToken, async (req, res) => {
 
     let totalPrice = 0;
 
-    // Проверяем товары
+    // =========================
+    // 🔥 1. Грузим все продукты одним запросом
+    // =========================
+    const productIds = items.map((i) => i.productId);
+
+    const products = await Product.findAll({
+      where: { id: productIds },
+      transaction,
+    });
+
+    if (products.length !== items.length) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "Один из товаров не найден" });
+    }
+
+    // =========================
+    // 💰 2. Считаем цену
+    // =========================
     for (const item of items) {
-      const product = await Product.findByPk(item.productId);
-
-      if (!product) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Товар не найден" });
-      }
-
-      if (product.stock < item.quantity) {
-        await transaction.rollback();
-        return res
-          .status(400)
-          .json({ message: "Недостаточно товара на складе" });
-      }
-
+      const product = products.find((p) => p.id === item.productId);
       totalPrice += product.price * item.quantity;
     }
 
-    // Создаем заказ (stock НЕ трогаем)
+    // =========================
+    // ⚡ 3. АТОМАРНО уменьшаем stock
+    // =========================
+    for (const item of items) {
+      const [updatedRows] = await Product.update(
+        {
+          stock: sequelize.literal(`stock - ${item.quantity}`),
+        },
+        {
+          where: {
+            id: item.productId,
+            stock: {
+              [Op.gte]: item.quantity,
+            },
+          },
+          transaction,
+        }
+      );
+
+      if (updatedRows === 0) {
+        await transaction.rollback();
+        return res.status(400).json({
+          message: "Недостаточно товара на складе",
+        });
+      }
+    }
+
+    // =========================
+    // 🧾 4. Создаем заказ
+    // =========================
     const order = await Order.create(
       {
         UserId: userId,
@@ -83,9 +117,11 @@ router.post("/", authenticateToken, async (req, res) => {
       { transaction }
     );
 
-    // Создаем позиции
+    // =========================
+    // 📦 5. Создаем позиции (БЕЗ лишних запросов)
+    // =========================
     for (const item of items) {
-      const product = await Product.findByPk(item.productId);
+      const product = products.find((p) => p.id === item.productId);
 
       await OrderItem.create(
         {

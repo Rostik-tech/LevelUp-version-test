@@ -1,126 +1,105 @@
-// backend/controllers/authController.js
+import http from 'k6/http';
+import { sleep, check } from 'k6';
 
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { User } from "../models/index.js";
-
-/* =========================
-   📝 REGISTER
-========================= */
-export const register = async (req, res) => {
-  try {
-
-    
-
-    const { username, email, password, fullName } = req.body;
-
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: "Все поля обязательны" });
-    }
-
-    const existing = await User.findOne({ where: { email } });
-
-    if (existing) {
-      return res.status(400).json({ message: "Пользователь уже существует" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-  username,
-  email,
-  fullName,
-  password: hashedPassword,
-  role: "USER"
-});
-    console.log("USER REGISTERED:", email);
-
-
-
-    return res.status(201).json({
-      message: "Пользователь создан",
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role
-      }
-    });
-
-  } catch (err) {
-    console.error("REGISTER ERROR:", err.message);
-    return res.status(500).json({ message: "Ошибка регистрации" });
-  }
+export const options = {
+  vus: 20,
+  duration: '1m',
 };
 
-/* =========================
-   🔐 LOGIN
-========================= */
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+const BASE_URL = 'https://www.levelup-gaming.store/api';
 
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email и пароль обязательны" });
+export default function () {
+  // =========================
+  // 1. REGISTER
+  // =========================
+  const email = `user_${__VU}_${__ITER}@test.com`;
+
+  const registerPayload = JSON.stringify({
+    username: `user_${__VU}_${__ITER}`,
+    email: email,
+    password: '123456',
+    fullName: 'Test User'
+  });
+
+  const registerRes = http.post(
+    `${BASE_URL}/auth/register`,
+    registerPayload,
+    {
+      headers: { 'Content-Type': 'application/json' },
     }
+  );
 
-    console.log("LOGIN ATTEMPT:", email)
+  check(registerRes, {
+    'register status 201': (r) => r.status === 201,
+  });
 
-    const user = await User.findOne({ where: { email } });
+  // =========================
+  // 2. LOGIN
+  // =========================
+  const loginPayload = JSON.stringify({
+    email: email,
+    password: '123456',
+  });
 
-        
-        
-        
-    if (!user) {
-      return res.status(400).json({ message: "Пользователь не найден" });
+  const loginRes = http.post(
+    `${BASE_URL}/auth/login`,
+    loginPayload,
+    {
+      headers: { 'Content-Type': 'application/json' },
     }
+  );
 
-    const isMatch = await bcrypt.compare(password, user.password);
+  const loginCheck = check(loginRes, {
+    'login status 200': (r) => r.status === 200,
+    'login has token': (r) => r.json('token') !== undefined,
+  });
 
+  if (!loginCheck) {
+    console.error('LOGIN FAILED:', loginRes.body);
+    return;
+  }
 
-    if (!isMatch) {
-      return res.status(400).json({ message: "Неверный пароль" });
+  const token = loginRes.json('token');
+
+  // =========================
+  // 3. GET PRODUCTS
+  // =========================
+  const productsRes = http.get(`${BASE_URL}/products`);
+
+  check(productsRes, {
+    'products status 200': (r) => r.status === 200,
+  });
+
+  // =========================
+  // 4. CREATE ORDER
+  // =========================
+  const orderPayload = JSON.stringify({
+    items: [
+      { productId: 1, quantity: 1 }
+    ],
+    shippingFullName: "Test User",
+    shippingPhone: "+123456789",
+    shippingCountry: "USA",
+    shippingCity: "NY",
+    shippingAddress: "Test street",
+    shippingPostalCode: "10001",
+    shippingApartment: "1A"
+  });
+
+  const orderRes = http.post(
+    `${BASE_URL}/orders`,
+    orderPayload,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     }
+  );
 
-    if (!process.env.JWT_SECRET) {
-  console.error("JWT_SECRET НЕ НАСТРОЕН");
-  return res.status(500).json({ message: "Server config error" });
+  check(orderRes, {
+    'order created 201': (r) => r.status === 201,
+  });
+
+  sleep(1);
 }
-
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-    console.log("LOGIN SUCCESS:", email);
-    return res.json({
-      message: "Успешный вход",
-      token
-    });
-
-  } catch (err) {
-    console.error("LOGIN ERROR:", err.message);
-    return res.status(500).json({ message: "Ошибка входа" });
-  }
-};
-
-/* =========================
-   👤 GET CURRENT USER
-========================= */
-export const me = async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: ["id", "username", "email", "role", "createdAt"]
-    });
-
-    if (!user) {
-      return res.status(404).json({ message: "Пользователь не найден" });
-    }
-
-    return res.json(user);
-
-  } catch (err) {
-    console.error("ME ERROR:", err.message);
-    return res.status(500).json({ message: "Ошибка получения пользователя" });
-  }
-};

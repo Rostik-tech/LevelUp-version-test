@@ -270,27 +270,7 @@ const captureId =
 
 payment.paypalCaptureId = captureId;
 
-    // 🔥 6. Уменьшаем stock
-    const items = await OrderItem.findAll({
-      where: { OrderId: dbOrder.id },
-      transaction,
-    });
-
-    for (const item of items) {
-      const product = await Product.findByPk(item.ProductId, {
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
-
-      if (!product)
-        throw new Error("Товар не найден");
-
-      if (product.stock < item.quantity)
-        throw new Error("Недостаточно товара на складе");
-
-      product.stock -= item.quantity;
-      await product.save({ transaction });
-    }
+    
 
     // 🔄 7. Обновление статусов
     dbOrder.status = "PAID";
