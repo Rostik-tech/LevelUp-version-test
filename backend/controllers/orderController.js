@@ -1,7 +1,7 @@
 // backend/controllers/orderController.js
 import { sequelize } from "../models/index.js";
 import { Order, OrderItem, Product } from "../models/index.js";
-
+import { Op } from "sequelize";
 // ======================
 // СОЗДАТЬ ЗАКАЗ
 // ======================
@@ -63,12 +63,7 @@ if (!product) {
   return res.status(404).json({ message: "Товар не найден" });
 }
 
-  if (product.stock < item.quantity) {
-    await transaction.rollback();
-    return res.status(400).json({
-      message: "Недостаточно товара на складе",
-    });
-  }
+  
 
   totalPrice += product.price * item.quantity;
 }
@@ -98,6 +93,28 @@ for (const item of items) {
 if (!product) {
   await transaction.rollback();
   return res.status(404).json({ message: "Товар не найден" });
+}
+
+const [updatedRows] = await Product.update(
+  {
+    stock: sequelize.literal(`stock - ${item.quantity}`),
+  },
+  {
+    where: {
+      id: item.productId,
+      stock: {
+        [Op.gte]: item.quantity,
+      },
+    },
+    transaction,
+  }
+);
+
+if (updatedRows === 0) {
+  await transaction.rollback();
+  return res.status(400).json({
+    message: "Недостаточно товара на складе",
+  });
 }
 
   await OrderItem.create(
