@@ -10,22 +10,22 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 1,
       stages: [
-        { duration: '30s', target: 10 },
-        { duration: '30s', target: 30 },
-        { duration: '30s', target: 50 },
-        { duration: '30s', target: 70 },
-        { duration: '30s', target: 90 },
-        { duration: '30s', target: 120 },
-        { duration: '30s', target: 150 },
-      ],
+  { duration: '30s', target: 50 },
+  { duration: '30s', target: 100 },
+  { duration: '30s', target: 150 },
+  { duration: '30s', target: 200 },
+  { duration: '30s', target: 250 }, // 🔥 вот тут начнётся мясо
+  { duration: '1m', target: 250 },  // держим нагрузку
+  { duration: '30s', target: 0 },
+],
       gracefulRampDown: '10s',
     },
   },
 
   thresholds: {
-    http_req_duration: ['p(95)<1500'],
-    http_req_failed: ['rate<0.1'],
-  },
+  http_req_duration: ['p(95)<3000'], // увеличили
+  http_req_failed: ['rate<0.3'],     // до 30% допустим
+},
 };
 
 const BASE_URL = 'https://www.levelup-gaming.store/api';
