@@ -1,5 +1,5 @@
 import http from 'k6/http';
-import { sleep, check } from 'k6';
+import { sleep, check, group } from 'k6';
 
 // =========================
 // ⚙️ СТРЕСС-ТЕСТ НАСТРОЙКИ
@@ -10,28 +10,28 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 1,
       stages: [
-  { duration: '30s', target: 10 },
-  { duration: '30s', target: 30 },
-  { duration: '30s', target: 50 },
-  { duration: '30s', target: 70 },
-  { duration: '30s', target: 90 },
-  { duration: '30s', target: 120 },
-  { duration: '30s', target: 150 },
-],
+        { duration: '30s', target: 10 },
+        { duration: '30s', target: 30 },
+        { duration: '30s', target: 50 },
+        { duration: '30s', target: 70 },
+        { duration: '30s', target: 90 },
+        { duration: '30s', target: 120 },
+        { duration: '30s', target: 150 },
+      ],
       gracefulRampDown: '10s',
     },
   },
 
   thresholds: {
     http_req_duration: ['p(95)<1500'],
-    http_req_failed: ['rate<0.2'],
+    http_req_failed: ['rate<0.1'], // ужесточили до 10%
   },
 };
 
 const BASE_URL = 'https://www.levelup-gaming.store/api';
 
 // =========================
-// 🔑 ГОТОВЫЕ ТОКЕНЫ (ВСТАВЬ СЮДА)
+// 🔑 ТОКЕНЫ
 // =========================
 const TOKENS = [
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzU4MzU4ODksImV4cCI6MTc3NTkyMjI4OX0.gYHhbDHvNQQ5uuHaydWSFis8Md05Yvke8DttQ2aXoj4',
@@ -40,12 +40,10 @@ const TOKENS = [
 ];
 
 // =========================
-// 🚀 ОСНОВНОЙ СТРЕСС-ТЕСТ
+// 📦 PAYLOAD
 // =========================
-export default function () {
-  const token = TOKENS[__VU % TOKENS.length];
-
-  const payload = JSON.stringify({
+function getPayload() {
+  return JSON.stringify({
     items: [
       {
         productId: 16,
@@ -60,34 +58,37 @@ export default function () {
     shippingPostalCode: '10001',
     shippingApartment: '1A',
   });
+}
 
-  let res;
-let attempts = 0;
+// =========================
+// 🚀 ТЕСТ
+// =========================
+export default function () {
+  const token = TOKENS[__VU % TOKENS.length];
 
-while (attempts < 2) {
-  res = http.post(`${BASE_URL}/orders`, payload, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    timeout: '60s',
+  group('Create Order', () => {
+    const res = http.post(
+      `${BASE_URL}/orders`,
+      getPayload(),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: '30s',
+      }
+    );
+
+    // ✅ правильные проверки
+    check(res, {
+      'status is 201': (r) => r.status === 201,
+    });
+
+    // ❗ логируем только реальные проблемы
+    if (res.status !== 201) {
+      console.error(`❌ ORDER FAILED: ${res.status} | ${res.body}`);
+    }
   });
 
-  if (res.status === 201) break;
-
-  attempts++;
-  sleep(0.5);
-}
-
-// ✅ check — ТОЛЬКО ОДИН РАЗ
-check(res, {
-  'order success or rate limited': (r) =>
-    r.status === 201 || r.status === 429,
-});
-
-// ✅ логируем только реальные ошибки
-if (res.status !== 201 && res.status !== 429) {
-  console.error('ORDER FAILED:', res.status, res.body);
-}
-sleep(Math.random() * 2);
+  sleep(Math.random() * 1.5);
 }
