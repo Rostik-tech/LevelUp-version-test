@@ -35,24 +35,43 @@ export const createOrder = async (req, res) => {
 
     let totalPrice = 0;
 
-    // Проверяем товары и считаем сумму
-    for (const item of items) {
-      const product = await Product.findByPk(item.productId);
+    const productIds = items.map(i => i.productId);
 
-      if (!product) {
-        await transaction.rollback();
-        return res.status(404).json({ message: "Товар не найден" });
-      }
+const products = await Product.findAll({
+  where: { id: productIds },
+  transaction,
+});
 
-      if (product.stock < item.quantity) {
-        await transaction.rollback();
-        return res.status(400).json({
-          message: "Недостаточно товара на складе",
-        });
-      }
 
-      totalPrice += product.price * item.quantity;
-    }
+const productMap = new Map();
+
+for (const product of products) {
+  productMap.set(product.id, product);
+}
+
+if (products.length !== items.length) {
+  await transaction.rollback();
+  return res.status(404).json({ message: "Товар не найден" });
+}
+
+// считаем цену и проверяем stock
+for (const item of items) {
+  const product = productMap.get(item.productId);
+
+if (!product) {
+  await transaction.rollback();
+  return res.status(404).json({ message: "Товар не найден" });
+}
+
+  if (product.stock < item.quantity) {
+    await transaction.rollback();
+    return res.status(400).json({
+      message: "Недостаточно товара на складе",
+    });
+  }
+
+  totalPrice += product.price * item.quantity;
+}
 
     // Создаем заказ (PENDING)
     const order = await Order.create(
@@ -72,20 +91,25 @@ export const createOrder = async (req, res) => {
       { transaction }
     );
 
-    // Создаем позиции заказа
-    for (const item of items) {
-      const product = await Product.findByPk(item.productId);
+    // создаем позиции заказа БЕЗ лишних запросов
+for (const item of items) {
+  const product = productMap.get(item.productId);
 
-      await OrderItem.create(
-        {
-          OrderId: order.id,
-          ProductId: product.id,
-          quantity: item.quantity,
-          price: product.price,
-        },
-        { transaction }
-      );
-    }
+if (!product) {
+  await transaction.rollback();
+  return res.status(404).json({ message: "Товар не найден" });
+}
+
+  await OrderItem.create(
+    {
+      OrderId: order.id,
+      ProductId: product.id,
+      quantity: item.quantity,
+      price: product.price,
+    },
+    { transaction }
+  );
+}
 
     await transaction.commit();
 
