@@ -90,6 +90,13 @@ export default function () {
   console.error(`❌ STATUS: ${res.status} | BODY: ${res.body}`);
 }
 
+
+
+// 👇 добавь ЭТО
+if (res.status !== 201 && res.status !== 400) {
+  console.log(`STATUS: ${res.status}`);
+}
+
 // 🔥 считаем статистику
 if (res.status === 429) {
   console.warn("⚠️ RATE LIMIT");
