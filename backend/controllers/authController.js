@@ -77,3 +77,14 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// GET CURRENT USER
+export const me = async (req, res) => {
+  try {
+    res.json({
+      user: req.user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
