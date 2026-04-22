@@ -185,7 +185,6 @@
 .product-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1; /* ВСЕ КАРТИНКИ ОДИНАКОВЫЕ */
     border-radius: 20px;
     overflow: hidden;
     padding: 3px;
@@ -195,8 +194,8 @@
 
 .product-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* ОБЯЗАТЕЛЬНО */
+    height: auto;
+    object-fit: contain;
     border-radius: 17px;
     display: block;
 }
