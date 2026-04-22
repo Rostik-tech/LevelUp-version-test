@@ -190,18 +190,15 @@
     background: linear-gradient(135deg, #00ffff, #ff00ff);
     padding: 2px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
 
     transition: transform 0.35s ease;
 }
 
 .product-image {
     width: 100%;
-    height: auto;
-    object-fit: contain;
-    
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
@@ -794,10 +791,9 @@ background:rgba(255,59,59,0.08);
     background: transparent;
     border-radius: 18px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
 
     overflow: hidden; /* ← ВОТ ЭТО ФИКСИТ ТВОЮ ПРОБЛЕМУ */
     position: relative; /* для badge */
+    aspect-ratio: 16 / 6;
 }
