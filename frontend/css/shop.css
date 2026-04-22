@@ -201,7 +201,7 @@
     width: 100%;
     height: auto;
     object-fit: contain;
-    border-radius: 17px;
+    
     display: block;
 }
 
@@ -706,9 +706,7 @@ background:rgba(255,59,59,0.08);
         padding: 2px;
     }
 
-    .product-image {
-        border-radius: 12px;
-    }
+    
 
     .product-image-wrapper::after {
         content: '';
