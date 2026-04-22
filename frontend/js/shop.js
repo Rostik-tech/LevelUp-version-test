@@ -84,12 +84,19 @@ function renderProducts(container, products) {
              
 
             <div class="product-image-wrapper">
-            <div class="product-rarity rarity-${product.rarity}">
-${product.rarity}
-</div>
-    <img src="${image}"
-         alt="${product.name}"
-         class="product-image">
+
+    <div class="product-image-inner">
+
+        <div class="product-rarity rarity-${product.rarity}">
+            ${product.rarity}
+        </div>
+
+        <img src="${image}"
+             alt="${product.name}"
+             class="product-image">
+
+    </div>
+
 </div>
 
             <h3 class="product-name">${product.name}</h3>

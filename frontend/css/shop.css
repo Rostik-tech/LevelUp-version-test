@@ -186,9 +186,14 @@
     position: relative;
     width: 100%;
     border-radius: 20px;
-    overflow: hidden;
-    padding: 3px;
+
     background: linear-gradient(135deg, #00ffff, #ff00ff);
+    padding: 2px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     transition: transform 0.35s ease;
 }
 
@@ -353,7 +358,6 @@ background:rgba(255,59,59,0.08);
     border-radius: 16px;
     padding: 18px;
     transition: all 0.3s ease;
-    overflow: hidden;
     position: relative;
 }
 
@@ -648,7 +652,7 @@ background:rgba(255,59,59,0.08);
         border: 1px solid rgba(255, 0, 255, 0.25);
 
         box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        overflow: hidden;
+        
     }
 
     .product-card::before {
@@ -741,7 +745,6 @@ background:rgba(255,59,59,0.08);
         display: -webkit-box;
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 
     .product-price {
@@ -786,4 +789,17 @@ background:rgba(255,59,59,0.08);
         margin-top: 10px;
     }
 
+}
+
+.product-image-inner {
+    width: 100%;
+    background: #0a0118;
+    border-radius: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden; /* ← ВОТ ЭТО ФИКСИТ ТВОЮ ПРОБЛЕМУ */
+    position: relative; /* для badge */
 }
